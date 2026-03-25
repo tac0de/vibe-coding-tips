@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CopyPromptButton } from "@/components/copy-prompt-button";
 import { SearchExplorer } from "@/components/search-explorer";
 import type { ContentRecord } from "@/lib/content/types";
 
@@ -56,16 +55,16 @@ function SequenceRows({
   );
 }
 
-function QuickCopyStrip({ items }: { items: ContentRecord[] }) {
+function QuickStartStrip({ items }: { items: ContentRecord[] }) {
   return (
     <section className="border-y border-line py-5">
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Quick Copy</p>
-          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">자주 바로 붙이는 프롬프트</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Quick Start</p>
+          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">자주 바로 여는 프롬프트</h2>
         </div>
         <p className="max-w-[36ch] text-sm leading-7 text-smoke">
-          전체 문서를 읽기 전에 바로 복붙해서 흐름을 시작할 수 있는 프롬프트만 먼저 뽑았다.
+          흐름 초반에 가장 자주 여는 문서만 먼저 뽑았다. 복사는 상세 화면에서 한 번만 제공한다.
         </p>
       </div>
       <div className="grid gap-3">
@@ -80,12 +79,15 @@ function QuickCopyStrip({ items }: { items: ContentRecord[] }) {
                 <p className="text-sm text-smoke">{item.summary}</p>
               </Link>
             </div>
-            {item.promptBlock ? (
-              <div className="flex items-start gap-4 md:justify-end">
-                <p className="pt-1 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">{item.domain}</p>
-                <CopyPromptButton value={item.promptBlock} />
-              </div>
-            ) : null}
+            <div className="flex items-start gap-4 md:justify-end">
+              <p className="pt-1 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">{item.domain}</p>
+              <Link
+                href={item.route}
+                className="border-b border-transparent pb-1 font-mono text-xs uppercase tracking-[0.22em] text-cobalt transition hover:border-cobalt"
+              >
+                Open
+              </Link>
+            </div>
           </div>
         ))}
       </div>
@@ -128,7 +130,7 @@ function DenseShelf({
 }
 
 export function LibraryHome({ data }: { data: HomeData }) {
-  const quickCopyRoutes = new Set([
+  const quickStartRoutes = new Set([
     "/prompts/onboarding/02-lock-scope",
     "/prompts/roles/builder",
     "/prompts/ui/landing-first-screen",
@@ -137,7 +139,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
     "/prompts/d3/09-react-d3-boundary"
   ]);
 
-  const quickCopy = data.all.filter((item) => quickCopyRoutes.has(item.route));
+  const quickStart = data.all.filter((item) => quickStartRoutes.has(item.route));
 
   return (
     <main className="min-h-screen bg-paper text-ink">
@@ -167,7 +169,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
         <section className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-start">
           <div className="space-y-8">
             <SequenceRows eyebrow="Start Here" title="Existing Project Flow" items={data.onboarding} />
-            <QuickCopyStrip items={quickCopy} />
+            <QuickStartStrip items={quickStart} />
           </div>
 
           <div className="space-y-8 md:sticky md:top-6">

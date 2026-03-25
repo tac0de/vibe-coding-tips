@@ -10,13 +10,26 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
     <main className="min-h-screen bg-paper text-ink">
       <div className="mx-auto grid max-w-[1320px] gap-10 px-5 pb-16 pt-6 md:grid-cols-[minmax(0,1fr)_300px] md:px-8 md:pb-24 md:pt-10">
         <article className="space-y-8">
+          <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-line pb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-smoke">
+            <Link href="/" className="transition hover:text-ink">
+              Home
+            </Link>
+            {document.prevLink ? (
+              <Link href={document.prevLink.route} className="transition hover:text-ink">
+                Previous
+              </Link>
+            ) : null}
+            {document.nextLink ? (
+              <Link href={document.nextLink.route} className="transition hover:text-ink">
+                Next
+              </Link>
+            ) : null}
+          </nav>
+
           <header className="space-y-4 border-b border-line pb-6">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">
-                {document.domain} / {document.kind}
-              </p>
-              {document.promptBlock ? <CopyPromptButton value={document.promptBlock} /> : null}
-            </div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">
+              {document.domain} / {document.kind}
+            </p>
             <h1 className="max-w-[14ch] font-display text-4xl leading-none tracking-[-0.045em] md:text-7xl">
               {document.title}
             </h1>
@@ -42,6 +55,16 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
         </article>
 
         <aside className="space-y-8 md:sticky md:top-6 md:self-start">
+          {document.prevLink ? (
+            <section className="border-t border-line pt-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Previous</p>
+              <Link href={document.prevLink.route} className="mt-3 block border-b border-line py-3 hover:bg-white/35">
+                <p className="font-display text-2xl tracking-[-0.025em]">{document.prevLink.title.replace(/^\d+\.\s*/, "")}</p>
+                <p className="text-sm text-smoke">{document.prevLink.summary}</p>
+              </Link>
+            </section>
+          ) : null}
+
           {document.nextLink ? (
             <section className="border-t border-line pt-4">
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Next Action</p>

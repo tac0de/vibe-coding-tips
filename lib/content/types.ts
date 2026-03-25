@@ -22,6 +22,7 @@ export type ContentRecord = ContentMeta & {
   promptBlock?: string | null;
   nextRoute?: string | null;
   nextLink?: ContentLink | null;
+  prevLink?: ContentLink | null;
   relatedRoutes: ContentLink[];
   summaryPoints: string[];
   failurePoints: string[];

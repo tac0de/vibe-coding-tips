@@ -125,6 +125,17 @@ async function loadAllContentRaw() {
 
   return records
     .map((record) => {
+      const orderedPeers = records
+        .filter(
+          (item) =>
+            item.kind === record.kind &&
+            item.domain === record.domain &&
+            typeof item.order === "number"
+        )
+        .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+      const currentIndex = orderedPeers.findIndex((item) => item.route === record.route);
+      const prevTarget = currentIndex > 0 ? orderedPeers[currentIndex - 1] : null;
+
       const relatedRoutes: ContentLink[] = (record.related ?? [])
         .map((entry) => resolveReference(entry))
         .filter(Boolean)
@@ -177,6 +188,15 @@ async function loadAllContentRaw() {
       return {
         ...record,
         nextRoute,
+        prevLink: prevTarget
+          ? {
+              title: prevTarget.title,
+              route: prevTarget.route,
+              summary: prevTarget.summary,
+              kind: prevTarget.kind,
+              domain: prevTarget.domain
+            }
+          : null,
         nextLink: nextTarget
           ? {
               title: nextTarget.title,

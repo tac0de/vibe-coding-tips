@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import type { ContentRecord } from "@/lib/content/types";
 
@@ -11,7 +11,26 @@ type Props = {
 
 export function SearchExplorer({ items }: Props) {
   const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const hasQuery = query.trim().length > 0;
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTypingTarget =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target?.isContentEditable;
+
+      if (!isTypingTarget && event.key === "/") {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -33,11 +52,16 @@ export function SearchExplorer({ items }: Props) {
       <div className="flex flex-col gap-5">
         <label className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Search the library</label>
         <input
+          ref={inputRef}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search prompts, playbooks, sources"
           className="w-full border-b border-ink bg-transparent px-0 py-3 font-display text-2xl tracking-[-0.03em] text-ink outline-none placeholder:text-smoke/70 md:text-4xl"
         />
+        <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+          <span>Press / to focus</span>
+          <span>prompt results first</span>
+        </div>
         {hasQuery ? (
           <div className="grid gap-2">
             <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
