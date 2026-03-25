@@ -1,0 +1,13 @@
+import { DocumentLayout } from "@/components/document-layout";
+import { getAllContent, getContentByKindAndSlug } from "@/lib/content/loader";
+
+export async function generateStaticParams() {
+  const all = await getAllContent();
+  return all.filter((item) => item.route.startsWith("/playbooks/")).map((item) => ({ slug: item.slug }));
+}
+
+export default async function PlaybookDetailPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params;
+  const document = await getContentByKindAndSlug("playbooks", slug);
+  return <DocumentLayout document={document} />;
+}
