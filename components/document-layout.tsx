@@ -59,6 +59,10 @@ export function DocumentLayout({
   if (!document || !localized) return null;
 
   const bundleTitle = stripOrdinalTitle(localized.title);
+  const nextActions = chapters
+    .map((chapter) => ({ id: chapter.id, title: chapter.title, doc: chapter.docs[0] ?? null }))
+    .filter((item) => item.doc)
+    .slice(0, 3) as Array<{ id: string; title: string; doc: ContentRecord }>;
 
   return (
     <main className="min-h-screen bg-terminal text-paper">
@@ -170,25 +174,59 @@ export function DocumentLayout({
               </div>
 
               {tab === "abstract" ? (
-                <div className="grid gap-4 pt-8 md:grid-cols-2">
-                  <article className="essay-panel p-5">
-                    <p className="eyebrow">{t("Reading Note", "읽기 노트")}</p>
-                    <p className="mt-4 text-sm leading-8 text-paper">
-                      {t(
-                        "Treat this text as a compact brief. It should help you decide what the agent needs to notice before it starts changing files.",
-                        "이 글은 압축된 브리프로 읽어야 한다. 에이전트가 파일을 바꾸기 전에 무엇을 먼저 봐야 하는지 결정하게 도와야 한다."
-                      )}
-                    </p>
-                  </article>
-                  <article className="essay-panel p-5">
-                    <p className="eyebrow">{t("Verification Note", "검증 노트")}</p>
-                    <p className="mt-4 text-sm leading-8 text-paper">
-                      {t(
-                        "A strong prompt does not end at generation. It leaves behind a standard for checking the browser, the layout, and the interaction surface.",
-                        "강한 프롬프트는 생성에서 끝나지 않는다. 브라우저, 레이아웃, 인터랙션 표면을 점검할 기준까지 남겨야 한다."
-                      )}
-                    </p>
-                  </article>
+                <div className="grid gap-4 pt-8">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <article className="essay-panel p-5">
+                      <p className="eyebrow">{t("Reading Note", "읽기 노트")}</p>
+                      <p className="mt-4 text-sm leading-8 text-paper">
+                        {t(
+                          "Treat this text as a compact brief. It should help you decide what the agent needs to notice before it starts changing files.",
+                          "이 글은 압축된 브리프로 읽어야 한다. 에이전트가 파일을 바꾸기 전에 무엇을 먼저 봐야 하는지 결정하게 도와야 한다."
+                        )}
+                      </p>
+                    </article>
+                    <article className="essay-panel p-5">
+                      <p className="eyebrow">{t("Verification Note", "검증 노트")}</p>
+                      <p className="mt-4 text-sm leading-8 text-paper">
+                        {t(
+                          "A strong prompt does not end at generation. It leaves behind a standard for checking the browser, the layout, and the interaction surface.",
+                          "강한 프롬프트는 생성에서 끝나지 않는다. 브라우저, 레이아웃, 인터랙션 표면을 점검할 기준까지 남겨야 한다."
+                        )}
+                      </p>
+                    </article>
+                  </div>
+
+                  <section className="collection-card">
+                    <p className="eyebrow">{t("Suggested Flow", "추천 플로우")}</p>
+                    <div className="mt-6 grid gap-4 md:grid-cols-3">
+                      {nextActions.map((item, index) => {
+                        const nextLocalized = getLocalizedRecord(item.doc, language);
+                        return (
+                          <article key={item.id} className="essay-panel p-5">
+                            <p className="eyebrow">
+                              {language === "ko" ? `${index + 1}. 다음 액션` : `${index + 1}. Next move`}
+                            </p>
+                            <h3 className="mt-4 font-display text-2xl tracking-[-0.04em] text-paper">
+                              {stripOrdinalTitle(nextLocalized.title)}
+                            </h3>
+                            <p className="mt-3 text-sm leading-7 text-cloud">{nextLocalized.summary}</p>
+                            <div className="mt-5 flex flex-wrap gap-2">
+                              <CopyPromptButton
+                                value={buildCopyPayload(item.doc, language, false)}
+                                onCopy={() => markCopied(item.doc.route)}
+                                className="ghost-button"
+                                defaultLabel={t("Copy prompt", "프롬프트 복사")}
+                                copiedLabel={t("Copied", "복사됨")}
+                              />
+                              <Link href={item.doc.route} className="quiet-link">
+                                {t("Read", "읽기")}
+                              </Link>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  </section>
                 </div>
               ) : null}
 

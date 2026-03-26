@@ -15,6 +15,7 @@ import {
   getScenarioDefinition,
   getScenarioLead,
   getScenarioRecords,
+  getScenarioVerificationSet,
   stripOrdinalTitle,
   WAR_ROOM_SCENARIOS
 } from "@/lib/content/workbench";
@@ -84,39 +85,33 @@ export function LibraryHome({ data }: { data: HomeData }) {
   const scenario = getScenarioDefinition(selectedScenario) ?? WAR_ROOM_SCENARIOS[0];
   const scenarioRecords = useMemo(() => getScenarioRecords(data.all, selectedScenario), [data.all, selectedScenario]);
   const lead = useMemo(() => getScenarioLead(data.all, selectedScenario), [data.all, selectedScenario]);
+  const verificationSet = useMemo(() => getScenarioVerificationSet(data.all, selectedScenario), [data.all, selectedScenario]);
   const archiveRecords = useMemo(() => getArchiveRecords(data.all).slice(0, 6), [data.all]);
   const recentReads = useMemo(
     () => recentViewed.map((route) => data.all.find((item) => item.route === route)).filter(Boolean) as ContentRecord[],
     [data.all, recentViewed]
   );
   const leadLocalized = lead ? getLocalizedRecord(lead, language) : null;
+  const flow = useMemo(() => {
+    const dossierRecords = scenarioRecords.filter((item) => item.isDossier);
+    const start = dossierRecords[0] ?? scenarioRecords[0] ?? null;
+    const direct = dossierRecords[1] ?? scenarioRecords[1] ?? start;
+    const verify = verificationSet[0] ?? scenarioRecords[2] ?? direct;
+    return { start, direct, verify };
+  }, [scenarioRecords, verificationSet]);
 
-  const thesis = [
-    {
-      id: "thesis-1",
-      title: t("Good vibe coding starts with taste, not speed.", "좋은 바이브코딩은 속도보다 취향에서 시작한다."),
-      body: t(
-        "A prompt should not merely request output. It should lock the scene, the tension, and the standard of judgment before an agent starts producing surface.",
-        "프롬프트는 산출물만 요구하면 안 된다. 에이전트가 표면을 만들기 전에 장면, 긴장감, 판단 기준을 먼저 고정해야 한다."
-      )
-    },
-    {
-      id: "thesis-2",
-      title: t("Non-developers need language for quality, not syntax.", "비개발자에게 필요한 것은 문법이 아니라 품질을 말하는 언어다."),
-      body: t(
-        "The collection should help people describe hierarchy, rhythm, friction, and evidence. That is how prompting becomes direction rather than guessing.",
-        "이 모음집은 hierarchy, rhythm, friction, evidence를 말할 수 있게 해야 한다. 그래야 프롬프팅이 추측이 아니라 디렉션이 된다."
-      )
-    },
-    {
-      id: "thesis-3",
-      title: t("Strong prompts read like condensed papers.", "강한 프롬프트는 압축된 논문처럼 읽혀야 한다."),
-      body: t(
-        "Every dossier here should state when to use it, what failure looks like, what a good output proves, and how to verify the result in the browser.",
-        "여기 있는 dossier는 언제 쓰는지, 어떻게 실패하는지, 좋은 출력이 무엇을 증명하는지, 브라우저에서 어떻게 검증하는지를 분명히 말해야 한다."
-      )
-    }
+  const utilityNotes = [
+    t(
+      "UI developers usually need language for mood, hierarchy, responsiveness, and browser polish before they need code.",
+      "UI 개발자는 코드보다 먼저 mood, hierarchy, responsiveness, browser polish를 말할 수 있어야 한다."
+    ),
+    t(
+      "Each flow starts with a prompt that frames the scene, then moves to direction and verification so the agent does not drift into generic output.",
+      "각 플로우는 장면을 잡는 프롬프트로 시작하고, 그 다음 디렉션과 검증으로 이어져 결과가 양산형으로 흐르지 않게 한다."
+    )
   ];
+
+  const scenarioLibrary = scenarioRecords.filter((item) => item.isDossier).slice(0, 6);
 
   return (
     <main className="min-h-screen bg-terminal text-paper">
@@ -172,7 +167,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
             <section className="paper-frame px-6 py-7 md:px-8">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <p className="eyebrow">{t("Selected Theme", "선택된 주제")}</p>
+                  <p className="eyebrow">{t("Selected Problem", "선택된 문제")}</p>
                   <h2 className="mt-3 font-display text-4xl tracking-[-0.05em] text-paper md:text-6xl">
                     {scenario.labels[language]}
                   </h2>
@@ -180,12 +175,91 @@ export function LibraryHome({ data }: { data: HomeData }) {
                 <p className="max-w-[34ch] text-sm leading-7 text-cloud">{scenario.summary[language]}</p>
               </div>
 
-              <div className="mt-8 grid gap-4 md:grid-cols-3">
-                {thesis.map((item) => (
-                  <article key={item.id} className="thesis-card">
-                    <p className="eyebrow">{t("Thesis", "테제")}</p>
-                    <h3 className="mt-4 font-display text-2xl tracking-[-0.04em] text-paper">{item.title}</h3>
-                    <p className="mt-4 text-sm leading-7 text-cloud">{item.body}</p>
+              <div className="mt-8 grid gap-4 lg:grid-cols-3">
+                {flow.start ? (
+                  <article className="collection-card">
+                    <p className="eyebrow">{t("1. Start Here", "1. 먼저 이걸 쓴다")}</p>
+                    <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
+                      {stripOrdinalTitle(getLocalizedRecord(flow.start, language).title)}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-cloud">{getLocalizedRecord(flow.start, language).summary}</p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      <CopyPromptButton
+                        value={buildCopyPayload(flow.start, language, false)}
+                        onCopy={() => markCopied(flow.start.route)}
+                        className="action-button"
+                        defaultLabel={t("Copy first prompt", "첫 프롬프트 복사")}
+                        copiedLabel={t("Copied", "복사됨")}
+                      />
+                      <Link href={flow.start.route} className="quiet-link">
+                        {t("Read", "읽기")}
+                      </Link>
+                    </div>
+                  </article>
+                ) : null}
+                {flow.direct ? (
+                  <article className="collection-card">
+                    <p className="eyebrow">{t("2. Lock Direction", "2. 방향을 잠근다")}</p>
+                    <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
+                      {stripOrdinalTitle(getLocalizedRecord(flow.direct, language).title)}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-cloud">{getLocalizedRecord(flow.direct, language).summary}</p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      <CopyPromptButton
+                        value={buildCopyPayload(flow.direct, language, true)}
+                        onCopy={() => markCopied(flow.direct.route)}
+                        className="ghost-button"
+                        defaultLabel={t("Copy with context", "컨텍스트 포함 복사")}
+                        copiedLabel={t("Copied", "복사됨")}
+                      />
+                      <Link href={flow.direct.route} className="quiet-link">
+                        {t("Read", "읽기")}
+                      </Link>
+                    </div>
+                  </article>
+                ) : null}
+                {flow.verify ? (
+                  <article className="collection-card">
+                    <p className="eyebrow">{t("3. Check In Browser", "3. 브라우저에서 확인")}</p>
+                    <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
+                      {stripOrdinalTitle(getLocalizedRecord(flow.verify, language).title)}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-cloud">{getLocalizedRecord(flow.verify, language).summary}</p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      <CopyPromptButton
+                        value={buildCopyPayload(flow.verify, language, false)}
+                        onCopy={() => markCopied(flow.verify.route)}
+                        className="ghost-button"
+                        defaultLabel={t("Copy verify prompt", "검증 프롬프트 복사")}
+                        copiedLabel={t("Copied", "복사됨")}
+                      />
+                      <Link href={flow.verify.route} className="quiet-link">
+                        {t("Read", "읽기")}
+                      </Link>
+                    </div>
+                  </article>
+                ) : null}
+              </div>
+            </section>
+
+            <section className="paper-frame px-6 py-7 md:px-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="eyebrow">{t("Useful For UI Developers", "UI 개발자에게 왜 유용한가")}</p>
+                  <p className="mt-3 max-w-[48ch] text-sm leading-7 text-cloud">
+                    {t(
+                      "This collection is meant for people who need to direct visual quality, not just ask for implementation.",
+                      "이 컬렉션은 구현만 요청하는 사람이 아니라 시각 품질을 지시해야 하는 사람을 위한 구조다."
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {utilityNotes.map((item) => (
+                  <article key={item} className="thesis-card">
+                    <p className="eyebrow">{t("Reason", "이유")}</p>
+                    <p className="mt-4 text-sm leading-8 text-paper">{item}</p>
                   </article>
                 ))}
               </div>
@@ -194,31 +268,28 @@ export function LibraryHome({ data }: { data: HomeData }) {
             <section className="paper-frame px-6 py-7 md:px-8">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <p className="eyebrow">{t("Prompt Dossiers", "프롬프트 dossier")}</p>
-                  <p className="mt-3 max-w-[48ch] text-sm leading-7 text-cloud">
+                  <p className="eyebrow">{t("Prompt Library", "프롬프트 라이브러리")}</p>
+                  <p className="mt-3 max-w-[44ch] text-sm leading-7 text-cloud">
                     {t(
-                      "Open these when you need dense prompts with diagnosis, direction, and verification built in.",
-                      "진단, 디렉션, 검증이 한 번에 묶인 긴 프롬프트가 필요할 때 여는 문서들."
+                      "After the first flow, use this section to open adjacent dossiers for the same UI problem.",
+                      "첫 플로우를 탄 뒤, 같은 UI 문제에 딸린 인접 dossier를 여기서 이어서 연다."
                     )}
                   </p>
                 </div>
                 <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
-                  {scenarioRecords.filter((item) => item.isDossier).length} {t("texts", "texts")}
+                  {scenarioLibrary.length} {t("texts", "texts")}
                 </span>
               </div>
 
               <div className="mt-8 grid gap-4">
-                {scenarioRecords
-                  .filter((item) => item.isDossier)
-                  .slice(0, 6)
-                  .map((item) => (
-                    <CollectionCard
-                      key={item.route}
-                      item={item}
-                      language={language}
-                      onCopy={() => markCopied(item.route)}
-                    />
-                  ))}
+                {scenarioLibrary.map((item) => (
+                  <CollectionCard
+                    key={item.route}
+                    item={item}
+                    language={language}
+                    onCopy={() => markCopied(item.route)}
+                  />
+                ))}
               </div>
             </section>
 
@@ -279,7 +350,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
             ) : null}
 
             <section className="index-panel p-6">
-              <p className="eyebrow">{t("Recently Read", "최근 읽은 문서")}</p>
+              <p className="eyebrow">{t("Continue Reading", "이어서 읽기")}</p>
               <div className="mt-5 grid gap-2">
                 {(recentReads.length > 0 ? recentReads.slice(0, 5) : scenarioRecords.slice(0, 5)).map((item) => {
                   const localized = getLocalizedRecord(item, language);
