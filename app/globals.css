@@ -40,6 +40,10 @@ body {
   font-family: var(--font-sans);
 }
 
+main {
+  overflow-x: clip;
+}
+
 * {
   border-color: var(--line-0);
 }
@@ -259,6 +263,10 @@ input:focus-visible {
   padding: 1.4rem;
 }
 
+.collection-card-featured {
+  padding: 1.7rem;
+}
+
 .thesis-card {
   border-radius: 24px;
   padding: 1.25rem;
@@ -288,7 +296,6 @@ input:focus-visible {
 .archive-entry:hover,
 .index-entry:hover,
 .index-link:hover {
-  transform: translateY(-1px);
   border-color: rgba(56, 189, 248, 0.2);
   background: rgba(255, 255, 255, 0.03);
 }
@@ -341,6 +348,25 @@ input:focus-visible {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
   opacity: 0.45;
+}
+
+.collection-card::before,
+.index-entry::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.78), transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0.85;
+  transition: transform 280ms ease;
+}
+
+.collection-card:hover::before,
+.index-entry:hover::before {
+  transform: scaleX(1);
 }
 
 .war-frame,
@@ -467,9 +493,21 @@ input:focus-visible {
 }
 
 .war-tab {
+  position: relative;
   border-color: rgba(184, 198, 214, 0.16);
   background: rgba(255, 255, 255, 0.045);
   color: var(--text-2);
+}
+
+.war-tab::before {
+  content: "";
+  position: absolute;
+  inset: auto 14px 6px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.92), rgba(56, 189, 248, 0.18));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms ease;
 }
 
 .war-tab:hover {
@@ -481,6 +519,10 @@ input:focus-visible {
   border-color: rgba(56, 189, 248, 0.6);
   background: rgba(56, 189, 248, 0.14);
   color: var(--text-0);
+}
+
+.war-tab-active::before {
+  transform: scaleX(1);
 }
 
 .archive-shell {
@@ -551,6 +593,21 @@ input:focus-visible {
   border-radius: 24px;
 }
 
+.prompt-block {
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 0%, transparent 42%, rgba(125, 211, 252, 0.12) 50%, transparent 58%, transparent 100%);
+  transform: translateX(-120%);
+  animation: prompt-scan 1.8s ease 0.15s 1 both;
+  pointer-events: none;
+}
+
 .prose-body pre code {
   background: transparent;
   padding: 0;
@@ -590,6 +647,16 @@ input:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes prompt-scan {
+  from {
+    transform: translateX(-120%);
+  }
+
+  to {
+    transform: translateX(120%);
   }
 }
 

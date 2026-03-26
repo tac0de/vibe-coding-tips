@@ -31,24 +31,26 @@ function MetaPill({ label }: { label: string }) {
 function PromptCard({
   item,
   language,
-  onCopy
+  onCopy,
+  featured = false
 }: {
   item: ContentRecord;
   language: "en" | "ko";
   onCopy: () => void;
+  featured?: boolean;
 }) {
   const localized = getLocalizedRecord(item, language);
 
   return (
-    <article className="collection-card">
+    <article className={`collection-card ${featured ? "collection-card-featured" : ""}`}>
       <div className="flex flex-wrap gap-2">
         <MetaPill label={getArtifactTypeLabel(item.artifactType, language)} />
         <MetaPill label={getRiskLabel(item.riskLevel, language)} />
       </div>
-      <h3 className="mt-5 font-display text-[2rem] tracking-[-0.04em] text-paper">
+      <h3 className={`mt-5 font-display tracking-[-0.04em] text-paper ${featured ? "text-[2.4rem] md:text-[3rem]" : "text-[1.8rem] md:text-[2rem]"}`}>
         {stripOrdinalTitle(localized.title)}
       </h3>
-      <p className="mt-3 text-sm leading-7 text-cloud">{localized.summary}</p>
+      <p className="mt-3 max-w-[44ch] text-sm leading-7 text-cloud">{localized.summary}</p>
       <div className="mt-6 flex flex-wrap gap-2">
         <CopyPromptButton
           value={buildCopyPayload(item, language, false)}
@@ -91,8 +93,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
         "02-design-scales.md",
         "04-structure-data-join.md",
         "05-add-tooltip.md",
-        "09-react-d3-boundary.md",
-        "13-interaction-qa.md"
+        "09-react-d3-boundary.md"
       ]),
     [data.d3]
   );
@@ -102,14 +103,12 @@ export function LibraryHome({ data }: { data: HomeData }) {
       [
         ...collectByFiles(data.ui, [
           "create-design-brief.md",
-          "landing-first-screen.md",
-          "accessibility-audit.md",
-          "review-ui-tone.md"
+          "accessibility-audit.md"
         ]),
         ...data.playbooks.filter((item) => item.path.endsWith("ui-vibe-coding.md"))
       ]
         .filter((item, index, self) => self.findIndex((candidate) => candidate.route === item.route) === index)
-        .slice(0, 4),
+        .slice(0, 2),
     [data.playbooks, data.ui]
   );
 
@@ -126,10 +125,11 @@ export function LibraryHome({ data }: { data: HomeData }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
+      gsap.fromTo("[data-motion='intro-rule']", { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.9, ease: "power3.out" });
       gsap.fromTo(
         "[data-motion='intro']",
-        { autoAlpha: 0, y: 14 },
-        { autoAlpha: 1, y: 0, duration: 0.44, ease: "power2.out", stagger: 0.05 }
+        { autoAlpha: 0, y: 16, clipPath: "inset(0 0 100% 0)" },
+        { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.55, ease: "power2.out", stagger: 0.06 }
       );
       gsap.fromTo(
         "[data-motion='cards']",
@@ -150,6 +150,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
               <p data-motion="intro" className="eyebrow">
                 {t("D3 prompt library", "D3 프롬프트 라이브러리")}
               </p>
+              <div data-motion="intro-rule" className="mt-5 h-px w-24 bg-[linear-gradient(90deg,rgba(56,189,248,0.88),rgba(56,189,248,0.12))]" />
               <h1 data-motion="intro" className="mt-4 max-w-[10ch] font-display text-5xl leading-[0.96] tracking-[-0.06em] text-paper md:text-7xl">
                 {t("D3.js work, prompt first.", "D3.js 작업은 프롬프트부터 정리한다.")}
               </h1>
@@ -172,18 +173,11 @@ export function LibraryHome({ data }: { data: HomeData }) {
                   {t("For the next D3 class", "다음 D3 강의용 핵심 세트")}
                 </h2>
               </div>
-              {d3Lead ? (
-                <div data-motion="intro" className="max-w-[34ch] text-sm leading-7 text-cloud">
-                  <Link href={d3Lead.route} className="transition hover:text-paper">
-                    {getLocalizedRecord(d3Lead, language).summary}
-                  </Link>
-                </div>
-              ) : null}
             </div>
 
             {d3Lead ? (
               <div data-motion="cards" className="mt-8 border-b border-line pb-6">
-                <PromptCard item={d3Lead} language={language} onCopy={() => markCopied(d3Lead.route)} />
+                <PromptCard item={d3Lead} language={language} onCopy={() => markCopied(d3Lead.route)} featured />
               </div>
             ) : null}
 
@@ -200,7 +194,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="eyebrow">{t("UI support", "UI 보조 프롬프트")}</p>
-                <p className="mt-3 max-w-[42ch] text-sm leading-7 text-cloud">
+                <p className="mt-3 max-w-[34ch] text-sm leading-7 text-cloud">
                   {t("Use these when the D3 work touches layout, hierarchy, or visual tone.", "D3 작업이 레이아웃, hierarchy, 시각 톤까지 건드릴 때 같이 쓴다.")}
                 </p>
               </div>
@@ -217,7 +211,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
           <section className="paper-frame px-6 py-6 md:px-8">
             <p className="eyebrow">{t("More", "더 보기")}</p>
-            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">
+            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
               {quietLinks.map((item) => (
                 <Link key={item.route} href={item.route} className="quiet-link" data-motion="cards">
                   {stripOrdinalTitle(getLocalizedRecord(item, language).title)}

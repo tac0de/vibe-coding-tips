@@ -84,11 +84,14 @@ export function DocumentLayout({
   );
   const nextLinks = relatedLinks.slice(0, 3);
   const relatedPromptDocs = catalog.filter((item) => item.domain === document.domain && item.route !== document.route && item.promptBlock).slice(0, 4);
+  const sidebarLinks = [...nextLinks, ...relatedLinks].filter(
+    (item, index, self) => self.findIndex((candidate) => candidate.route === item.route) === index
+  );
 
   return (
     <main ref={rootRef} className="min-h-screen bg-terminal text-paper">
       <div className="mx-auto max-w-[1120px] px-4 pb-20 pt-5 md:px-8 md:pb-28 md:pt-10">
-        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.04fr)_320px]">
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_300px]">
           <article className="space-y-8">
             <nav
               data-motion="detail-hero"
@@ -113,7 +116,7 @@ export function DocumentLayout({
             </nav>
 
             <section data-motion="detail-hero" className="paper-frame px-6 py-8 md:px-10 md:py-10">
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_248px]">
                 <div>
                   <div className="flex flex-wrap gap-2">
                     <MetaPill label={getArtifactTypeLabel(document.artifactType, language)} />
@@ -171,49 +174,13 @@ export function DocumentLayout({
               <div ref={panelRef} className="pt-8">
                 {tab === "prompt" ? (
                   document.promptBlock ? (
-                    <div className="space-y-6">
-                      <pre className="overflow-x-auto rounded-[24px] border border-line bg-[#0b1622] px-4 py-4 text-[13px] leading-7 text-paper">
+                    <div className="space-y-4">
+                      <pre className="prompt-block overflow-x-auto rounded-[24px] border border-line bg-[#0b1622] px-4 py-4 text-[13px] leading-7 text-paper">
                         <code>{document.promptBlock}</code>
                       </pre>
-                      {nextLinks.length > 0 ? (
-                        <section className="grid gap-3">
-                          <p className="eyebrow">{t("Next", "다음")}</p>
-                          {nextLinks.map((item) => (
-                            <RelatedLink key={item.route} item={item} language={language} />
-                          ))}
-                        </section>
-                      ) : null}
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      {relatedPromptDocs.length > 0 ? (
-                        <section className="grid gap-3">
-                          <p className="eyebrow">{t("Related prompts", "같이 보는 프롬프트")}</p>
-                          {relatedPromptDocs.map((item) => {
-                            const itemLocalized = getLocalizedRecord(item, language);
-                            return (
-                              <article key={item.route} className="index-entry">
-                                <p className="font-display text-xl tracking-[-0.03em] text-paper">
-                                  {stripOrdinalTitle(itemLocalized.title)}
-                                </p>
-                                <p className="mt-1 text-sm leading-6 text-cloud">{compactLine(itemLocalized.summary, 92)}</p>
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                  <CopyPromptButton
-                                    value={buildCopyPayload(item, language, false)}
-                                    onCopy={() => markCopied(item.route)}
-                                    className="ghost-button"
-                                    defaultLabel={t("Copy prompt", "프롬프트 복사")}
-                                    copiedLabel={t("Copied", "복사됨")}
-                                  />
-                                  <Link href={item.route} className="quiet-link">
-                                    {t("Open", "열기")}
-                                  </Link>
-                                </div>
-                              </article>
-                            );
-                          })}
-                        </section>
-                      ) : null}
                       <div className="prose-body max-w-none" dangerouslySetInnerHTML={{ __html: localized.html }} />
                     </div>
                   )
@@ -221,8 +188,35 @@ export function DocumentLayout({
 
                 {tab === "related" ? (
                   <div className="grid gap-3">
-                    {relatedLinks.length > 0 ? (
-                      relatedLinks.map((item) => <RelatedLink key={item.route} item={item} language={language} />)
+                    {relatedLinks.length > 0 || relatedPromptDocs.length > 0 ? (
+                      <>
+                        {relatedPromptDocs.map((item) => {
+                          const itemLocalized = getLocalizedRecord(item, language);
+                          return (
+                            <article key={item.route} className="index-entry">
+                              <p className="font-display text-xl tracking-[-0.03em] text-paper">
+                                {stripOrdinalTitle(itemLocalized.title)}
+                              </p>
+                              <p className="mt-1 text-sm leading-6 text-cloud">{compactLine(itemLocalized.summary, 92)}</p>
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                <CopyPromptButton
+                                  value={buildCopyPayload(item, language, false)}
+                                  onCopy={() => markCopied(item.route)}
+                                  className="ghost-button"
+                                  defaultLabel={t("Copy prompt", "프롬프트 복사")}
+                                  copiedLabel={t("Copied", "복사됨")}
+                                />
+                                <Link href={item.route} className="quiet-link">
+                                  {t("Open", "열기")}
+                                </Link>
+                              </div>
+                            </article>
+                          );
+                        })}
+                        {relatedLinks.map((item) => (
+                          <RelatedLink key={item.route} item={item} language={language} />
+                        ))}
+                      </>
                     ) : (
                       <p className="text-sm leading-7 text-cloud">{t("No related texts are linked yet.", "아직 연결된 관련 문서가 없다.")}</p>
                     )}
@@ -236,23 +230,12 @@ export function DocumentLayout({
 
           <aside className="space-y-6 xl:sticky xl:top-8 xl:self-start">
             <section className="index-panel p-6">
-              <p className="eyebrow">{t("Next", "다음")}</p>
+              <p className="eyebrow">{t("Next / Related", "다음 / 관련")}</p>
               <div className="mt-5 grid gap-2">
-                {nextLinks.length > 0 ? (
-                  nextLinks.map((item) => <RelatedLink key={item.route} item={item} language={language} />)
+                {sidebarLinks.length > 0 ? (
+                  sidebarLinks.slice(0, 5).map((item) => <RelatedLink key={item.route} item={item} language={language} />)
                 ) : (
-                  <p className="text-sm leading-7 text-cloud">{t("No next texts are linked yet.", "아직 연결된 다음 문서가 없다.")}</p>
-                )}
-              </div>
-            </section>
-
-            <section className="index-panel p-6">
-              <p className="eyebrow">{t("Related", "관련 문서")}</p>
-              <div className="mt-5 grid gap-2">
-                {relatedLinks.length > 0 ? (
-                  relatedLinks.slice(0, 5).map((item) => <RelatedLink key={item.route} item={item} language={language} />)
-                ) : (
-                  <p className="text-sm leading-7 text-cloud">{t("No related texts are linked yet.", "아직 연결된 관련 문서가 없다.")}</p>
+                  <p className="text-sm leading-7 text-cloud">{t("No linked texts yet.", "아직 연결된 문서가 없다.")}</p>
                 )}
               </div>
             </section>
