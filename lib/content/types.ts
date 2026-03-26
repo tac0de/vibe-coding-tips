@@ -1,5 +1,18 @@
 export type ContentKind = "prompt" | "playbook" | "source" | "template" | "guide";
 export type ContentDomain = "onboarding" | "roles" | "ui" | "d3" | "ops" | "templates" | string;
+export type SiteLanguage = "en" | "ko";
+
+export type LocalizedContentData = {
+  title: string;
+  summary: string;
+  body: string;
+  html: string;
+  toc: Array<{ id: string; title: string; level: number }>;
+  promptBlock?: string | null;
+  situationLead?: string | null;
+  summaryPoints: string[];
+  failurePoints: string[];
+};
 
 export type ContentMeta = {
   title: string;
@@ -30,6 +43,7 @@ export type ContentRecord = ContentMeta & {
   situationLead?: string | null;
   summaryPoints: string[];
   failurePoints: string[];
+  locales: Record<SiteLanguage, LocalizedContentData>;
 };
 
 export type ContentLink = {
@@ -39,4 +53,5 @@ export type ContentLink = {
   kind: ContentKind;
   domain: ContentDomain;
   order?: number;
+  locales: Record<SiteLanguage, Pick<LocalizedContentData, "title" | "summary">>;
 };

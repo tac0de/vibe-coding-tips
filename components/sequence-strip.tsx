@@ -3,6 +3,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 import { useSiteLanguage } from "@/components/site-language";
+import { getLocalizedLink } from "@/lib/content/localize";
 import type { ContentLink } from "@/lib/content/types";
 
 type Props = {
@@ -12,18 +13,21 @@ type Props = {
 };
 
 export function SequenceStrip({ title, items, activeRoute }: Props) {
-  const { t } = useSiteLanguage();
+  const { language, t } = useSiteLanguage();
   if (items.length <= 1) return null;
 
   return (
     <section className="space-y-3 border-y border-line py-4">
       <div className="flex items-center justify-between gap-3">
         <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-fog">{title}</p>
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">{t(`${items.length} steps`, `${items.length} 단계`)}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">
+          {t(`${items.length} steps`, `${items.length} 단계`)}
+        </p>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
         {items.map((item, index) => {
           const isActive = item.route === activeRoute;
+          const localized = getLocalizedLink(item, language);
           return (
             <Link
               key={item.route}
@@ -39,7 +43,9 @@ export function SequenceStrip({ title, items, activeRoute }: Props) {
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em]">
                   {String(item.order ?? index + 1).padStart(2, "0")}
                 </p>
-                <p className="font-display text-lg tracking-[-0.02em]">{item.title.replace(/^\d+\.\s*/, "")}</p>
+                <p className="font-display text-lg tracking-[-0.02em]">
+                  {localized.title.replace(/^\d+\.\s*/, "")}
+                </p>
               </div>
             </Link>
           );

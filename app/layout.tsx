@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
+import { ReadingProgressProvider } from "@/components/reading-progress";
 import { SiteLanguageProvider } from "@/components/site-language";
 import "./globals.css";
 
@@ -22,7 +23,7 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "vibe-coding-tips",
-  description: "UI, Tailwind, D3, 그리고 MCP 오케스트레이션을 웹에서 바로 따라가는 바이브 코딩 강의용 사이트."
+  description: "A terminal-quest lecture site for vibe coding, Codex workflows, Tailwind UI, D3, and MCP orchestration."
 };
 
 export default function RootLayout({
@@ -31,9 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="en">
       <body className={`${display.variable} ${sans.variable} ${mono.variable} font-sans antialiased`}>
-        <SiteLanguageProvider>{children}</SiteLanguageProvider>
+        <SiteLanguageProvider>
+          <ReadingProgressProvider>{children}</ReadingProgressProvider>
+        </SiteLanguageProvider>
       </body>
     </html>
   );

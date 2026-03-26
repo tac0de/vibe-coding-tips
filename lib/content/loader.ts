@@ -12,9 +12,23 @@ import {
   rewriteInternalLinks,
   stripLeadingTitle
 } from "@/lib/content/markdown";
-import type { ContentKind, ContentLink, ContentMeta, ContentRecord } from "@/lib/content/types";
+import type {
+  ContentKind,
+  ContentLink,
+  ContentMeta,
+  ContentRecord,
+  LocalizedContentData
+} from "@/lib/content/types";
+
+type RawContentRecord = Omit<
+  ContentRecord,
+  "nextRoute" | "nextLink" | "prevLink" | "sequenceIndex" | "sequenceTotal" | "sequenceLinks" | "relatedRoutes"
+> & {
+  nextReference: string | null;
+};
 
 const ROOT = process.cwd();
+const LOCALE_ROOT = path.join(ROOT, "locales");
 const CONTENT_TARGETS = [
   { dir: "prompts", route: "prompts" },
   { dir: "playbooks", route: "playbooks" },
@@ -55,37 +69,77 @@ function sanitizeMeta(raw: Record<string, unknown>): ContentMeta {
 function normalizeSummary(summary: string, body: string) {
   if (summary && !summary.startsWith("- 링크:")) return summary;
 
-  const sourceMatch = body.match(/- 왜 지금 보는지:\s*(?:\r?\n)+\s*-\s+(.+)/);
+  const sourceMatch =
+    body.match(/- 왜 지금 보는지:\s*(?:\r?\n)+\s*-\s+(.+)/) ??
+    body.match(/- Why this matters:\s*(?:\r?\n)+\s*-\s+(.+)/);
+
   if (sourceMatch?.[1]) return sourceMatch[1].trim();
 
   return (
     extractLeadLineFromSection(body, "상황") ??
+    extractLeadLineFromSection(body, "Situation") ??
     extractLeadLineFromSection(body, "왜 지금 보는지") ??
+    extractLeadLineFromSection(body, "Why this matters") ??
     summary
   );
 }
 
+async function buildLocalizedData(source: string) {
+  const parsed = matter(source);
+  const meta = sanitizeMeta(parsed.data);
+  const normalizedBody = stripLeadingTitle(parsed.content);
+  const rewrittenBody = rewriteInternalLinks(normalizedBody);
+  const promptTitle =
+    extractPromptBlock(rewrittenBody) && rewrittenBody.includes("## 바로 복붙할 프롬프트")
+      ? "바로 복붙할 프롬프트"
+      : rewrittenBody.includes("## Copy-ready prompt")
+        ? "Copy-ready prompt"
+        : null;
+
+  const displayBody =
+    meta.kind === "prompt" && promptTitle ? removeSection(rewrittenBody, promptTitle) : rewrittenBody;
+
+  return {
+    title: meta.title,
+    summary: normalizeSummary(meta.summary, rewrittenBody),
+    body: rewrittenBody,
+    html: await renderMarkdown(displayBody),
+    toc: extractToc(displayBody),
+    promptBlock: meta.kind === "prompt" ? extractPromptBlock(rewrittenBody) : null,
+    situationLead:
+      extractLeadLineFromSection(rewrittenBody, "상황") ??
+      extractLeadLineFromSection(rewrittenBody, "Situation"),
+    summaryPoints:
+      extractBulletSummary(rewrittenBody, "좋은 출력의 기준").length > 0
+        ? extractBulletSummary(rewrittenBody, "좋은 출력의 기준")
+        : extractBulletSummary(rewrittenBody, "Good output checklist"),
+    failurePoints:
+      extractBulletSummary(rewrittenBody, "실패 패턴").length > 0
+        ? extractBulletSummary(rewrittenBody, "실패 패턴")
+        : extractBulletSummary(rewrittenBody, "Failure patterns")
+  } satisfies LocalizedContentData;
+}
+
 async function loadAllContentRaw() {
-  const records = await Promise.all(
+  const records: RawContentRecord[] = await Promise.all(
     CONTENT_TARGETS.flatMap(({ dir, route }) =>
       walk(path.join(ROOT, dir)).map(async (filePath) => {
         const relativePath = path.relative(path.join(ROOT, dir), filePath);
-        const source = fs.readFileSync(filePath, "utf8");
-        const parsed = matter(source);
+        const sourceKo = fs.readFileSync(filePath, "utf8");
+        const parsed = matter(sourceKo);
         const baseMeta = sanitizeMeta(parsed.data);
-        const normalizedBody = stripLeadingTitle(parsed.content);
-        const rewrittenBody = rewriteInternalLinks(normalizedBody);
         const inferredOrder = inferOrder(relativePath);
+        const localePathEn = path.join(LOCALE_ROOT, "en", dir, relativePath);
+        const sourceEn = fs.existsSync(localePathEn) ? fs.readFileSync(localePathEn, "utf8") : sourceKo;
+
+        const localizedKo = await buildLocalizedData(sourceKo);
+        const localizedEn = await buildLocalizedData(sourceEn);
+
         const meta = {
           ...baseMeta,
-          summary: normalizeSummary(baseMeta.summary, rewrittenBody),
+          summary: localizedKo.summary,
           order: baseMeta.order ?? inferredOrder
         };
-        const displayBody =
-          meta.kind === "prompt" && extractPromptBlock(rewrittenBody)
-            ? removeSection(rewrittenBody, "바로 복붙할 프롬프트")
-            : rewrittenBody;
-        const html = await renderMarkdown(displayBody);
         const routeParts = normalizeRouteParts(route, relativePath);
 
         return {
@@ -93,14 +147,18 @@ async function loadAllContentRaw() {
           slug: routeParts.slice(1),
           route: `/${routeParts.join("/")}`,
           path: filePath,
-          body: rewrittenBody,
-          html,
-          toc: extractToc(displayBody),
-          promptBlock: meta.kind === "prompt" ? extractPromptBlock(rewrittenBody) : null,
-          nextReference: meta.next ?? extractNextFromBody(rewrittenBody),
-          situationLead: extractLeadLineFromSection(rewrittenBody, "상황"),
-          summaryPoints: extractBulletSummary(rewrittenBody, "좋은 출력의 기준"),
-          failurePoints: extractBulletSummary(rewrittenBody, "실패 패턴")
+          body: localizedKo.body,
+          html: localizedKo.html,
+          toc: localizedKo.toc,
+          promptBlock: localizedKo.promptBlock,
+          nextReference: meta.next ?? extractNextFromBody(localizedKo.body),
+          situationLead: localizedKo.situationLead,
+          summaryPoints: localizedKo.summaryPoints,
+          failurePoints: localizedKo.failurePoints,
+          locales: {
+            ko: localizedKo,
+            en: localizedEn
+          }
         };
       })
     )
@@ -111,6 +169,7 @@ async function loadAllContentRaw() {
 
   for (const record of records) {
     byTitle.set(record.title.toLowerCase(), record.route);
+    byTitle.set(record.locales.en.title.toLowerCase(), record.route);
     byPath.set(path.basename(record.path).toLowerCase(), record.route);
     byPath.set(record.slug.join("/").toLowerCase(), record.route);
   }
@@ -134,47 +193,36 @@ async function loadAllContentRaw() {
             typeof item.order === "number"
         )
         .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+
       const currentIndex = orderedPeers.findIndex((item) => item.route === record.route);
       const prevTarget = currentIndex > 0 ? orderedPeers[currentIndex - 1] : null;
-      const sequenceLinks: ContentLink[] = orderedPeers.map((item) => ({
+
+      const toLink = (item: RawContentRecord): ContentLink => ({
         title: item.title,
         route: item.route,
         summary: item.summary,
         kind: item.kind,
         domain: item.domain,
-        order: item.order
-      }));
+        order: item.order,
+        locales: {
+          ko: { title: item.locales.ko.title, summary: item.locales.ko.summary },
+          en: { title: item.locales.en.title, summary: item.locales.en.summary }
+        }
+      });
+
+      const sequenceLinks: ContentLink[] = orderedPeers.map(toLink);
 
       const relatedRoutes: ContentLink[] = (record.related ?? [])
         .map((entry) => resolveReference(entry))
         .filter(Boolean)
-        .map((route) => {
-          const target = records.find((item) => item.route === route)!;
-          return {
-            title: target.title,
-            route: target.route,
-            summary: target.summary,
-            kind: target.kind,
-            domain: target.domain,
-            order: target.order
-          };
-        });
+        .map((route) => toLink(records.find((item) => item.route === route)!));
 
       if (relatedRoutes.length === 0) {
         records
           .filter((item) => item.route !== record.route && item.kind === record.kind && item.domain === record.domain)
           .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
           .slice(0, 3)
-          .forEach((item) =>
-            relatedRoutes.push({
-              title: item.title,
-              route: item.route,
-              summary: item.summary,
-              kind: item.kind,
-              domain: item.domain,
-              order: item.order
-            })
-          );
+          .forEach((item) => relatedRoutes.push(toLink(item)));
       }
 
       const explicitNextRoute = resolveReference(record.nextReference);
@@ -199,29 +247,11 @@ async function loadAllContentRaw() {
       return {
         ...record,
         nextRoute,
-        prevLink: prevTarget
-          ? {
-              title: prevTarget.title,
-              route: prevTarget.route,
-              summary: prevTarget.summary,
-              kind: prevTarget.kind,
-              domain: prevTarget.domain,
-              order: prevTarget.order
-            }
-          : null,
+        prevLink: prevTarget ? toLink(prevTarget) : null,
         sequenceIndex: currentIndex >= 0 ? currentIndex + 1 : null,
         sequenceTotal: orderedPeers.length > 0 ? orderedPeers.length : null,
         sequenceLinks,
-        nextLink: nextTarget
-          ? {
-              title: nextTarget.title,
-              route: nextTarget.route,
-              summary: nextTarget.summary,
-              kind: nextTarget.kind,
-              domain: nextTarget.domain,
-              order: nextTarget.order
-            }
-          : null,
+        nextLink: nextTarget ? toLink(nextTarget) : null,
         relatedRoutes
       } satisfies ContentRecord;
     })

@@ -24,6 +24,10 @@ export function SiteLanguageProvider({ children }: { children: React.ReactNode }
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const handleSetLanguage = (value: SiteLanguage) => {
     setLanguage(value);
     window.localStorage.setItem(STORAGE_KEY, value);
