@@ -2,15 +2,16 @@
 title: "04. Structure Data Join"
 kind: "prompt"
 domain: "d3"
-summary: "데이터가 바뀔 때 시각 요소도 안정적으로 바뀌게 하고 싶다."
+summary: "데이터 변경이 enter, update, exit에 안정적으로 연결되게 만들 때 쓰는 join 프롬프트."
 tags:
   - "d3"
   - "structure"
   - "data"
   - "join"
 order: 4
-next: null
-related: []
+next: "prompts/d3/05-add-tooltip.md"
+related:
+  - "prompts/d3/10-debug-scales-and-joins.md"
 ---
 
 # 04. Structure Data Join

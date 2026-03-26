@@ -2,14 +2,15 @@
 title: "02. Design Scales"
 kind: "prompt"
 domain: "d3"
-summary: "데이터를 시각 강도, 위치, 크기로 바꾸는 기준을 설계하고 싶다."
+summary: "데이터를 위치, 길이, 색으로 어떻게 바꿀지 먼저 정할 때 쓰는 scale 설계 프롬프트."
 tags:
   - "d3"
   - "design"
   - "scales"
 order: 2
-next: null
-related: []
+next: "prompts/d3/03-add-axis-or-legend-scale.md"
+related:
+  - "prompts/d3/10-debug-scales-and-joins.md"
 ---
 
 # 02. Design Scales

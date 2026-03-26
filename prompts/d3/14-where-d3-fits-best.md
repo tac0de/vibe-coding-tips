@@ -2,7 +2,7 @@
 title: "14. Where D3 Fits Best"
 kind: "prompt"
 domain: "d3"
-summary: "D3를 어디에 써야 하는지, Chart.js나 일반 컴포넌트보다 어떤 장면에서 강한지 정리하는 프롬프트."
+summary: "D3가 정말 맞는 장면과 아닌 장면을 마지막으로 정리할 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "concept"

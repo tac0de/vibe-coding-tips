@@ -2,7 +2,7 @@
 title: "Landing First Screen"
 kind: "prompt"
 domain: "ui"
-summary: "첫 화면의 hierarchy, message, visual tension을 빠르게 잡아주는 랜딩 히어로 프롬프트."
+summary: "첫 화면의 hierarchy와 메시지를 빠르게 정리할 때 쓰는 랜딩 프롬프트."
 tags:
   - "ui"
   - "landing"

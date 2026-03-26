@@ -2,7 +2,7 @@
 title: "03. Add Axis Or Legend Scale"
 kind: "prompt"
 domain: "d3"
-summary: "사용자가 값을 해석할 기준선을 읽을 수 있게 해야 한다."
+summary: "축이나 legend를 붙여 사용자가 값을 바로 읽게 만들 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "add"
@@ -10,8 +10,9 @@ tags:
   - "or"
   - "legend"
 order: 3
-next: null
-related: []
+next: "prompts/d3/04-structure-data-join.md"
+related:
+  - "prompts/d3/02-design-scales.md"
 ---
 
 # 03. Add Axis Or Legend Scale

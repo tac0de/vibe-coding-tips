@@ -2,7 +2,7 @@
 title: "12. Performance For Large SVG"
 kind: "prompt"
 domain: "d3"
-summary: "노드, 라벨, path, annotation이 많아지면서 SVG 성능과 상호작용이 무거워진다."
+summary: "노드 수가 많아 SVG와 인터랙션이 무거워질 때 성능 병목을 줄이는 프롬프트."
 tags:
   - "d3"
   - "performance"
@@ -10,8 +10,9 @@ tags:
   - "large"
   - "svg"
 order: 12
-next: null
-related: []
+next: "prompts/d3/13-interaction-qa.md"
+related:
+  - "prompts/d3/09-react-d3-boundary.md"
 ---
 
 # 12. Performance For Large SVG

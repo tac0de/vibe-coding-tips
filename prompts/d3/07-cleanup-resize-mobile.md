@@ -2,15 +2,16 @@
 title: "07. Cleanup Resize Mobile"
 kind: "prompt"
 domain: "d3"
-summary: "D3 구현은 됐지만 유지보수와 반응형 안정성이 걱정된다."
+summary: "구현 뒤 resize, mobile, cleanup을 정리할 때 쓰는 마무리 프롬프트."
 tags:
   - "d3"
   - "cleanup"
   - "resize"
   - "mobile"
 order: 7
-next: null
-related: []
+next: "prompts/d3/13-interaction-qa.md"
+related:
+  - "prompts/d3/09-react-d3-boundary.md"
 ---
 
 # 07. Cleanup Resize Mobile

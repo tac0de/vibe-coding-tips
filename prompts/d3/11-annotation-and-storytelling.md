@@ -2,15 +2,16 @@
 title: "11. Annotation And Storytelling"
 kind: "prompt"
 domain: "d3"
-summary: "D3가 정보는 보여주지만 기사형 설명이나 스토리텔링 포인트가 약하다."
+summary: "annotation, callout, story 흐름을 붙여 설명력을 올릴 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "annotation"
   - "and"
   - "storytelling"
 order: 11
-next: null
-related: []
+next: "prompts/d3/13-interaction-qa.md"
+related:
+  - "prompts/d3/14-where-d3-fits-best.md"
 ---
 
 # 11. Annotation And Storytelling

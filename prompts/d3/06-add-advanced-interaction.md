@@ -2,15 +2,16 @@
 title: "06. Add Advanced Interaction"
 kind: "prompt"
 domain: "d3"
-summary: "static chart처럼 보이지 않게, 탐색 가치를 더하고 싶다."
+summary: "zoom, brush, drag 같은 고급 인터랙션을 붙일 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "add"
   - "advanced"
   - "interaction"
 order: 6
-next: null
-related: []
+next: "prompts/d3/07-cleanup-resize-mobile.md"
+related:
+  - "prompts/d3/13-interaction-qa.md"
 ---
 
 # 06. Add Advanced Interaction

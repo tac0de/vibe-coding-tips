@@ -2,14 +2,15 @@
 title: "09. React D3 Boundary"
 kind: "prompt"
 domain: "d3"
-summary: "D3와 React 책임이 섞여서 코드가 지저분해지거나, D3가 DOM을 통째로 장악한다."
+summary: "React와 D3 책임이 섞였을 때 경계를 다시 나누는 프롬프트."
 tags:
   - "d3"
   - "react"
   - "boundary"
 order: 9
-next: null
-related: []
+next: "prompts/d3/07-cleanup-resize-mobile.md"
+related:
+  - "prompts/d3/12-performance-for-large-svg.md"
 ---
 
 # 09. React D3 Boundary

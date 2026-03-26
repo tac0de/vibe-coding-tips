@@ -2,14 +2,16 @@
 title: "13. Interaction QA"
 kind: "prompt"
 domain: "d3"
-summary: "tooltip, zoom, brush, drag 같은 D3 인터랙션이 실제로 읽히는지 마지막 점검이 필요하다."
+summary: "tooltip, zoom, brush, drag가 실제로 읽히고 동작하는지 마지막으로 점검할 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "interaction"
   - "qa"
 order: 13
-next: null
-related: []
+next: "prompts/d3/14-where-d3-fits-best.md"
+related:
+  - "prompts/d3/05-add-tooltip.md"
+  - "prompts/d3/06-add-advanced-interaction.md"
 ---
 
 # 13. Interaction QA

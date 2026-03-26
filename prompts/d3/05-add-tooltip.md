@@ -2,14 +2,15 @@
 title: "05. Add Tooltip"
 kind: "prompt"
 domain: "d3"
-summary: "사용자가 값을 탐색할 때 맥락을 짧게 보고 싶다."
+summary: "사용자가 값을 짧게 읽고 비교할 수 있는 tooltip을 붙일 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "add"
   - "tooltip"
 order: 5
-next: null
-related: []
+next: "prompts/d3/06-add-advanced-interaction.md"
+related:
+  - "prompts/d3/13-interaction-qa.md"
 ---
 
 # 05. Add Tooltip

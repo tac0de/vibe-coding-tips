@@ -2,15 +2,16 @@
 title: "08. Data Shaping For D3"
 kind: "prompt"
 domain: "d3"
-summary: "API 응답이나 raw JSON은 있는데, D3에 바로 쓰기엔 구조가 지저분하다."
+summary: "API 응답이나 raw JSON을 D3에 맞는 배열 구조로 먼저 정리할 때 쓰는 프롬프트."
 tags:
   - "d3"
   - "data"
   - "shaping"
   - "for"
 order: 8
-next: null
-related: []
+next: "prompts/d3/02-design-scales.md"
+related:
+  - "prompts/d3/04-structure-data-join.md"
 ---
 
 # 08. Data Shaping For D3

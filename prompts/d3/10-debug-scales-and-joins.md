@@ -2,7 +2,7 @@
 title: "10. Debug Scales And Joins"
 kind: "prompt"
 domain: "d3"
-summary: "축이 틀어지거나, 데이터가 중복 렌더되거나, join이 꼬여서 D3가 이상하게 보인다."
+summary: "축, scale, join이 꼬여 화면이 이상할 때 원인을 좁히는 디버그 프롬프트."
 tags:
   - "d3"
   - "debug"
@@ -10,8 +10,10 @@ tags:
   - "and"
   - "joins"
 order: 10
-next: null
-related: []
+next: "prompts/d3/13-interaction-qa.md"
+related:
+  - "prompts/d3/02-design-scales.md"
+  - "prompts/d3/04-structure-data-join.md"
 ---
 
 # 10. Debug Scales And Joins
