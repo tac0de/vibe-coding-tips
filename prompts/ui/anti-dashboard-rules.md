@@ -2,7 +2,7 @@
 title: "Anti Dashboard Rules"
 kind: "prompt"
 domain: "ui"
-summary: "랜딩이나 에디토리얼 UI가 자꾸 SaaS 대시보드처럼 나온다."
+summary: "랜딩이나 에디토리얼 화면이 자꾸 SaaS 대시보드 문법으로 무너질 때 금지 규칙을 먼저 거는 프롬프트."
 tags:
   - "ui"
   - "anti"

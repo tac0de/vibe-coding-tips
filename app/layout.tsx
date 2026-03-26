@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
+import { JetBrains_Mono, Nanum_Myeongjo, Noto_Sans_KR } from "next/font/google";
 import { ReadingProgressProvider } from "@/components/reading-progress";
 import { SiteLanguageProvider } from "@/components/site-language";
 import { WorkbenchStateProvider } from "@/components/workbench-state";
 import "./globals.css";
 
-const display = Noto_Serif_KR({
+const display = Nanum_Myeongjo({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"]
+  weight: ["400", "700", "800"]
 });
 
 const sans = Noto_Sans_KR({
@@ -23,7 +23,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prompt Collection for UI Agent Work",
+  title: "Minimal Prompt Library for UI Agent Work",
   description:
     "A minimal prompt collection for UI developers directing agents across legacy CSS, D3, browser verification, and visual quality control."
 };

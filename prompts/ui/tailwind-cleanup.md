@@ -2,7 +2,7 @@
 title: "Tailwind Cleanup"
 kind: "prompt"
 domain: "ui"
-summary: "Tailwind 클래스가 지저분하고 UI 위계가 흐려져 있다."
+summary: "Tailwind 클래스는 많은데 위계가 안 읽힐 때 spacing, typography, surface 규칙을 다시 세우는 정리 프롬프트."
 tags:
   - "ui"
   - "tailwind"

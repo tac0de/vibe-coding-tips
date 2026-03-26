@@ -2,7 +2,7 @@
 title: "Review UI Tone"
 kind: "prompt"
 domain: "ui"
-summary: "코드는 맞는데 미감이 구린지 확인하고 싶다."
+summary: "코드는 맞지만 화면이 촌스럽거나 제품 대시보드처럼 보일 때 톤 문제를 먼저 짚는 리뷰 프롬프트."
 tags:
   - "ui"
   - "review"
