@@ -15,7 +15,7 @@ const STORAGE_KEY = "vibe-coding-tips:language";
 const SiteLanguageContext = createContext<SiteLanguageContextValue | null>(null);
 
 export function SiteLanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<SiteLanguage>("en");
+  const [language, setLanguage] = useState<SiteLanguage>("ko");
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);

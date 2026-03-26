@@ -5,11 +5,13 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 type ProgressState = {
   viewed: string[];
   completed: string[];
+  recentViewed: string[];
 };
 
 type ReadingProgressContextValue = {
   viewed: string[];
   completed: string[];
+  recentViewed: string[];
   points: number;
   markViewed: (route: string) => void;
   toggleCompleted: (route: string) => void;
@@ -25,7 +27,7 @@ function dedupe(items: string[]) {
 }
 
 export function ReadingProgressProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<ProgressState>({ viewed: [], completed: [] });
+  const [state, setState] = useState<ProgressState>({ viewed: [], completed: [], recentViewed: [] });
 
   useEffect(() => {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -35,10 +37,11 @@ export function ReadingProgressProvider({ children }: { children: React.ReactNod
       const parsed = JSON.parse(raw) as ProgressState;
       setState({
         viewed: Array.isArray(parsed.viewed) ? dedupe(parsed.viewed) : [],
-        completed: Array.isArray(parsed.completed) ? dedupe(parsed.completed) : []
+        completed: Array.isArray(parsed.completed) ? dedupe(parsed.completed) : [],
+        recentViewed: Array.isArray(parsed.recentViewed) ? dedupe(parsed.recentViewed).slice(0, 12) : []
       });
     } catch {
-      setState({ viewed: [], completed: [] });
+      setState({ viewed: [], completed: [], recentViewed: [] });
     }
   }, []);
 
@@ -49,17 +52,19 @@ export function ReadingProgressProvider({ children }: { children: React.ReactNod
   const value = useMemo<ReadingProgressContextValue>(() => {
     const markViewed = (route: string) =>
       setState((current) =>
-        current.viewed.includes(route)
+        current.viewed.includes(route) && current.recentViewed[0] === route
           ? current
           : {
               ...current,
-              viewed: dedupe([...current.viewed, route])
+              viewed: current.viewed.includes(route) ? current.viewed : dedupe([...current.viewed, route]),
+              recentViewed: dedupe([route, ...current.recentViewed]).slice(0, 12)
             }
       );
 
     const toggleCompleted = (route: string) =>
       setState((current) => ({
         viewed: dedupe([...current.viewed, route]),
+        recentViewed: dedupe([route, ...current.recentViewed]).slice(0, 12),
         completed: current.completed.includes(route)
           ? current.completed.filter((item) => item !== route)
           : dedupe([...current.completed, route])
@@ -68,6 +73,7 @@ export function ReadingProgressProvider({ children }: { children: React.ReactNod
     return {
       viewed: state.viewed,
       completed: state.completed,
+      recentViewed: state.recentViewed,
       points: state.viewed.length * 2 + state.completed.length * 8,
       markViewed,
       toggleCompleted,

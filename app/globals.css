@@ -7,27 +7,43 @@
 }
 
 html {
-  background: #0b0f17;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(29, 78, 216, 0.18), transparent 30%),
+    radial-gradient(circle at right 10%, rgba(18, 21, 28, 0.08), transparent 22%),
+    #09111d;
 }
 
 body {
+  min-height: 100vh;
+  color: #f3efe6;
   background:
-    radial-gradient(circle at top left, rgba(79, 112, 191, 0.14), rgba(11, 15, 23, 0) 36%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(248, 244, 236, 0.03), rgba(248, 244, 236, 0)),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.045) 0,
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px,
+      transparent 96px
+    ),
     repeating-linear-gradient(
       to bottom,
-      transparent,
-      transparent 34px,
-      rgba(170, 183, 209, 0.03) 34px,
-      rgba(170, 183, 209, 0.03) 35px
+      rgba(255, 255, 255, 0.03) 0,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 84px
     ),
-    #0b0f17;
-  color: #eef2ff;
-  min-height: 100vh;
+    linear-gradient(135deg, #09111d 0%, #111827 58%, #171717 100%);
 }
 
 * {
-  border-color: rgba(144, 162, 194, 0.18);
+  border-color: rgba(243, 239, 230, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 a {
@@ -38,63 +54,160 @@ a {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid rgba(93, 135, 255, 0.92);
-  outline-offset: 2px;
+  outline: 2px solid rgba(29, 78, 216, 0.95);
+  outline-offset: 3px;
 }
 
 ::selection {
-  background: rgba(93, 135, 255, 0.28);
+  background: rgba(29, 78, 216, 0.28);
 }
 
 .bg-terminal {
-  background:
-    radial-gradient(circle at top left, rgba(79, 112, 191, 0.16), rgba(11, 15, 23, 0) 34%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
-    #0b0f17;
+  background: transparent;
 }
 
 .text-paper {
-  color: #eef2ff;
+  color: #f3efe6;
 }
 
 .text-cloud {
-  color: #cfd6ea;
+  color: rgba(232, 227, 215, 0.76);
 }
 
 .text-fog {
-  color: #91a0c4;
+  color: rgba(232, 227, 215, 0.5);
 }
 
 .border-line {
-  border-color: rgba(144, 162, 194, 0.18);
+  border-color: rgba(243, 239, 230, 0.12);
+}
+
+.editorial-frame {
+  position: relative;
+  border: 1px solid rgba(243, 239, 230, 0.12);
+  border-radius: 34px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+    rgba(8, 14, 24, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 80px rgba(3, 6, 14, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.editorial-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at top right, rgba(29, 78, 216, 0.16), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%);
+  pointer-events: none;
+}
+
+.lab-panel {
+  border: 1px solid rgba(243, 239, 230, 0.1);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.025);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(243, 239, 230, 0.58);
+}
+
+.action-button,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.action-button {
+  border: 1px solid rgba(29, 78, 216, 0.9);
+  background: #1d4ed8;
+  color: white;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+  background: #2563eb;
+}
+
+.ghost-button {
+  border: 1px solid rgba(243, 239, 230, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(243, 239, 230, 0.92);
+}
+
+.ghost-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(29, 78, 216, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lab-list-item {
+  border: 1px solid rgba(243, 239, 230, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.95rem 1rem;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.lab-list-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(29, 78, 216, 0.42);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .prose-body h2,
 .prose-body h3 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .prose-body h2 {
-  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-  margin-top: 2.75rem;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  margin-top: 3rem;
   margin-bottom: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(144, 162, 194, 0.18);
-  color: #eef2ff;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(243, 239, 230, 0.12);
+  color: #f3efe6;
 }
 
 .prose-body h3 {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   margin-top: 1.8rem;
   margin-bottom: 0.7rem;
-  color: #eef2ff;
+  color: #f3efe6;
 }
 
 .prose-body p,
 .prose-body li {
-  color: #cfd6ea;
-  line-height: 1.9;
+  color: rgba(232, 227, 215, 0.8);
+  line-height: 1.95;
   max-width: 72ch;
 }
 
@@ -108,17 +221,19 @@ input:focus-visible {
 .prose-body code {
   font-family: var(--font-mono);
   font-size: 0.92em;
-  background: rgba(144, 162, 194, 0.1);
-  padding: 0.1rem 0.35rem;
+  background: rgba(255, 255, 255, 0.09);
+  padding: 0.08rem 0.35rem;
+  border-radius: 6px;
 }
 
 .prose-body pre {
   overflow-x: auto;
-  background: #080b12;
-  color: #f6f7fb;
+  background: #08111f;
+  color: #f6f1e7;
   padding: 1rem 1.1rem;
-  line-height: 1.65;
-  border: 1px solid rgba(144, 162, 194, 0.18);
+  line-height: 1.7;
+  border: 1px solid rgba(243, 239, 230, 0.12);
+  border-radius: 24px;
 }
 
 .prose-body pre code {
@@ -129,12 +244,31 @@ input:focus-visible {
 .prose-body blockquote {
   margin: 1.25rem 0;
   padding-left: 1rem;
-  border-left: 2px solid rgba(93, 135, 255, 0.45);
-  color: #aeb9d3;
+  border-left: 2px solid rgba(29, 78, 216, 0.56);
+  color: rgba(232, 227, 215, 0.64);
 }
 
 .prose-body a {
   text-decoration: underline;
-  text-decoration-color: rgba(93, 135, 255, 0.4);
+  text-decoration-color: rgba(29, 78, 216, 0.5);
   text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-frame,
+  .lab-panel {
+    animation: panel-rise 420ms ease;
+  }
+}
+
+@keyframes panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

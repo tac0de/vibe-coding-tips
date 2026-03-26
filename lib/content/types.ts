@@ -1,6 +1,8 @@
 export type ContentKind = "prompt" | "playbook" | "source" | "template" | "guide";
 export type ContentDomain = "onboarding" | "roles" | "ui" | "d3" | "ops" | "templates" | string;
 export type SiteLanguage = "en" | "ko";
+export type ContentDifficulty = "starter" | "intermediate" | "advanced";
+export type ContentCopyReadiness = "ready" | "guided" | "reference";
 
 export type LocalizedContentData = {
   title: string;
@@ -20,6 +22,13 @@ export type ContentMeta = {
   domain: ContentDomain;
   summary: string;
   tags: string[];
+  useCase: string;
+  role: string;
+  difficulty: ContentDifficulty;
+  timeToUse: number;
+  copyReadiness: ContentCopyReadiness;
+  workflowGroup: string;
+  featured: boolean;
   order?: number;
   next?: string | null;
   related?: string[];
@@ -52,6 +61,13 @@ export type ContentLink = {
   summary: string;
   kind: ContentKind;
   domain: ContentDomain;
+  useCase: string;
+  role: string;
+  difficulty: ContentDifficulty;
+  timeToUse: number;
+  copyReadiness: ContentCopyReadiness;
+  workflowGroup: string;
+  featured: boolean;
   order?: number;
   locales: Record<SiteLanguage, Pick<LocalizedContentData, "title" | "summary">>;
 };

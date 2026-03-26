@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
 import { ReadingProgressProvider } from "@/components/reading-progress";
 import { SiteLanguageProvider } from "@/components/site-language";
+import { WorkbenchStateProvider } from "@/components/workbench-state";
 import "./globals.css";
 
 const display = Noto_Serif_KR({
@@ -22,8 +23,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "vibe-coding-tips",
-  description: "A terminal-quest lecture site for vibe coding, Codex workflows, Tailwind UI, D3, and MCP orchestration."
+  title: "Prompt Workbench",
+  description: "Interaction-max prompt workbench for agent coding, rapid execution flows, browser verification, UI passes, D3 work, and orchestration."
 };
 
 export default function RootLayout({
@@ -32,10 +33,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className={`${display.variable} ${sans.variable} ${mono.variable} font-sans antialiased`}>
         <SiteLanguageProvider>
-          <ReadingProgressProvider>{children}</ReadingProgressProvider>
+          <ReadingProgressProvider>
+            <WorkbenchStateProvider>{children}</WorkbenchStateProvider>
+          </ReadingProgressProvider>
         </SiteLanguageProvider>
       </body>
     </html>

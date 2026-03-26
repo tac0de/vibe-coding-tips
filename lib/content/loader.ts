@@ -13,6 +13,8 @@ import {
   stripLeadingTitle
 } from "@/lib/content/markdown";
 import type {
+  ContentCopyReadiness,
+  ContentDifficulty,
   ContentKind,
   ContentLink,
   ContentMeta,
@@ -53,6 +55,81 @@ function inferOrder(relativePath: string) {
   return match ? Number(match[1]) : undefined;
 }
 
+function inferUseCase(dir: string, relativePath: string, kind: ContentKind, domain: string) {
+  const file = relativePath.toLowerCase();
+
+  if (kind === "source") return "reference";
+  if (file.includes("review") || file.includes("accessibility")) return "review-qa";
+  if (file.includes("browser")) return "browser-verification";
+  if (file.includes("one-hour") || file.includes("instructor") || file.includes("handout")) return "teaching-kit";
+  if (file.includes("orchestration") || file.includes("mcp")) return "agent-orchestration";
+  if (file.includes("tailwind") || domain === "ui") return "ui-polish";
+  if (domain === "d3" || file.includes("d3")) return "d3-execution";
+  if (domain === "onboarding") return "repo-onboarding";
+  if (domain === "roles") return "role-templates";
+  return dir === "playbooks" ? "workflow-playbook" : "reference";
+}
+
+function inferRole(relativePath: string, kind: ContentKind, domain: string) {
+  const file = relativePath.toLowerCase();
+
+  if (kind === "source") return "reference";
+  if (file.includes("reviewer")) return "reviewer";
+  if (file.includes("explorer")) return "explorer";
+  if (file.includes("browser")) return "browser-verifier";
+  if (file.includes("builder")) return "builder";
+  if (file.includes("instructor") || file.includes("handout")) return "instructor";
+  if (file.includes("orchestration") || file.includes("mcp")) return "orchestrator";
+  if (kind === "playbook") return "operator";
+  return "builder";
+}
+
+function inferDifficulty(relativePath: string, kind: ContentKind, order?: number): ContentDifficulty {
+  const file = relativePath.toLowerCase();
+  if (file.includes("advanced") || file.includes("performance") || file.includes("orchestration")) return "advanced";
+  if (kind === "source") return "intermediate";
+  if ((order ?? 0) >= 8) return "advanced";
+  if ((order ?? 0) >= 4) return "intermediate";
+  return "starter";
+}
+
+function inferTimeToUse(source: string, kind: ContentKind, difficulty: ContentDifficulty) {
+  const wordCount = source.split(/\s+/).filter(Boolean).length;
+  if (kind === "source") return 12;
+  if (difficulty === "advanced") return 18;
+  if (wordCount > 900) return 15;
+  if (wordCount > 450) return 10;
+  return 5;
+}
+
+function inferCopyReadiness(kind: ContentKind, promptBlock: string | null | undefined): ContentCopyReadiness {
+  if (promptBlock) return "ready";
+  if (kind === "playbook") return "guided";
+  return "reference";
+}
+
+function inferWorkflowGroup(dir: string, relativePath: string, domain: string) {
+  const file = relativePath.toLowerCase();
+
+  if (file.includes("one-hour")) return "one-hour-lab";
+  if (file.includes("orchestration") || file.includes("mcp")) return "orchestration-lab";
+  if (domain === "onboarding") return "existing-repo-flow";
+  if (domain === "ui") return "ui-studio";
+  if (domain === "d3") return "d3-lab";
+  if (domain === "roles") return "agent-roles";
+  return dir === "sources" ? "evidence-base" : "general";
+}
+
+function inferFeatured(relativePath: string, kind: ContentKind, workflowGroup: string) {
+  const file = relativePath.toLowerCase();
+  if (file.includes("01-read-existing-repo")) return true;
+  if (file.includes("review-and-browser-verify")) return true;
+  if (file.includes("one-hour-agent-lab")) return true;
+  if (file.includes("landing-first-screen")) return true;
+  if (workflowGroup === "orchestration-lab") return true;
+  return kind === "source" && file.includes("openai");
+}
+
 function sanitizeMeta(raw: Record<string, unknown>): ContentMeta {
   return {
     title: String(raw.title ?? "Untitled"),
@@ -60,6 +137,13 @@ function sanitizeMeta(raw: Record<string, unknown>): ContentMeta {
     domain: String(raw.domain ?? "ops"),
     summary: String(raw.summary ?? ""),
     tags: Array.isArray(raw.tags) ? raw.tags.map(String) : [],
+    useCase: String(raw.useCase ?? ""),
+    role: String(raw.role ?? ""),
+    difficulty: (raw.difficulty as ContentDifficulty) ?? "starter",
+    timeToUse: typeof raw.timeToUse === "number" ? raw.timeToUse : 0,
+    copyReadiness: (raw.copyReadiness as ContentCopyReadiness) ?? "reference",
+    workflowGroup: String(raw.workflowGroup ?? ""),
+    featured: typeof raw.featured === "boolean" ? raw.featured : false,
     order: typeof raw.order === "number" ? raw.order : undefined,
     next: raw.next == null ? null : String(raw.next),
     related: Array.isArray(raw.related) ? raw.related.map(String) : []
@@ -134,10 +218,30 @@ async function loadAllContentRaw() {
 
         const localizedKo = await buildLocalizedData(sourceKo);
         const localizedEn = await buildLocalizedData(sourceEn);
+        const useCase = baseMeta.useCase || inferUseCase(dir, relativePath, baseMeta.kind, baseMeta.domain);
+        const role = baseMeta.role || inferRole(relativePath, baseMeta.kind, baseMeta.domain);
+        const difficulty =
+          typeof parsed.data.difficulty === "string"
+            ? baseMeta.difficulty
+            : inferDifficulty(relativePath, baseMeta.kind, inferredOrder);
+        const timeToUse = baseMeta.timeToUse > 0 ? baseMeta.timeToUse : inferTimeToUse(sourceKo, baseMeta.kind, difficulty);
+        const copyReadiness =
+          typeof parsed.data.copyReadiness === "string"
+            ? baseMeta.copyReadiness
+            : inferCopyReadiness(baseMeta.kind, localizedKo.promptBlock);
+        const workflowGroup = baseMeta.workflowGroup || inferWorkflowGroup(dir, relativePath, baseMeta.domain);
+        const featured = typeof parsed.data.featured === "boolean" ? Boolean(parsed.data.featured) : inferFeatured(relativePath, baseMeta.kind, workflowGroup);
 
         const meta = {
           ...baseMeta,
           summary: localizedKo.summary,
+          useCase,
+          role,
+          difficulty,
+          timeToUse,
+          copyReadiness,
+          workflowGroup,
+          featured,
           order: baseMeta.order ?? inferredOrder
         };
         const routeParts = normalizeRouteParts(route, relativePath);
@@ -203,6 +307,13 @@ async function loadAllContentRaw() {
         summary: item.summary,
         kind: item.kind,
         domain: item.domain,
+        useCase: item.useCase,
+        role: item.role,
+        difficulty: item.difficulty,
+        timeToUse: item.timeToUse,
+        copyReadiness: item.copyReadiness,
+        workflowGroup: item.workflowGroup,
+        featured: item.featured,
         order: item.order,
         locales: {
           ko: { title: item.locales.ko.title, summary: item.locales.ko.summary },
@@ -219,8 +330,15 @@ async function loadAllContentRaw() {
 
       if (relatedRoutes.length === 0) {
         records
-          .filter((item) => item.route !== record.route && item.kind === record.kind && item.domain === record.domain)
-          .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+          .filter((item) => item.route !== record.route)
+          .sort((a, b) => {
+            const workflowScore =
+              Number(b.workflowGroup === record.workflowGroup) - Number(a.workflowGroup === record.workflowGroup);
+            const useCaseScore = Number(b.useCase === record.useCase) - Number(a.useCase === record.useCase);
+            const kindScore = Number(b.kind === record.kind) - Number(a.kind === record.kind);
+            const domainScore = Number(b.domain === record.domain) - Number(a.domain === record.domain);
+            return workflowScore || useCaseScore || kindScore || domainScore || (a.order ?? 999) - (b.order ?? 999);
+          })
           .slice(0, 3)
           .forEach((item) => relatedRoutes.push(toLink(item)));
       }
