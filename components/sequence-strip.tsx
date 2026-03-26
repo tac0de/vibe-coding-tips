@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import clsx from "clsx";
+import { useSiteLanguage } from "@/components/site-language";
 import type { ContentLink } from "@/lib/content/types";
 
 type Props = {
@@ -11,13 +12,14 @@ type Props = {
 };
 
 export function SequenceStrip({ title, items, activeRoute }: Props) {
+  const { t } = useSiteLanguage();
   if (items.length <= 1) return null;
 
   return (
     <section className="space-y-3 border-y border-line py-4">
       <div className="flex items-center justify-between gap-3">
         <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-fog">{title}</p>
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">{items.length} steps</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">{t(`${items.length} steps`, `${items.length} 단계`)}</p>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
         {items.map((item, index) => {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
+import { useSiteLanguage } from "@/components/site-language";
 import type { ContentRecord } from "@/lib/content/types";
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function SearchExplorer({ items }: Props) {
+  const { t } = useSiteLanguage();
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const hasQuery = query.trim().length > 0;
@@ -50,21 +52,23 @@ export function SearchExplorer({ items }: Props) {
   return (
     <section className="border-y border-line py-6">
       <div className="flex flex-col gap-5">
-        <label className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">문서 검색</label>
+        <label className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">{t("Search", "문서 검색")}</label>
         <input
           ref={inputRef}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="온보딩, Tailwind, D3, reviewer 프롬프트 검색"
+          placeholder={t("Search onboarding, Tailwind, D3, or reviewer prompts", "온보딩, Tailwind, D3, reviewer 프롬프트 검색")}
           className="w-full border-b border-line bg-transparent px-0 py-3 font-display text-2xl tracking-[-0.03em] text-paper outline-none placeholder:text-fog/70 md:text-4xl"
         />
         <div className="flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-fog">
-          <span>/ 키로 바로 포커스</span>
-          <span>프롬프트 우선 정렬</span>
+          <span>{t("press / to focus", "/ 키로 바로 포커스")}</span>
+          <span>{t("prompt results first", "프롬프트 우선 정렬")}</span>
         </div>
         {hasQuery ? (
           <div className="grid gap-2">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">{results.length} results / 프롬프트 우선</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">
+              {t(`${results.length} results / prompts first`, `${results.length} results / 프롬프트 우선`)}
+            </p>
             {results.map((item) => (
               <Link
                 key={item.route}
@@ -90,7 +94,10 @@ export function SearchExplorer({ items }: Props) {
           </div>
         ) : (
           <p className="max-w-measure text-sm leading-7 text-cloud">
-            검색은 바로 필요한 프롬프트를 찾을 때 쓰고, 처음 시작은 위 트랙 중 하나를 고르는 쪽이 더 빠릅니다.
+            {t(
+              "Use search when you already know the task. Starting from one of the tracks above is usually faster.",
+              "검색은 바로 필요한 프롬프트를 찾을 때 쓰고, 처음 시작은 위 트랙 중 하나를 고르는 쪽이 더 빠릅니다."
+            )}
           </p>
         )}
       </div>

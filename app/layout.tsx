@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
+import { SiteLanguageProvider } from "@/components/site-language";
 import "./globals.css";
 
 const display = Noto_Serif_KR({
@@ -31,7 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${display.variable} ${sans.variable} ${mono.variable} font-sans antialiased`}>{children}</body>
+      <body className={`${display.variable} ${sans.variable} ${mono.variable} font-sans antialiased`}>
+        <SiteLanguageProvider>{children}</SiteLanguageProvider>
+      </body>
     </html>
   );
 }

@@ -1,41 +1,47 @@
+"use client";
+
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { DocumentReader } from "@/components/document-reader";
 import { SequenceStrip } from "@/components/sequence-strip";
+import { LanguageToggle, useSiteLanguage } from "@/components/site-language";
 import type { ContentRecord } from "@/lib/content/types";
 
 function getSidebarTone(document: ContentRecord) {
   if (document.kind === "source") {
     return {
-      badge: "출처 문서",
-      summaryLabel: "왜 보는지",
-      relatedLabel: "연결 문서",
+      badge: { en: "source doc", ko: "출처 문서" },
+      summaryLabel: { en: "why this source", ko: "왜 보는지" },
+      relatedLabel: { en: "linked docs", ko: "연결 문서" },
       progressLabel: "source trail",
-      accentClass: "text-[#c88c4b]"
+      accentClass: "text-[#c88c4b]",
+      panelClass: "border-[#c88c4b]/35 bg-[#c88c4b]/[0.06]"
     };
   }
 
   if (document.kind === "playbook") {
     return {
-      badge: "해설 문서",
-      summaryLabel: "핵심 개념",
-      relatedLabel: "이어 읽기",
+      badge: { en: "playbook", ko: "해설 문서" },
+      summaryLabel: { en: "core concept", ko: "핵심 개념" },
+      relatedLabel: { en: "read next", ko: "이어 읽기" },
       progressLabel: "playbook flow",
-      accentClass: "text-cobalt"
+      accentClass: "text-cobalt",
+      panelClass: "border-cobalt/35 bg-cobalt/[0.06]"
     };
   }
 
   return {
-    badge: "실행 문서",
-    summaryLabel: "실행 체크",
-    relatedLabel: "다음 프롬프트",
+    badge: { en: "prompt doc", ko: "실행 문서" },
+    summaryLabel: { en: "execution check", ko: "실행 체크" },
+    relatedLabel: { en: "next prompts", ko: "다음 프롬프트" },
     progressLabel: "prompt track",
-    accentClass: "text-[#74a2ff]"
+    accentClass: "text-[#74a2ff]",
+    panelClass: "border-[#74a2ff]/35 bg-[#74a2ff]/[0.06]"
   };
 }
 
 export function DocumentLayout({ document }: { document: ContentRecord | null }) {
-  if (!document) notFound();
+  const { t } = useSiteLanguage();
+  if (!document) return null;
   const sidebarTone = getSidebarTone(document);
   const progressLabel =
     document.sequenceIndex && document.sequenceTotal
@@ -48,18 +54,21 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
         <article className="space-y-8">
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-line pb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
             <Link href="/" className="transition hover:text-paper">
-              홈
+              {t("Home", "홈")}
             </Link>
             {document.prevLink ? (
               <Link href={document.prevLink.route} className="transition hover:text-paper">
-                이전
+                {t("Previous", "이전")}
               </Link>
             ) : null}
             {document.nextLink ? (
               <Link href={document.nextLink.route} className="transition hover:text-paper">
-                다음
+                {t("Next", "다음")}
               </Link>
             ) : null}
+            <div className="ml-auto">
+              <LanguageToggle />
+            </div>
           </nav>
 
           <header className="space-y-4 border-b border-line pb-6">
@@ -73,7 +82,7 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
             <div className="grid gap-2 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-fog md:grid-cols-3">
               <span>{document.kind}</span>
               <span>{document.domain}</span>
-              <span>{document.promptBlock ? "compact default" : "read compact"}</span>
+              <span>{document.promptBlock ? t("compact default", "compact 기본") : t("read compact", "compact 읽기")}</span>
             </div>
           </header>
 
@@ -81,16 +90,24 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
             <SequenceStrip title={sidebarTone.progressLabel} items={document.sequenceLinks} activeRoute={document.route} />
           ) : null}
 
-          <section className="grid gap-4 border-y border-line py-5 md:grid-cols-3">
+          <section className={`grid gap-4 border-y border-line py-5 md:grid-cols-3 ${sidebarTone.panelClass}`}>
             <div className="space-y-2">
               <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-                {document.kind === "source" ? "왜 보는지" : document.kind === "playbook" ? "무엇을 배우는지" : "언제 쓰는지"}
+                {document.kind === "source"
+                  ? t("Why this source", "왜 보는지")
+                  : document.kind === "playbook"
+                    ? t("What you learn", "무엇을 배우는지")
+                    : t("Use this when", "언제 쓰는지")}
               </p>
               <p className="text-sm leading-7 text-paper">{document.situationLead ?? document.summary}</p>
             </div>
             <div className="space-y-2">
               <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-                {document.kind === "source" ? "어떤 문서에 쓰는지" : document.kind === "playbook" ? "핵심 개념" : "기대 출력"}
+                {document.kind === "source"
+                  ? t("Used in", "어떤 문서에 쓰는지")
+                  : document.kind === "playbook"
+                    ? t("Core concept", "핵심 개념")
+                    : t("Expected output", "기대 출력")}
               </p>
               <p className="text-sm leading-7 text-paper">
                 {document.summaryPoints[0] ?? "좋은 출력 기준을 먼저 읽고 프롬프트를 붙인다."}
@@ -98,7 +115,11 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
             </div>
             <div className="space-y-2">
               <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-                {document.kind === "source" ? "관련 링크" : document.kind === "playbook" ? "다음 읽기" : "다음 프롬프트"}
+                {document.kind === "source"
+                  ? t("Related links", "관련 링크")
+                  : document.kind === "playbook"
+                    ? t("Read next", "다음 읽기")
+                    : t("Next prompt", "다음 프롬프트")}
               </p>
               <p className="text-sm leading-7 text-paper">
                 {document.nextLink ? (
@@ -123,9 +144,11 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
         </article>
 
         <aside className="space-y-8 md:sticky md:top-6 md:self-start">
-          <section className="border-t border-line pt-4">
-            <p className={`font-mono text-[11px] uppercase tracking-[0.28em] ${sidebarTone.accentClass}`}>{sidebarTone.badge}</p>
-            <div className="mt-3 border-b border-line pb-4">
+          <section className={`border-t border-line pt-4`}>
+            <p className={`font-mono text-[11px] uppercase tracking-[0.28em] ${sidebarTone.accentClass}`}>
+              {t(sidebarTone.badge.en, sidebarTone.badge.ko)}
+            </p>
+            <div className={`mt-3 border border-line pb-4 pl-4 pr-4 pt-4 ${sidebarTone.panelClass}`}>
               <p className="font-display text-2xl tracking-[-0.025em]">{document.title.replace(/^\d+\.\s*/, "")}</p>
               <p className="mt-2 text-sm leading-7 text-cloud">{document.summary}</p>
               <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-fog">{progressLabel}</p>
@@ -134,8 +157,8 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
 
           {document.prevLink ? (
             <section className="border-t border-line pt-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">이전</p>
-              <Link href={document.prevLink.route} className="mt-3 block border-b border-line py-3 hover:bg-white/[0.03]">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">{t("Previous", "이전")}</p>
+              <Link href={document.prevLink.route} className={`mt-3 block border border-line px-4 py-3 hover:bg-white/[0.03] ${sidebarTone.panelClass}`}>
                 <p className="font-display text-2xl tracking-[-0.025em]">{document.prevLink.title.replace(/^\d+\.\s*/, "")}</p>
                 <p className="text-sm text-cloud">{document.prevLink.summary}</p>
               </Link>
@@ -145,22 +168,32 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
           {document.nextLink ? (
             <section className="border-t border-line pt-4">
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">
-                {document.kind === "prompt" ? "다음 프롬프트" : document.kind === "playbook" ? "다음 읽기" : "연결 문서"}
+                {document.kind === "prompt"
+                  ? t("Next prompt", "다음 프롬프트")
+                  : document.kind === "playbook"
+                    ? t("Read next", "다음 읽기")
+                    : t("Linked doc", "연결 문서")}
               </p>
-              <Link href={document.nextLink.route} className="mt-3 block border-b border-line py-3 hover:bg-white/[0.03]">
+              <Link href={document.nextLink.route} className={`mt-3 block border border-line px-4 py-3 hover:bg-white/[0.03] ${sidebarTone.panelClass}`}>
                 <p className="font-display text-2xl tracking-[-0.025em]">{document.nextLink.title.replace(/^\d+\.\s*/, "")}</p>
                 <p className="text-sm text-cloud">{document.nextLink.summary}</p>
               </Link>
             </section>
           ) : null}
 
-          <section className="border-t border-line pt-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">{sidebarTone.summaryLabel}</p>
-            <div className="mt-3 space-y-4 text-sm leading-7 text-cloud">
+          <section className={`border-t border-line pt-4`}>
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">
+              {t(sidebarTone.summaryLabel.en, sidebarTone.summaryLabel.ko)}
+            </p>
+            <div className={`mt-3 space-y-4 border border-line px-4 py-4 text-sm leading-7 text-cloud ${sidebarTone.panelClass}`}>
               {document.summaryPoints.length > 0 ? (
                 <div>
                   <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-paper">
-                    {document.kind === "source" ? "핵심 링크" : document.kind === "playbook" ? "핵심 개념" : "기대 출력"}
+                    {document.kind === "source"
+                      ? t("Key links", "핵심 링크")
+                      : document.kind === "playbook"
+                        ? t("Core concept", "핵심 개념")
+                        : t("Expected output", "기대 출력")}
                   </p>
                   <ul className="space-y-2">
                     {document.summaryPoints.map((point) => (
@@ -172,7 +205,7 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
               {document.failurePoints.length > 0 ? (
                 <div>
                   <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-paper">
-                    {document.kind === "source" ? "주의" : "실패 패턴"}
+                    {document.kind === "source" ? t("Caution", "주의") : t("Failure patterns", "실패 패턴")}
                   </p>
                   <ul className="space-y-2">
                     {document.failurePoints.map((point) => (
@@ -186,8 +219,8 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
 
           {document.toc.length > 0 ? (
             <section className="border-t border-line pt-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">섹션</p>
-              <div className="mt-3 grid gap-2 text-sm text-cloud">
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">{t("Sections", "섹션")}</p>
+              <div className="mt-3 grid gap-2 border border-line px-4 py-4 text-sm text-cloud">
                 {document.toc.map((item) => (
                   <a key={item.id} href={`#${item.id}`} className="border-b border-line py-2 hover:text-paper">
                     {item.title}
@@ -199,10 +232,12 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
 
           {document.relatedRoutes.length > 0 ? (
             <section className="border-t border-line pt-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">{sidebarTone.relatedLabel}</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-fog">
+                {t(sidebarTone.relatedLabel.en, sidebarTone.relatedLabel.ko)}
+              </p>
               <div className="mt-3 grid gap-2">
                 {document.relatedRoutes.map((item) => (
-                  <Link key={item.route} href={item.route} className="border-b border-line py-3 hover:bg-white/[0.03]">
+                  <Link key={item.route} href={item.route} className={`border border-line px-4 py-3 hover:bg-white/[0.03] ${sidebarTone.panelClass}`}>
                     <p className="font-display text-xl tracking-[-0.025em]">{item.title}</p>
                     <p className="text-sm text-cloud">{item.summary}</p>
                   </Link>
