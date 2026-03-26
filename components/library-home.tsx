@@ -11,14 +11,10 @@ import {
   buildCopyPayload,
   getArchiveRecords,
   getArtifactTypeLabel,
-  getDifficultyLabel,
-  getLegacySurfaceLabel,
   getRiskLabel,
   getScenarioDefinition,
   getScenarioLead,
   getScenarioRecords,
-  getScenarioVerificationSet,
-  getTargetArchitectureLabel,
   stripOrdinalTitle,
   WAR_ROOM_SCENARIOS
 } from "@/lib/content/workbench";
@@ -42,375 +38,260 @@ function MetaPill({ label }: { label: string }) {
   );
 }
 
+function CollectionCard({
+  item,
+  language,
+  onCopy
+}: {
+  item: ContentRecord;
+  language: "en" | "ko";
+  onCopy: () => void;
+}) {
+  const localized = getLocalizedRecord(item, language);
+
+  return (
+    <article className="collection-card">
+      <div className="flex flex-wrap gap-2">
+        <MetaPill label={getArtifactTypeLabel(item.artifactType, language)} />
+        <MetaPill label={getRiskLabel(item.riskLevel, language)} />
+      </div>
+      <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
+        {stripOrdinalTitle(localized.title)}
+      </h3>
+      <p className="mt-3 text-sm leading-7 text-cloud">{localized.summary}</p>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <CopyPromptButton
+          value={buildCopyPayload(item, language, false)}
+          onCopy={onCopy}
+          className="ghost-button"
+          defaultLabel={language === "ko" ? "프롬프트 복사" : "Copy prompt"}
+          copiedLabel={language === "ko" ? "복사됨" : "Copied"}
+        />
+        <Link href={item.route} className="quiet-link">
+          {language === "ko" ? "읽기" : "Read"}
+        </Link>
+      </div>
+    </article>
+  );
+}
+
 export function LibraryHome({ data }: { data: HomeData }) {
   const { language, t } = useSiteLanguage();
-  const { recentViewed, completed } = useReadingProgress();
-  const {
-    queue,
-    favorites,
-    copied,
-    recentSearches,
-    toggleQueue,
-    toggleFavorite,
-    markCopied,
-    isQueued,
-    isFavorite
-  } = useWorkbenchState();
+  const { recentViewed } = useReadingProgress();
+  const { markCopied } = useWorkbenchState();
   const [selectedScenario, setSelectedScenario] = useState<string>("scss-swamp");
 
   const scenario = getScenarioDefinition(selectedScenario) ?? WAR_ROOM_SCENARIOS[0];
   const scenarioRecords = useMemo(() => getScenarioRecords(data.all, selectedScenario), [data.all, selectedScenario]);
   const lead = useMemo(() => getScenarioLead(data.all, selectedScenario), [data.all, selectedScenario]);
-  const verificationSet = useMemo(() => getScenarioVerificationSet(data.all, selectedScenario), [data.all, selectedScenario]);
-  const archiveRecords = useMemo(() => getArchiveRecords(data.all).slice(0, 12), [data.all]);
-  const battleStack = useMemo(
-    () => queue.map((route) => data.all.find((item) => item.route === route)).filter(Boolean) as ContentRecord[],
-    [data.all, queue]
-  );
-  const opsTray = useMemo(
-    () => favorites.map((route) => data.all.find((item) => item.route === route)).filter(Boolean) as ContentRecord[],
-    [data.all, favorites]
-  );
-  const recentRuns = useMemo(
+  const archiveRecords = useMemo(() => getArchiveRecords(data.all).slice(0, 6), [data.all]);
+  const recentReads = useMemo(
     () => recentViewed.map((route) => data.all.find((item) => item.route === route)).filter(Boolean) as ContentRecord[],
     [data.all, recentViewed]
   );
   const leadLocalized = lead ? getLocalizedRecord(lead, language) : null;
 
+  const thesis = [
+    {
+      id: "thesis-1",
+      title: t("Good vibe coding starts with taste, not speed.", "좋은 바이브코딩은 속도보다 취향에서 시작한다."),
+      body: t(
+        "A prompt should not merely request output. It should lock the scene, the tension, and the standard of judgment before an agent starts producing surface.",
+        "프롬프트는 산출물만 요구하면 안 된다. 에이전트가 표면을 만들기 전에 장면, 긴장감, 판단 기준을 먼저 고정해야 한다."
+      )
+    },
+    {
+      id: "thesis-2",
+      title: t("Non-developers need language for quality, not syntax.", "비개발자에게 필요한 것은 문법이 아니라 품질을 말하는 언어다."),
+      body: t(
+        "The collection should help people describe hierarchy, rhythm, friction, and evidence. That is how prompting becomes direction rather than guessing.",
+        "이 모음집은 hierarchy, rhythm, friction, evidence를 말할 수 있게 해야 한다. 그래야 프롬프팅이 추측이 아니라 디렉션이 된다."
+      )
+    },
+    {
+      id: "thesis-3",
+      title: t("Strong prompts read like condensed papers.", "강한 프롬프트는 압축된 논문처럼 읽혀야 한다."),
+      body: t(
+        "Every dossier here should state when to use it, what failure looks like, what a good output proves, and how to verify the result in the browser.",
+        "여기 있는 dossier는 언제 쓰는지, 어떻게 실패하는지, 좋은 출력이 무엇을 증명하는지, 브라우저에서 어떻게 검증하는지를 분명히 말해야 한다."
+      )
+    }
+  ];
+
   return (
     <main className="min-h-screen bg-terminal text-paper">
-      <div className="mx-auto max-w-[1500px] px-4 pb-16 pt-4 md:px-8 md:pb-24 md:pt-8">
-        <section className="war-frame overflow-hidden px-5 py-6 md:px-8 md:py-8">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_420px]">
-            <div className="space-y-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="space-y-3">
-                  <p className="eyebrow">{t("Legacy UI Migration War Room", "Legacy UI Migration War Room")}</p>
-                  <h1 className="max-w-[10ch] font-display text-5xl leading-[0.86] tracking-[-0.07em] text-paper md:text-8xl">
-                    {t("Break the legacy surface. Rebuild with agents.", "레거시 표면을 부수고 에이전트로 재구축")}
-                  </h1>
-                </div>
-                <LanguageToggle />
-              </div>
-
-              <p className="max-w-[66ch] text-base leading-8 text-cloud md:text-lg">
+      <div className="mx-auto max-w-[1380px] px-4 pb-20 pt-5 md:px-8 md:pb-28 md:pt-10">
+        <section className="paper-frame px-6 py-8 md:px-10 md:py-12">
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            <div className="max-w-[820px]">
+              <p className="eyebrow">{t("Prompt Collection", "프롬프트 컬렉션")}</p>
+              <h1 className="mt-4 max-w-[12ch] font-display text-5xl leading-[0.92] tracking-[-0.07em] text-paper md:text-8xl">
+                {t("An archive for high-resolution prompting.", "고해상도 프롬프팅을 위한 아카이브.")}
+              </h1>
+              <p className="mt-6 max-w-[58ch] text-lg leading-8 text-cloud">
                 {t(
-                  "This is not a prompt warehouse. It is a migration console for SCSS sprawl, legacy component decomposition, D3 retrofits, and browser verification under real refactor pressure.",
-                  "여긴 범용 프롬프트 창고가 아니다. SCSS 확산, 레거시 컴포넌트 분해, D3 레트로핏, 브라우저 검증을 실제 리팩터 압력 아래서 처리하는 마이그레이션 콘솔이다."
+                  "A curated collection of long-form prompt dossiers and short papers on how to direct agents with taste, evidence, and structural clarity.",
+                  "긴 프롬프트 dossier와 바이브코딩 방법론을 묶은 큐레이션 아카이브. 코드 문법보다 장면, 근거, 구조 감각을 먼저 다룬다."
                 )}
               </p>
+            </div>
+            <LanguageToggle />
+          </div>
 
-              <div className="grid gap-3 md:grid-cols-4">
-                <div className="threat-card p-4">
-                  <p className="eyebrow text-fog">{t("Current migration run", "현재 마이그레이션 런")}</p>
-                  <p className="mt-3 font-display text-4xl text-paper">{battleStack.length}</p>
-                  <p className="mt-2 text-sm leading-6 text-cloud">{t("Docs queued for the current operation.", "현재 작업에 적재된 문서 수.")}</p>
-                </div>
-                <div className="threat-card p-4">
-                  <p className="eyebrow text-fog">{t("Ops tray", "Ops tray")}</p>
-                  <p className="mt-3 font-display text-4xl text-paper">{opsTray.length}</p>
-                  <p className="mt-2 text-sm leading-6 text-cloud">{t("Pinned dossiers and recurring tools.", "자주 쓰는 dossier 및 도구 보관함.")}</p>
-                </div>
-                <div className="threat-card p-4">
-                  <p className="eyebrow text-fog">{t("Copied bundles", "복사한 번들")}</p>
-                  <p className="mt-3 font-display text-4xl text-paper">{copied.length}</p>
-                  <p className="mt-2 text-sm leading-6 text-cloud">{t("Prompt bundles already taken into action.", "이미 실행으로 가져간 프롬프트 번들 수.")}</p>
-                </div>
-                <div className="threat-card p-4">
-                  <p className="eyebrow text-fog">{t("Completed gates", "완료 게이트")}</p>
-                  <p className="mt-3 font-display text-4xl text-paper">{completed.length}</p>
-                  <p className="mt-2 text-sm leading-6 text-cloud">{t("Checkpoints closed in this browser.", "이 브라우저에서 닫은 체크포인트 수.")}</p>
-                </div>
-              </div>
+          <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_340px]">
+            <div className="essay-panel p-6 md:p-7">
+              <p className="eyebrow">{t("Abstract", "초록")}</p>
+              <p className="mt-4 max-w-[66ch] text-base leading-8 text-paper">
+                {t(
+                  "This site is built as a reading surface first. It collects prompts that help people brief agents for legacy CSS/SCSS migration, D3 integration, UI refinement, and browser verification without collapsing into generic output.",
+                  "이 사이트는 먼저 읽히는 화면으로 설계된다. 레거시 CSS/SCSS 마이그레이션, D3 통합, UI 정리, 브라우저 검증을 다룰 때 결과물이 양산형으로 무너지지 않도록 돕는 프롬프트를 모은다."
+                )}
+              </p>
             </div>
 
-            <div className="war-side-panel p-5">
-              <div className="flex items-center justify-between gap-3">
-                <p className="eyebrow">{t("Scenario chooser", "전투 시나리오 선택기")}</p>
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">{WAR_ROOM_SCENARIOS.length} {t("fronts", "전장")}</p>
-              </div>
-
-              <div className="mt-4 grid gap-3">
+            <aside className="index-panel p-6">
+              <p className="eyebrow">{t("Reading Index", "읽기 인덱스")}</p>
+              <div className="mt-5 grid gap-2">
                 {WAR_ROOM_SCENARIOS.map((entry) => (
                   <button
                     key={entry.id}
                     type="button"
                     onClick={() => setSelectedScenario(entry.id)}
-                    className={`scenario-tile text-left ${selectedScenario === entry.id ? "scenario-tile-active" : ""}`}
+                    className={`index-link ${selectedScenario === entry.id ? "index-link-active" : ""}`}
                   >
-                    <p className="font-display text-2xl tracking-[-0.04em] text-paper">{entry.labels[language]}</p>
-                    <p className="mt-2 text-sm leading-7 text-cloud">{entry.summary[language]}</p>
-                    <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{entry.risks[language]}</p>
+                    <span>{entry.labels[language]}</span>
                   </button>
                 ))}
               </div>
-            </div>
+            </aside>
           </div>
         </section>
 
-        <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_440px]">
-          <div className="space-y-6">
-            <section className="war-frame px-5 py-5 md:px-7">
-              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <section className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_360px]">
+          <div className="space-y-8">
+            <section className="paper-frame px-6 py-7 md:px-8">
+              <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <p className="eyebrow">{t("Primary front", "주 전장")}</p>
-                  <h2 className="mt-2 font-display text-4xl tracking-[-0.05em] text-paper md:text-6xl">
+                  <p className="eyebrow">{t("Selected Theme", "선택된 주제")}</p>
+                  <h2 className="mt-3 font-display text-4xl tracking-[-0.05em] text-paper md:text-6xl">
                     {scenario.labels[language]}
                   </h2>
                 </div>
-                <div className="text-right">
-                  <p className="eyebrow text-fog">{t("Recommended dossier", "대표 dossier")}</p>
-                  <p className="mt-2 text-sm leading-7 text-cloud">{scenario.dossierTitle[language]}</p>
-                </div>
+                <p className="max-w-[34ch] text-sm leading-7 text-cloud">{scenario.summary[language]}</p>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-                <div className="lab-panel p-5">
-                  <p className="eyebrow text-fog">{t("When to use", "언제 쓰는가")}</p>
-                  <p className="mt-3 text-base leading-8 text-paper">{scenario.summary[language]}</p>
-                  <p className="mt-4 text-sm leading-7 text-cloud">{scenario.risks[language]}</p>
-                </div>
-
-                <div className="threat-card p-5">
-                  <p className="eyebrow text-fog">{t("Recommended order", "추천 순서")}</p>
-                  <ol className="mt-4 space-y-3">
-                    {scenarioRecords.slice(0, 4).map((item, index) => {
-                      const localized = getLocalizedRecord(item, language);
-                      return (
-                        <li key={item.route} className="flex gap-3">
-                          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">{String(index + 1).padStart(2, "0")}</span>
-                          <div className="text-left">
-                            <Link href={item.route} className="font-display text-xl text-paper">
-                              {stripOrdinalTitle(localized.title)}
-                            </Link>
-                            <p className="mt-1 text-sm leading-6 text-cloud">{localized.summary}</p>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                </div>
+              <div className="mt-8 grid gap-4 md:grid-cols-3">
+                {thesis.map((item) => (
+                  <article key={item.id} className="thesis-card">
+                    <p className="eyebrow">{t("Thesis", "테제")}</p>
+                    <h3 className="mt-4 font-display text-2xl tracking-[-0.04em] text-paper">{item.title}</h3>
+                    <p className="mt-4 text-sm leading-7 text-cloud">{item.body}</p>
+                  </article>
+                ))}
               </div>
             </section>
 
-            <section className="war-frame px-5 py-5 md:px-7">
-              <div className="mb-5 flex items-center justify-between gap-3">
+            <section className="paper-frame px-6 py-7 md:px-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <p className="eyebrow">{t("Dossier shelf", "Dossier shelf")}</p>
-                  <p className="mt-2 text-sm leading-7 text-cloud">
+                  <p className="eyebrow">{t("Prompt Dossiers", "프롬프트 dossier")}</p>
+                  <p className="mt-3 max-w-[48ch] text-sm leading-7 text-cloud">
                     {t(
-                      "These are the long-form bundles to open before you let an agent touch the legacy surface.",
-                      "에이전트가 레거시 표면을 건드리기 전에 먼저 여는 긴 프롬프트 묶음."
+                      "Open these when you need dense prompts with diagnosis, direction, and verification built in.",
+                      "진단, 디렉션, 검증이 한 번에 묶인 긴 프롬프트가 필요할 때 여는 문서들."
                     )}
                   </p>
                 </div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
-                  {scenarioRecords.filter((item) => item.isDossier).length} {t("dossiers", "dossiers")}
-                </p>
+                <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
+                  {scenarioRecords.filter((item) => item.isDossier).length} {t("texts", "texts")}
+                </span>
               </div>
 
-              <div className="grid gap-4">
-                {scenarioRecords.filter((item) => item.isDossier).slice(0, 6).map((item) => {
+              <div className="mt-8 grid gap-4">
+                {scenarioRecords
+                  .filter((item) => item.isDossier)
+                  .slice(0, 6)
+                  .map((item) => (
+                    <CollectionCard
+                      key={item.route}
+                      item={item}
+                      language={language}
+                      onCopy={() => markCopied(item.route)}
+                    />
+                  ))}
+              </div>
+            </section>
+
+            <section className="paper-frame px-6 py-7 md:px-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="eyebrow">{t("Archive", "아카이브")}</p>
+                  <p className="mt-3 max-w-[44ch] text-sm leading-7 text-cloud">
+                    {t(
+                      "Secondary materials remain available, but they no longer dominate the first screen.",
+                      "보조 자료도 남겨두되, 더 이상 첫 화면을 지배하지는 않는다."
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-3 md:grid-cols-2">
+                {archiveRecords.map((item) => {
                   const localized = getLocalizedRecord(item, language);
                   return (
-                    <div key={item.route} className="dossier-card">
-                      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                        <div className="min-w-0">
-                          <div className="flex flex-wrap gap-2">
-                            <MetaPill label={getArtifactTypeLabel(item.artifactType, language)} />
-                            <MetaPill label={getRiskLabel(item.riskLevel, language)} />
-                            <MetaPill label={getLegacySurfaceLabel(item.legacySurface, language)} />
-                            <MetaPill label={getTargetArchitectureLabel(item.targetArchitecture, language)} />
-                          </div>
-                          <p className="mt-4 font-display text-3xl tracking-[-0.04em] text-paper">
-                            {stripOrdinalTitle(localized.title)}
-                          </p>
-                          <p className="mt-3 max-w-[72ch] text-sm leading-7 text-cloud">{localized.summary}</p>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          <button type="button" onClick={() => toggleQueue(item.route)} className="ghost-button">
-                            {isQueued(item.route) ? t("In battle stack", "battle stack 적재됨") : t("Add battle stack", "battle stack 적재")}
-                          </button>
-                          <button type="button" onClick={() => toggleFavorite(item.route)} className="ghost-button">
-                            {isFavorite(item.route) ? t("Pinned ops tray", "ops tray 고정됨") : t("Pin ops tray", "ops tray 고정")}
-                          </button>
-                          <CopyPromptButton
-                            value={buildCopyPayload(item, language, true)}
-                            onCopy={() => markCopied(item.route)}
-                            className="ghost-button"
-                            defaultLabel={t("Copy context", "컨텍스트 복사")}
-                            copiedLabel={t("Copied", "복사됨")}
-                          />
-                          <Link href={item.route} className="action-button">
-                            {t("Open dossier", "dossier 열기")}
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+                    <Link key={item.route} href={item.route} className="archive-entry">
+                      <p className="eyebrow">{item.kind}</p>
+                      <p className="mt-3 font-display text-2xl tracking-[-0.04em] text-paper">
+                        {stripOrdinalTitle(localized.title)}
+                      </p>
+                    </Link>
                   );
                 })}
               </div>
             </section>
-
-            <section className="grid gap-6 lg:grid-cols-3">
-              <div className="war-frame px-5 py-5">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="eyebrow">{t("Battle stack", "battle stack")}</p>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">{battleStack.length}</p>
-                </div>
-                <div className="mt-4 grid gap-3">
-                  {battleStack.slice(0, 4).map((item) => {
-                    const localized = getLocalizedRecord(item, language);
-                    return (
-                      <Link key={item.route} href={item.route} className="lab-list-item block">
-                        <p className="eyebrow text-fog">{getScenarioDefinition(item.scenario)?.labels[language] ?? item.scenario}</p>
-                        <p className="mt-2 font-display text-xl text-paper">{stripOrdinalTitle(localized.title)}</p>
-                      </Link>
-                    );
-                  })}
-                  {battleStack.length === 0 ? (
-                    <p className="text-sm leading-7 text-cloud">{t("Queue the dossiers for the current migration run.", "현재 마이그레이션 런에 필요한 dossier를 적재한다.")}</p>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="war-frame px-5 py-5">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="eyebrow">{t("Ops tray", "ops tray")}</p>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">{opsTray.length}</p>
-                </div>
-                <div className="mt-4 grid gap-3">
-                  {opsTray.slice(0, 4).map((item) => {
-                    const localized = getLocalizedRecord(item, language);
-                    return (
-                      <Link key={item.route} href={item.route} className="lab-list-item block">
-                        <p className="eyebrow text-fog">{getArtifactTypeLabel(item.artifactType, language)}</p>
-                        <p className="mt-2 font-display text-xl text-paper">{stripOrdinalTitle(localized.title)}</p>
-                      </Link>
-                    );
-                  })}
-                  {opsTray.length === 0 ? (
-                    <p className="text-sm leading-7 text-cloud">{t("Pin recurring dossiers and gates here.", "반복적으로 쓰는 dossier와 gate를 여기에 고정한다.")}</p>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="war-frame px-5 py-5">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="eyebrow">{t("Recent runs", "최근 런")}</p>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">{recentRuns.length}</p>
-                </div>
-                <div className="mt-4 grid gap-3">
-                  {recentRuns.slice(0, 4).map((item) => {
-                    const localized = getLocalizedRecord(item, language);
-                    return (
-                      <Link key={item.route} href={item.route} className="lab-list-item block">
-                        <p className="eyebrow text-fog">{getScenarioDefinition(item.scenario)?.labels[language] ?? item.scenario}</p>
-                        <p className="mt-2 font-display text-xl text-paper">{stripOrdinalTitle(localized.title)}</p>
-                      </Link>
-                    );
-                  })}
-                  {recentRuns.length === 0 ? (
-                    <p className="text-sm leading-7 text-cloud">{t("Recent dossier runs land here for quick re-entry.", "최근 dossier 런은 여기에 쌓여 빠르게 재진입할 수 있다.")}</p>
-                  ) : null}
-                </div>
-              </div>
-            </section>
           </div>
 
-          <aside className="space-y-6 xl:sticky xl:top-6 xl:self-start">
+          <aside className="space-y-6 xl:sticky xl:top-8 xl:self-start">
             {lead && leadLocalized ? (
-              <section className="war-side-panel p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="eyebrow">{t("Lead dossier", "대표 dossier")}</p>
-                  <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
-                    {lead.timeToUse}m
-                  </span>
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <MetaPill label={getRiskLabel(lead.riskLevel, language)} />
-                  <MetaPill label={getLegacySurfaceLabel(lead.legacySurface, language)} />
-                  <MetaPill label={getTargetArchitectureLabel(lead.targetArchitecture, language)} />
-                  <MetaPill label={getDifficultyLabel(lead.difficulty, language)} />
-                </div>
-
-                <div className="mt-5">
-                  <p className="font-display text-4xl tracking-[-0.05em] text-paper">{stripOrdinalTitle(leadLocalized.title)}</p>
-                  <p className="mt-3 text-sm leading-7 text-cloud">{leadLocalized.summary}</p>
-                </div>
-
-                <div className="mt-5 space-y-3">
-                  <div className="threat-card p-4">
-                    <p className="eyebrow text-fog">{t("Primary risk", "주요 리스크")}</p>
-                    <p className="mt-3 text-sm leading-7 text-paper">{scenario.risks[language]}</p>
-                  </div>
-                  <div className="threat-card p-4">
-                    <p className="eyebrow text-fog">{t("Verification set", "검증 세트")}</p>
-                    <div className="mt-3 grid gap-2">
-                      {verificationSet.slice(0, 3).map((item) => {
-                        const localized = getLocalizedRecord(item, language);
-                        return (
-                          <Link key={item.route} href={item.route} className="lab-list-item block">
-                            <p className="font-display text-xl text-paper">{stripOrdinalTitle(localized.title)}</p>
-                            <p className="mt-1 text-sm leading-6 text-cloud">{localized.summary}</p>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-
+              <section className="index-panel p-6">
+                <p className="eyebrow">{t("Lead Reading", "대표 읽기")}</p>
+                <h2 className="mt-4 font-display text-4xl tracking-[-0.05em] text-paper">
+                  {stripOrdinalTitle(leadLocalized.title)}
+                </h2>
+                <p className="mt-4 text-sm leading-7 text-cloud">{leadLocalized.summary}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
+                  <MetaPill label={getArtifactTypeLabel(lead.artifactType, language)} />
+                  <MetaPill label={getRiskLabel(lead.riskLevel, language)} />
+                </div>
+                <div className="mt-6 flex flex-wrap gap-2">
                   <CopyPromptButton
                     value={buildCopyPayload(lead, language, true)}
                     onCopy={() => markCopied(lead.route)}
                     className="action-button"
-                    defaultLabel={t("Copy migration context", "마이그레이션 컨텍스트 복사")}
+                    defaultLabel={t("Copy dossier", "dossier 복사")}
                     copiedLabel={t("Copied", "복사됨")}
                   />
-                  <Link href={lead.route} className="ghost-button">
-                    {t("Open lead dossier", "대표 dossier 열기")}
+                  <Link href={lead.route} className="quiet-link">
+                    {t("Open text", "본문 열기")}
                   </Link>
                 </div>
               </section>
             ) : null}
 
-            <section className="war-frame archive-shell px-5 py-5 md:px-6">
-              <div className="flex items-center justify-between gap-3">
-                <p className="eyebrow">{t("Archive / Secondary library", "Archive / Secondary library")}</p>
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">{archiveRecords.length}</p>
-              </div>
-              <p className="mt-3 text-sm leading-7 text-cloud">
-                {t(
-                  "Generic docs are still here, but they are no longer driving the front page.",
-                  "범용 문서는 남겨두되, 더 이상 프런트 페이지를 끌고 가지 않는다."
-                )}
-              </p>
-              <div className="mt-4 grid gap-2">
-                {archiveRecords.slice(0, 8).map((item) => {
+            <section className="index-panel p-6">
+              <p className="eyebrow">{t("Recently Read", "최근 읽은 문서")}</p>
+              <div className="mt-5 grid gap-2">
+                {(recentReads.length > 0 ? recentReads.slice(0, 5) : scenarioRecords.slice(0, 5)).map((item) => {
                   const localized = getLocalizedRecord(item, language);
                   return (
-                    <Link key={item.route} href={item.route} className="lab-list-item block">
-                      <p className="eyebrow text-fog">{item.kind}</p>
-                      <p className="mt-2 font-display text-xl text-paper">{stripOrdinalTitle(localized.title)}</p>
+                    <Link key={item.route} href={item.route} className="index-entry">
+                      <p className="font-display text-xl tracking-[-0.03em] text-paper">
+                        {stripOrdinalTitle(localized.title)}
+                      </p>
                     </Link>
                   );
                 })}
               </div>
-              {recentSearches.length > 0 ? (
-                <div className="mt-5 border-t border-line pt-4">
-                  <p className="eyebrow text-fog">{t("Recent search traces", "최근 검색 흔적")}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {recentSearches.slice(0, 6).map((item) => (
-                      <span key={item} className="rounded-full border border-line px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
             </section>
           </aside>
         </section>
