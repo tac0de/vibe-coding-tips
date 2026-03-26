@@ -1,0 +1,210 @@
+1:"$Sreact.fragment"
+2:I[7980,["177","static/chunks/app/layout-efa5bca206f5ed37.js"],"SiteLanguageProvider"]
+3:I[5776,["177","static/chunks/app/layout-efa5bca206f5ed37.js"],"ReadingProgressProvider"]
+4:I[4323,["177","static/chunks/app/layout-efa5bca206f5ed37.js"],"WorkbenchStateProvider"]
+5:I[6607,[],""]
+6:I[5027,[],""]
+8:I[6102,[],"OutletBoundary"]
+a:I[7803,[],"AsyncMetadataOutlet"]
+c:I[6102,[],"ViewportBoundary"]
+e:I[6102,[],"MetadataBoundary"]
+f:"$Sreact.suspense"
+11:I[4485,[],""]
+:HL["/vibe-coding-tips/_next/static/media/bb3ef058b751a6ad-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibe-coding-tips/_next/static/media/d2c1ffb734f61872-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibe-coding-tips/_next/static/media/e192359dc6beee49-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibe-coding-tips/_next/static/css/ee40ce506d55b93b.css","style"]
+:HL["/vibe-coding-tips/_next/static/css/212f2f44320b2292.css","style"]
+:HL["/vibe-coding-tips/_next/static/css/4fec5cf0f8f4587f.css","style"]
+0:{"P":null,"b":"ImTcM5H4fJRONXHZgi_mb","p":"/vibe-coding-tips","c":["","playbooks","mcp-orchestration",""],"i":false,"f":[[["",{"children":["playbooks",{"children":[["slug","mcp-orchestration","c"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/vibe-coding-tips/_next/static/css/ee40ce506d55b93b.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/vibe-coding-tips/_next/static/css/212f2f44320b2292.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/vibe-coding-tips/_next/static/css/4fec5cf0f8f4587f.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ko","children":["$","body",null,{"className":"__variable_65366c __variable_8ec159 __variable_bdaae9 font-sans antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"children":["$","$L4",null,{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]}]}]]}],{"children":["playbooks",["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","mcp-orchestration","c"],["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L7",null,["$","$L8",null,{"children":["$L9",["$","$La",null,{"promise":"$@b"}]]}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$Lc",null,{"children":"$Ld"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$Le",null,{"children":["$","div",null,{"hidden":true,"children":["$","$f",null,{"fallback":null,"children":"$L10"}]}]}]]}],false]],"m":"$undefined","G":["$11",[]],"s":false,"S":true}
+12:I[192,["174","static/chunks/174-e06431677b020f6b.js","996","static/chunks/996-c0a31bacfbdc8641.js","119","static/chunks/app/playbooks/%5B...slug%5D/page-7d22aa11565fdf9c.js"],"DocumentLayout"]
+13:T812,<p>도구가 많아질수록 중요한 것은 “무엇을 쓸까”보다 “언제 누구를 먼저 쓸까”다.</p>
+<h2 id="기본-원칙">기본 원칙</h2>
+<ul>
+<li>탐색 도구는 구현 전에 짧게</li>
+<li>구현 도구는 범위가 잠긴 뒤에만</li>
+<li>reviewer는 구현과 분리</li>
+<li>browser verifier는 화면이 생긴 뒤 마지막에</li>
+<li>문서 조회는 필요한 섹션만</li>
+</ul>
+<h2 id="ui-tailwind-작업에서의-추천-순서">UI / Tailwind 작업에서의 추천 순서</h2>
+<ol>
+<li>explorer로 구조 읽기</li>
+<li>design-system extract 또는 brief prompt로 기준 고정</li>
+<li>builder로 작은 패치</li>
+<li>reviewer로 회귀와 톤 검토</li>
+<li>browser verifier로 실제 breakage 확인</li>
+</ol>
+<h2 id="d3-작업에서의-추천-순서">D3 작업에서의 추천 순서</h2>
+<ol>
+<li>D3 필요 여부 판단</li>
+<li>공식 문서나 Context7로 필요한 모듈만 확인</li>
+<li>data shaping</li>
+<li>scale -> axis -> join -> tooltip -> advanced interaction</li>
+<li>performance / interaction QA</li>
+<li>browser verifier</li>
+</ol>
+<h2 id="자주-쓰는-mcp-도구와-용도">자주 쓰는 MCP / 도구와 용도</h2>
+<ul>
+<li>Playwright MCP: 실제 화면 검증, breakpoint, hover/click 흐름 확인</li>
+<li>Context7: 최신 라이브러리 API 문맥 주입</li>
+<li>GitHub / registry 계열 MCP: 이슈, PR, 저장소 문맥 확인</li>
+<li>일반 브라우징: 최신 문서나 기사, 공식 출처 확인</li>
+</ul>
+<h2 id="비효율-패턴">비효율 패턴</h2>
+<ul>
+<li>구현 전에 브라우저 검증부터 건다</li>
+<li>reviewer 없이 builder만 돌린다</li>
+<li>D3 단계가 섞인 채로 바로 interaction부터 붙인다</li>
+<li>필요한 API 범위보다 넓게 문서를 읽는다</li>
+</ul>
+<h2 id="같이-보면-좋은-파일">같이 보면 좋은 파일</h2>
+<ul>
+<li><code>prompts/onboarding/11-tool-orchestration.md</code></li>
+<li><code>prompts/onboarding/09-subagent-orchestration.md</code></li>
+<li><code>prompts/d3/14-where-d3-fits-best.md</code></li>
+</ul>
+14:T812,<p>도구가 많아질수록 중요한 것은 “무엇을 쓸까”보다 “언제 누구를 먼저 쓸까”다.</p>
+<h2 id="기본-원칙">기본 원칙</h2>
+<ul>
+<li>탐색 도구는 구현 전에 짧게</li>
+<li>구현 도구는 범위가 잠긴 뒤에만</li>
+<li>reviewer는 구현과 분리</li>
+<li>browser verifier는 화면이 생긴 뒤 마지막에</li>
+<li>문서 조회는 필요한 섹션만</li>
+</ul>
+<h2 id="ui-tailwind-작업에서의-추천-순서">UI / Tailwind 작업에서의 추천 순서</h2>
+<ol>
+<li>explorer로 구조 읽기</li>
+<li>design-system extract 또는 brief prompt로 기준 고정</li>
+<li>builder로 작은 패치</li>
+<li>reviewer로 회귀와 톤 검토</li>
+<li>browser verifier로 실제 breakage 확인</li>
+</ol>
+<h2 id="d3-작업에서의-추천-순서">D3 작업에서의 추천 순서</h2>
+<ol>
+<li>D3 필요 여부 판단</li>
+<li>공식 문서나 Context7로 필요한 모듈만 확인</li>
+<li>data shaping</li>
+<li>scale -> axis -> join -> tooltip -> advanced interaction</li>
+<li>performance / interaction QA</li>
+<li>browser verifier</li>
+</ol>
+<h2 id="자주-쓰는-mcp-도구와-용도">자주 쓰는 MCP / 도구와 용도</h2>
+<ul>
+<li>Playwright MCP: 실제 화면 검증, breakpoint, hover/click 흐름 확인</li>
+<li>Context7: 최신 라이브러리 API 문맥 주입</li>
+<li>GitHub / registry 계열 MCP: 이슈, PR, 저장소 문맥 확인</li>
+<li>일반 브라우징: 최신 문서나 기사, 공식 출처 확인</li>
+</ul>
+<h2 id="비효율-패턴">비효율 패턴</h2>
+<ul>
+<li>구현 전에 브라우저 검증부터 건다</li>
+<li>reviewer 없이 builder만 돌린다</li>
+<li>D3 단계가 섞인 채로 바로 interaction부터 붙인다</li>
+<li>필요한 API 범위보다 넓게 문서를 읽는다</li>
+</ul>
+<h2 id="같이-보면-좋은-파일">같이 보면 좋은 파일</h2>
+<ul>
+<li><code>prompts/onboarding/11-tool-orchestration.md</code></li>
+<li><code>prompts/onboarding/09-subagent-orchestration.md</code></li>
+<li><code>prompts/d3/14-where-d3-fits-best.md</code></li>
+</ul>
+15:T691,As the number of tools increases, the more important question is not “what to use,” but “when and who to use first.”
+
+## basic principles
+
+- Navigation tools are briefly
+- The implementation tool only works after the scope is locked.
+- Reviewer is separate from implementation
+- The browser verifier is used at the end after the screen is created.
+- Document search only for the sections you need
+
+## Recommendation order in UI/Tailwind tasks
+
+1. Reading structure with explorer
+2. Fix criteria with design-system extract or brief prompt
+3. Small patch with builder
+4. Return to reviewer and review tone
+5. Check actual breakage with browser verifier
+
+## Recommendation order in D3 tasks
+
+1. Determine whether D3 is needed
+2. Check only necessary modules through official documentation or Context7
+3. data shaping
+4. scale -> axis -> join -> tooltip -> advanced interaction
+5. performance / interaction QA
+6. browser verifier
+
+## Frequently used MCP / tools and uses
+
+- Playwright MCP: Actual screen verification, breakpoint, hover/click flow verification
+- Context7: Modern library API context injection
+- GitHub / registry-based MCP: Check issues, PR, and repository context
+- General browsing: Check the latest documents, articles, and official sources
+
+## inefficiency pattern
+
+- Browser verification is required before implementation
+- Run only builder without reviewer
+- D3 steps are mixed and the interaction is added immediately.
+- Reading the documentation wider than the required API scope
+
+## Good file to watch together
+
+- `prompts/onboarding/11-tool-orchestration.md`
+- `prompts/onboarding/09-subagent-orchestration.md`
+- `prompts/d3/14-where-d3-fits-best.md`
+16:T892,<p>As the number of tools increases, the more important question is not “what to use,” but “when and who to use first.”</p>
+<h2 id="basic-principles">basic principles</h2>
+<ul>
+<li>Navigation tools are briefly</li>
+<li>The implementation tool only works after the scope is locked.</li>
+<li>Reviewer is separate from implementation</li>
+<li>The browser verifier is used at the end after the screen is created.</li>
+<li>Document search only for the sections you need</li>
+</ul>
+<h2 id="recommendation-order-in-uitailwind-tasks">Recommendation order in UI/Tailwind tasks</h2>
+<ol>
+<li>Reading structure with explorer</li>
+<li>Fix criteria with design-system extract or brief prompt</li>
+<li>Small patch with builder</li>
+<li>Return to reviewer and review tone</li>
+<li>Check actual breakage with browser verifier</li>
+</ol>
+<h2 id="recommendation-order-in-d3-tasks">Recommendation order in D3 tasks</h2>
+<ol>
+<li>Determine whether D3 is needed</li>
+<li>Check only necessary modules through official documentation or Context7</li>
+<li>data shaping</li>
+<li>scale -> axis -> join -> tooltip -> advanced interaction</li>
+<li>performance / interaction QA</li>
+<li>browser verifier</li>
+</ol>
+<h2 id="frequently-used-mcp-tools-and-uses">Frequently used MCP / tools and uses</h2>
+<ul>
+<li>Playwright MCP: Actual screen verification, breakpoint, hover/click flow verification</li>
+<li>Context7: Modern library API context injection</li>
+<li>GitHub / registry-based MCP: Check issues, PR, and repository context</li>
+<li>General browsing: Check the latest documents, articles, and official sources</li>
+</ul>
+<h2 id="inefficiency-pattern">inefficiency pattern</h2>
+<ul>
+<li>Browser verification is required before implementation</li>
+<li>Run only builder without reviewer</li>
+<li>D3 steps are mixed and the interaction is added immediately.</li>
+<li>Reading the documentation wider than the required API scope</li>
+</ul>
+<h2 id="good-file-to-watch-together">Good file to watch together</h2>
+<ul>
+<li><code>prompts/onboarding/11-tool-orchestration.md</code></li>
+<li><code>prompts/onboarding/09-subagent-orchestration.md</code></li>
+<li><code>prompts/d3/14-where-d3-fits-best.md</code></li>
+</ul>
+7:["$","$L12",null,{"document":{"title":"MCP Orchestration","kind":"playbook","domain":"ops","summary":"도구가 많아질수록 중요한 것은 많이 쓰는 것이 아니라 호출 순서와 책임 분리다.","tags":["ops","mcp","orchestration"],"useCase":"agent-orchestration","role":"orchestrator","difficulty":"advanced","timeToUse":18,"copyReadiness":"guided","workflowGroup":"orchestration-lab","featured":true,"order":"$undefined","next":null,"related":["prompts/onboarding/11-tool-orchestration.md","sources/mcp.md","sources/openai.md"],"slug":["mcp-orchestration"],"route":"/playbooks/mcp-orchestration","path":"/home/runner/work/vibe-coding-tips/vibe-coding-tips/playbooks/mcp-orchestration.md","body":"도구가 많아질수록 중요한 것은 “무엇을 쓸까”보다 “언제 누구를 먼저 쓸까”다.\n\n## 기본 원칙\n\n- 탐색 도구는 구현 전에 짧게\n- 구현 도구는 범위가 잠긴 뒤에만\n- reviewer는 구현과 분리\n- browser verifier는 화면이 생긴 뒤 마지막에\n- 문서 조회는 필요한 섹션만\n\n## UI / Tailwind 작업에서의 추천 순서\n\n1. explorer로 구조 읽기\n2. design-system extract 또는 brief prompt로 기준 고정\n3. builder로 작은 패치\n4. reviewer로 회귀와 톤 검토\n5. browser verifier로 실제 breakage 확인\n\n## D3 작업에서의 추천 순서\n\n1. D3 필요 여부 판단\n2. 공식 문서나 Context7로 필요한 모듈만 확인\n3. data shaping\n4. scale -> axis -> join -> tooltip -> advanced interaction\n5. performance / interaction QA\n6. browser verifier\n\n## 자주 쓰는 MCP / 도구와 용도\n\n- Playwright MCP: 실제 화면 검증, breakpoint, hover/click 흐름 확인\n- Context7: 최신 라이브러리 API 문맥 주입\n- GitHub / registry 계열 MCP: 이슈, PR, 저장소 문맥 확인\n- 일반 브라우징: 최신 문서나 기사, 공식 출처 확인\n\n## 비효율 패턴\n\n- 구현 전에 브라우저 검증부터 건다\n- reviewer 없이 builder만 돌린다\n- D3 단계가 섞인 채로 바로 interaction부터 붙인다\n- 필요한 API 범위보다 넓게 문서를 읽는다\n\n## 같이 보면 좋은 파일\n\n- `prompts/onboarding/11-tool-orchestration.md`\n- `prompts/onboarding/09-subagent-orchestration.md`\n- `prompts/d3/14-where-d3-fits-best.md`\n","html":"$13","toc":[{"id":"기본-원칙","title":"기본 원칙","level":2},{"id":"ui-tailwind-작업에서의-추천-순서","title":"UI / Tailwind 작업에서의 추천 순서","level":2},{"id":"d3-작업에서의-추천-순서","title":"D3 작업에서의 추천 순서","level":2},{"id":"자주-쓰는-mcp-도구와-용도","title":"자주 쓰는 MCP / 도구와 용도","level":2},{"id":"비효율-패턴","title":"비효율 패턴","level":2},{"id":"같이-보면-좋은-파일","title":"같이 보면 좋은 파일","level":2}],"promptBlock":null,"nextReference":null,"situationLead":null,"summaryPoints":[],"failurePoints":[],"locales":{"ko":{"title":"MCP Orchestration","summary":"도구가 많아질수록 중요한 것은 많이 쓰는 것이 아니라 호출 순서와 책임 분리다.","body":"도구가 많아질수록 중요한 것은 “무엇을 쓸까”보다 “언제 누구를 먼저 쓸까”다.\n\n## 기본 원칙\n\n- 탐색 도구는 구현 전에 짧게\n- 구현 도구는 범위가 잠긴 뒤에만\n- reviewer는 구현과 분리\n- browser verifier는 화면이 생긴 뒤 마지막에\n- 문서 조회는 필요한 섹션만\n\n## UI / Tailwind 작업에서의 추천 순서\n\n1. explorer로 구조 읽기\n2. design-system extract 또는 brief prompt로 기준 고정\n3. builder로 작은 패치\n4. reviewer로 회귀와 톤 검토\n5. browser verifier로 실제 breakage 확인\n\n## D3 작업에서의 추천 순서\n\n1. D3 필요 여부 판단\n2. 공식 문서나 Context7로 필요한 모듈만 확인\n3. data shaping\n4. scale -> axis -> join -> tooltip -> advanced interaction\n5. performance / interaction QA\n6. browser verifier\n\n## 자주 쓰는 MCP / 도구와 용도\n\n- Playwright MCP: 실제 화면 검증, breakpoint, hover/click 흐름 확인\n- Context7: 최신 라이브러리 API 문맥 주입\n- GitHub / registry 계열 MCP: 이슈, PR, 저장소 문맥 확인\n- 일반 브라우징: 최신 문서나 기사, 공식 출처 확인\n\n## 비효율 패턴\n\n- 구현 전에 브라우저 검증부터 건다\n- reviewer 없이 builder만 돌린다\n- D3 단계가 섞인 채로 바로 interaction부터 붙인다\n- 필요한 API 범위보다 넓게 문서를 읽는다\n\n## 같이 보면 좋은 파일\n\n- `prompts/onboarding/11-tool-orchestration.md`\n- `prompts/onboarding/09-subagent-orchestration.md`\n- `prompts/d3/14-where-d3-fits-best.md`\n","html":"$14","toc":"$7:props:document:toc","promptBlock":null,"situationLead":null,"summaryPoints":"$7:props:document:summaryPoints","failurePoints":"$7:props:document:failurePoints"},"en":{"title":"MCP Orchestration","summary":"As the number of tools increases, the important thing is not to use more, but to call order and separation of responsibilities.","body":"$15","html":"$16","toc":[{"id":"basic-principles","title":"basic principles","level":2},{"id":"recommendation-order-in-uitailwind-tasks","title":"Recommendation order in UI/Tailwind tasks","level":2},{"id":"recommendation-order-in-d3-tasks","title":"Recommendation order in D3 tasks","level":2},{"id":"frequently-used-mcp-tools-and-uses","title":"Frequently used MCP / tools and uses","level":2},{"id":"inefficiency-pattern","title":"inefficiency pattern","level":2},{"id":"good-file-to-watch-together","title":"Good file to watch together","level":2}],"promptBlock":null,"situationLead":null,"summaryPoints":[],"failurePoints":[]}},"nextRoute":null,"prevLink":null,"sequenceIndex":null,"sequenceTotal":null,"sequenceLinks":[],"nextLink":null,"relatedRoutes":[{"title":"11. Tool Orchestration","route":"/prompts/onboarding/11-tool-orchestration","summary":"Codex, reviewer, browser verifier, MCP 도구를 어떤 순서로 묶어 써야 비용과 실패를 줄이는지 정리한다.","kind":"prompt","domain":"onboarding","useCase":"agent-orchestration","role":"orchestrator","difficulty":"advanced","timeToUse":18,"copyReadiness":"ready","workflowGroup":"orchestration-lab","featured":true,"order":11,"locales":{"ko":{"title":"11. Tool Orchestration","summary":"Codex, reviewer, browser verifier, MCP 도구를 어떤 순서로 묶어 써야 비용과 실패를 줄이는지 정리한다."},"en":{"title":"11. Tool Orchestration","summary":"We organize the order in which codex, reviewer, browser verifier, and MCP tools should be used to reduce costs and failures."}}},{"title":"MCP Sources","route":"/sources/mcp","summary":"MCP와 도구 오케스트레이션을 설명할 때 바로 참조할 공식/핵심 문서.","kind":"source","domain":"mcp","useCase":"reference","role":"reference","difficulty":"intermediate","timeToUse":12,"copyReadiness":"reference","workflowGroup":"orchestration-lab","featured":true,"order":"$undefined","locales":{"ko":{"title":"MCP Sources","summary":"MCP와 도구 오케스트레이션을 설명할 때 바로 참조할 공식/핵심 문서."},"en":{"title":"MCP Sources","summary":"Official/core documentation to immediately reference when explaining MCP and tool orchestration."}}},{"title":"OpenAI Sources","route":"/sources/openai","summary":"Codex의 기본 사용 문맥과 기능 범위를 보기 위해","kind":"source","domain":"openai","useCase":"reference","role":"reference","difficulty":"intermediate","timeToUse":12,"copyReadiness":"reference","workflowGroup":"evidence-base","featured":true,"order":"$undefined","locales":{"ko":{"title":"OpenAI Sources","summary":"Codex의 기본 사용 문맥과 기능 범위를 보기 위해"},"en":{"title":"OpenAI Sources","summary":"- Link: <https://developers.openai.com/codex/app>"}}}]}}]
+d:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+9:null
+17:I[4467,[],"IconMark"]
+b:{"metadata":[["$","title","0",{"children":"Prompt Workbench"}],["$","meta","1",{"name":"description","content":"Interaction-max prompt workbench for agent coding, rapid execution flows, browser verification, UI passes, D3 work, and orchestration."}],["$","link","2",{"rel":"icon","href":"/vibe-coding-tips/icon.svg?ac17599649b59e16","type":"image/svg+xml","sizes":"any"}],["$","$L17","3",{}]],"error":null,"digest":"$undefined"}
+10:"$b:metadata"

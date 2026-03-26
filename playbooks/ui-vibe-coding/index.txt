@@ -1,0 +1,190 @@
+1:"$Sreact.fragment"
+2:I[7980,["177","static/chunks/app/layout-efa5bca206f5ed37.js"],"SiteLanguageProvider"]
+3:I[5776,["177","static/chunks/app/layout-efa5bca206f5ed37.js"],"ReadingProgressProvider"]
+4:I[4323,["177","static/chunks/app/layout-efa5bca206f5ed37.js"],"WorkbenchStateProvider"]
+5:I[6607,[],""]
+6:I[5027,[],""]
+8:I[6102,[],"OutletBoundary"]
+a:I[7803,[],"AsyncMetadataOutlet"]
+c:I[6102,[],"ViewportBoundary"]
+e:I[6102,[],"MetadataBoundary"]
+f:"$Sreact.suspense"
+11:I[4485,[],""]
+:HL["/vibe-coding-tips/_next/static/media/bb3ef058b751a6ad-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibe-coding-tips/_next/static/media/d2c1ffb734f61872-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibe-coding-tips/_next/static/media/e192359dc6beee49-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibe-coding-tips/_next/static/css/ee40ce506d55b93b.css","style"]
+:HL["/vibe-coding-tips/_next/static/css/212f2f44320b2292.css","style"]
+:HL["/vibe-coding-tips/_next/static/css/4fec5cf0f8f4587f.css","style"]
+0:{"P":null,"b":"ImTcM5H4fJRONXHZgi_mb","p":"/vibe-coding-tips","c":["","playbooks","ui-vibe-coding",""],"i":false,"f":[[["",{"children":["playbooks",{"children":[["slug","ui-vibe-coding","c"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/vibe-coding-tips/_next/static/css/ee40ce506d55b93b.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/vibe-coding-tips/_next/static/css/212f2f44320b2292.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/vibe-coding-tips/_next/static/css/4fec5cf0f8f4587f.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ko","children":["$","body",null,{"className":"__variable_65366c __variable_8ec159 __variable_bdaae9 font-sans antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"children":["$","$L4",null,{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]}]}]]}],{"children":["playbooks",["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","ui-vibe-coding","c"],["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L7",null,["$","$L8",null,{"children":["$L9",["$","$La",null,{"promise":"$@b"}]]}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$Lc",null,{"children":"$Ld"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$Le",null,{"children":["$","div",null,{"hidden":true,"children":["$","$f",null,{"fallback":null,"children":"$L10"}]}]}]]}],false]],"m":"$undefined","G":["$11",[]],"s":false,"S":true}
+12:I[192,["174","static/chunks/174-e06431677b020f6b.js","996","static/chunks/996-c0a31bacfbdc8641.js","119","static/chunks/app/playbooks/%5B...slug%5D/page-7d22aa11565fdf9c.js"],"DocumentLayout"]
+13:T78c,<p>UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다.</p>
+<h2 id="핵심-원칙">핵심 원칙</h2>
+<ul>
+<li>첫 화면의 주인공은 하나만 둔다</li>
+<li>카드, KPI, pill, dashboard 문법이 주인공이 되면 실패다</li>
+<li>모바일 기준으로 먼저 설계한다</li>
+<li>reference와 함께 금지할 UI 문법을 꼭 준다</li>
+</ul>
+<h2 id="tailwind를-어디에-잘-쓰는가">Tailwind를 어디에 잘 쓰는가</h2>
+<ul>
+<li>빠르게 레이아웃 위계를 정리할 때</li>
+<li>spacing과 typography 규칙을 실험적으로 조정할 때</li>
+<li>기존 design token을 읽고 얇게 맞춰갈 때</li>
+<li>작은 패치로 화면을 자주 돌려보는 vibe coding 흐름에 잘 맞는다</li>
+</ul>
+<h2 id="tailwind에서-특히-볼-것">Tailwind에서 특히 볼 것</h2>
+<ul>
+<li>spacing hierarchy</li>
+<li>typography hierarchy</li>
+<li>component depth</li>
+<li>surface / border / shadow 규칙</li>
+</ul>
+<h2 id="tailwind에서-자주-망하는-패턴">Tailwind에서 자주 망하는 패턴</h2>
+<ul>
+<li>utility를 늘리기만 하고 위계를 정의하지 않는다</li>
+<li>반응형 collapse 기준이 없다</li>
+<li>색과 shadow를 동시에 과하게 올린다</li>
+<li>class 중복을 줄이겠다고 섣불리 추상화부터 한다</li>
+</ul>
+<h2 id="바로-쓸-파일">바로 쓸 파일</h2>
+<ul>
+<li><code>prompts/ui/landing-first-screen.md</code></li>
+<li><code>prompts/ui/refactor-information-hierarchy.md</code></li>
+<li><code>prompts/ui/fix-responsive-breakage.md</code></li>
+<li><code>prompts/ui/create-design-brief.md</code></li>
+<li><code>prompts/ui/tailwind-cleanup.md</code></li>
+<li><code>prompts/ui/review-ui-tone.md</code></li>
+<li><code>prompts/ui/tailwind-vibe-rules.md</code></li>
+<li><code>prompts/ui/anti-dashboard-rules.md</code></li>
+<li><code>prompts/ui/accessibility-audit.md</code></li>
+</ul>
+14:T78c,<p>UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다.</p>
+<h2 id="핵심-원칙">핵심 원칙</h2>
+<ul>
+<li>첫 화면의 주인공은 하나만 둔다</li>
+<li>카드, KPI, pill, dashboard 문법이 주인공이 되면 실패다</li>
+<li>모바일 기준으로 먼저 설계한다</li>
+<li>reference와 함께 금지할 UI 문법을 꼭 준다</li>
+</ul>
+<h2 id="tailwind를-어디에-잘-쓰는가">Tailwind를 어디에 잘 쓰는가</h2>
+<ul>
+<li>빠르게 레이아웃 위계를 정리할 때</li>
+<li>spacing과 typography 규칙을 실험적으로 조정할 때</li>
+<li>기존 design token을 읽고 얇게 맞춰갈 때</li>
+<li>작은 패치로 화면을 자주 돌려보는 vibe coding 흐름에 잘 맞는다</li>
+</ul>
+<h2 id="tailwind에서-특히-볼-것">Tailwind에서 특히 볼 것</h2>
+<ul>
+<li>spacing hierarchy</li>
+<li>typography hierarchy</li>
+<li>component depth</li>
+<li>surface / border / shadow 규칙</li>
+</ul>
+<h2 id="tailwind에서-자주-망하는-패턴">Tailwind에서 자주 망하는 패턴</h2>
+<ul>
+<li>utility를 늘리기만 하고 위계를 정의하지 않는다</li>
+<li>반응형 collapse 기준이 없다</li>
+<li>색과 shadow를 동시에 과하게 올린다</li>
+<li>class 중복을 줄이겠다고 섣불리 추상화부터 한다</li>
+</ul>
+<h2 id="바로-쓸-파일">바로 쓸 파일</h2>
+<ul>
+<li><code>prompts/ui/landing-first-screen.md</code></li>
+<li><code>prompts/ui/refactor-information-hierarchy.md</code></li>
+<li><code>prompts/ui/fix-responsive-breakage.md</code></li>
+<li><code>prompts/ui/create-design-brief.md</code></li>
+<li><code>prompts/ui/tailwind-cleanup.md</code></li>
+<li><code>prompts/ui/review-ui-tone.md</code></li>
+<li><code>prompts/ui/tailwind-vibe-rules.md</code></li>
+<li><code>prompts/ui/anti-dashboard-rules.md</code></li>
+<li><code>prompts/ui/accessibility-audit.md</code></li>
+</ul>
+15:T5c6,The important thing in UI work is not “making it pretty,” but locking down “what kind of scene to create.”
+
+## core principles
+
+- There is only one main character on the first screen.
+- If card, KPI, pill, dashboard grammar becomes the main character, it is a failure.
+- Design for mobile first
+- Be sure to provide the UI syntax to be banned along with the reference.
+
+## What is Tailwind best used for?
+
+- When quickly organizing the layout hierarchy
+- When experimentally adjusting spacing and typography rules
+- When reading the existing design token and adjusting it thinly
+- It is a small patch that fits well with the vibe coding flow of frequently rotating the screen.
+
+## What to Watch Especially on Tailwind
+
+- spacing hierarchy
+- typography hierarchy
+- component depth
+- surface/border/shadow rules
+
+## Patterns that frequently fail in Tailwind
+
+- Only increases utility and does not define hierarchy
+- There is no standard for responsive collapse
+- Excessively increases color and shadow at the same time
+- To reduce class duplication, we hastily start with abstraction.
+
+## File to be written immediately
+
+- `prompts/ui/landing-first-screen.md`
+- `prompts/ui/refactor-information-hierarchy.md`
+- `prompts/ui/fix-responsive-breakage.md`
+- `prompts/ui/create-design-brief.md`
+- `prompts/ui/tailwind-cleanup.md`
+- `prompts/ui/review-ui-tone.md`
+- `prompts/ui/tailwind-vibe-rules.md`
+- `prompts/ui/anti-dashboard-rules.md`
+- `prompts/ui/accessibility-audit.md`
+16:T7e0,<p>The important thing in UI work is not “making it pretty,” but locking down “what kind of scene to create.”</p>
+<h2 id="core-principles">core principles</h2>
+<ul>
+<li>There is only one main character on the first screen.</li>
+<li>If card, KPI, pill, dashboard grammar becomes the main character, it is a failure.</li>
+<li>Design for mobile first</li>
+<li>Be sure to provide the UI syntax to be banned along with the reference.</li>
+</ul>
+<h2 id="what-is-tailwind-best-used-for">What is Tailwind best used for?</h2>
+<ul>
+<li>When quickly organizing the layout hierarchy</li>
+<li>When experimentally adjusting spacing and typography rules</li>
+<li>When reading the existing design token and adjusting it thinly</li>
+<li>It is a small patch that fits well with the vibe coding flow of frequently rotating the screen.</li>
+</ul>
+<h2 id="what-to-watch-especially-on-tailwind">What to Watch Especially on Tailwind</h2>
+<ul>
+<li>spacing hierarchy</li>
+<li>typography hierarchy</li>
+<li>component depth</li>
+<li>surface/border/shadow rules</li>
+</ul>
+<h2 id="patterns-that-frequently-fail-in-tailwind">Patterns that frequently fail in Tailwind</h2>
+<ul>
+<li>Only increases utility and does not define hierarchy</li>
+<li>There is no standard for responsive collapse</li>
+<li>Excessively increases color and shadow at the same time</li>
+<li>To reduce class duplication, we hastily start with abstraction.</li>
+</ul>
+<h2 id="file-to-be-written-immediately">File to be written immediately</h2>
+<ul>
+<li><code>prompts/ui/landing-first-screen.md</code></li>
+<li><code>prompts/ui/refactor-information-hierarchy.md</code></li>
+<li><code>prompts/ui/fix-responsive-breakage.md</code></li>
+<li><code>prompts/ui/create-design-brief.md</code></li>
+<li><code>prompts/ui/tailwind-cleanup.md</code></li>
+<li><code>prompts/ui/review-ui-tone.md</code></li>
+<li><code>prompts/ui/tailwind-vibe-rules.md</code></li>
+<li><code>prompts/ui/anti-dashboard-rules.md</code></li>
+<li><code>prompts/ui/accessibility-audit.md</code></li>
+</ul>
+7:["$","$L12",null,{"document":{"title":"UI Vibe Coding","kind":"playbook","domain":"ui","summary":"UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다.","tags":["ui","vibe","coding"],"useCase":"ui-polish","role":"operator","difficulty":"starter","timeToUse":5,"copyReadiness":"guided","workflowGroup":"ui-studio","featured":false,"order":"$undefined","next":null,"related":[],"slug":["ui-vibe-coding"],"route":"/playbooks/ui-vibe-coding","path":"/home/runner/work/vibe-coding-tips/vibe-coding-tips/playbooks/ui-vibe-coding.md","body":"UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다.\n\n## 핵심 원칙\n\n- 첫 화면의 주인공은 하나만 둔다\n- 카드, KPI, pill, dashboard 문법이 주인공이 되면 실패다\n- 모바일 기준으로 먼저 설계한다\n- reference와 함께 금지할 UI 문법을 꼭 준다\n\n## Tailwind를 어디에 잘 쓰는가\n\n- 빠르게 레이아웃 위계를 정리할 때\n- spacing과 typography 규칙을 실험적으로 조정할 때\n- 기존 design token을 읽고 얇게 맞춰갈 때\n- 작은 패치로 화면을 자주 돌려보는 vibe coding 흐름에 잘 맞는다\n\n## Tailwind에서 특히 볼 것\n\n- spacing hierarchy\n- typography hierarchy\n- component depth\n- surface / border / shadow 규칙\n\n## Tailwind에서 자주 망하는 패턴\n\n- utility를 늘리기만 하고 위계를 정의하지 않는다\n- 반응형 collapse 기준이 없다\n- 색과 shadow를 동시에 과하게 올린다\n- class 중복을 줄이겠다고 섣불리 추상화부터 한다\n\n## 바로 쓸 파일\n\n- `prompts/ui/landing-first-screen.md`\n- `prompts/ui/refactor-information-hierarchy.md`\n- `prompts/ui/fix-responsive-breakage.md`\n- `prompts/ui/create-design-brief.md`\n- `prompts/ui/tailwind-cleanup.md`\n- `prompts/ui/review-ui-tone.md`\n- `prompts/ui/tailwind-vibe-rules.md`\n- `prompts/ui/anti-dashboard-rules.md`\n- `prompts/ui/accessibility-audit.md`\n","html":"$13","toc":[{"id":"핵심-원칙","title":"핵심 원칙","level":2},{"id":"tailwind를-어디에-잘-쓰는가","title":"Tailwind를 어디에 잘 쓰는가","level":2},{"id":"tailwind에서-특히-볼-것","title":"Tailwind에서 특히 볼 것","level":2},{"id":"tailwind에서-자주-망하는-패턴","title":"Tailwind에서 자주 망하는 패턴","level":2},{"id":"바로-쓸-파일","title":"바로 쓸 파일","level":2}],"promptBlock":null,"nextReference":null,"situationLead":null,"summaryPoints":[],"failurePoints":[],"locales":{"ko":{"title":"UI Vibe Coding","summary":"UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다.","body":"UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다.\n\n## 핵심 원칙\n\n- 첫 화면의 주인공은 하나만 둔다\n- 카드, KPI, pill, dashboard 문법이 주인공이 되면 실패다\n- 모바일 기준으로 먼저 설계한다\n- reference와 함께 금지할 UI 문법을 꼭 준다\n\n## Tailwind를 어디에 잘 쓰는가\n\n- 빠르게 레이아웃 위계를 정리할 때\n- spacing과 typography 규칙을 실험적으로 조정할 때\n- 기존 design token을 읽고 얇게 맞춰갈 때\n- 작은 패치로 화면을 자주 돌려보는 vibe coding 흐름에 잘 맞는다\n\n## Tailwind에서 특히 볼 것\n\n- spacing hierarchy\n- typography hierarchy\n- component depth\n- surface / border / shadow 규칙\n\n## Tailwind에서 자주 망하는 패턴\n\n- utility를 늘리기만 하고 위계를 정의하지 않는다\n- 반응형 collapse 기준이 없다\n- 색과 shadow를 동시에 과하게 올린다\n- class 중복을 줄이겠다고 섣불리 추상화부터 한다\n\n## 바로 쓸 파일\n\n- `prompts/ui/landing-first-screen.md`\n- `prompts/ui/refactor-information-hierarchy.md`\n- `prompts/ui/fix-responsive-breakage.md`\n- `prompts/ui/create-design-brief.md`\n- `prompts/ui/tailwind-cleanup.md`\n- `prompts/ui/review-ui-tone.md`\n- `prompts/ui/tailwind-vibe-rules.md`\n- `prompts/ui/anti-dashboard-rules.md`\n- `prompts/ui/accessibility-audit.md`\n","html":"$14","toc":"$7:props:document:toc","promptBlock":null,"situationLead":null,"summaryPoints":"$7:props:document:summaryPoints","failurePoints":"$7:props:document:failurePoints"},"en":{"title":"UI Vibe Coding","summary":"The important thing in UI work is not “making it pretty,” but locking down “what kind of scene to create.”","body":"$15","html":"$16","toc":[{"id":"core-principles","title":"core principles","level":2},{"id":"what-is-tailwind-best-used-for","title":"What is Tailwind best used for?","level":2},{"id":"what-to-watch-especially-on-tailwind","title":"What to Watch Especially on Tailwind","level":2},{"id":"patterns-that-frequently-fail-in-tailwind","title":"Patterns that frequently fail in Tailwind","level":2},{"id":"file-to-be-written-immediately","title":"File to be written immediately","level":2}],"promptBlock":null,"situationLead":null,"summaryPoints":[],"failurePoints":[]}},"nextRoute":null,"prevLink":null,"sequenceIndex":null,"sequenceTotal":null,"sequenceLinks":[],"nextLink":null,"relatedRoutes":[{"title":"Anti Dashboard Rules","route":"/prompts/ui/anti-dashboard-rules","summary":"랜딩이나 에디토리얼 UI가 자꾸 SaaS 대시보드처럼 나온다.","kind":"prompt","domain":"ui","useCase":"ui-polish","role":"builder","difficulty":"starter","timeToUse":5,"copyReadiness":"ready","workflowGroup":"ui-studio","featured":false,"order":"$undefined","locales":{"ko":{"title":"Anti Dashboard Rules","summary":"랜딩이나 에디토리얼 UI가 자꾸 SaaS 대시보드처럼 나온다."},"en":{"title":"Anti Dashboard Rules","summary":"The landing or editorial UI keeps appearing like a SaaS dashboard."}}},{"title":"Component API Cleanup","route":"/prompts/ui/component-api-cleanup","summary":"컴포넌트는 많아졌는데 props가 지저분하고 variant가 난잡해졌다.","kind":"prompt","domain":"ui","useCase":"ui-polish","role":"builder","difficulty":"starter","timeToUse":5,"copyReadiness":"ready","workflowGroup":"ui-studio","featured":false,"order":"$undefined","locales":{"ko":{"title":"Component API Cleanup","summary":"컴포넌트는 많아졌는데 props가 지저분하고 variant가 난잡해졌다."},"en":{"title":"Component API Cleanup","summary":"There are more components, but props are messy and variants are confusing."}}},{"title":"Create Design Brief","route":"/prompts/ui/create-design-brief","summary":"에이전트가 자꾸 양산형 UI를 만든다.","kind":"prompt","domain":"ui","useCase":"ui-polish","role":"builder","difficulty":"starter","timeToUse":5,"copyReadiness":"ready","workflowGroup":"ui-studio","featured":false,"order":"$undefined","locales":{"ko":{"title":"Create Design Brief","summary":"에이전트가 자꾸 양산형 UI를 만든다."},"en":{"title":"Create Design Brief","summary":"Agents keep creating mass-produced UIs."}}}]}}]
+d:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+9:null
+17:I[4467,[],"IconMark"]
+b:{"metadata":[["$","title","0",{"children":"Prompt Workbench"}],["$","meta","1",{"name":"description","content":"Interaction-max prompt workbench for agent coding, rapid execution flows, browser verification, UI passes, D3 work, and orchestration."}],["$","link","2",{"rel":"icon","href":"/vibe-coding-tips/icon.svg?ac17599649b59e16","type":"image/svg+xml","sizes":"any"}],["$","$L17","3",{}]],"error":null,"digest":"$undefined"}
+10:"$b:metadata"
