@@ -22,7 +22,7 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "vibe-coding-tips",
-  description: "Editorial prompt library for UI, Tailwind, D3, and harness engineering."
+  description: "UI, Tailwind, D3, 그리고 에이전트 작업 흐름을 바로 따라 쓰는 프롬프트 모음집."
 };
 
 export default function RootLayout({

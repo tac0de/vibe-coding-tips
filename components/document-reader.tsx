@@ -61,9 +61,9 @@ export function DocumentReader({
           </div>
           <div className="grid gap-1 text-sm text-smoke md:text-right">
             <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
-              Copy button lives in prompt view only
+              Copy button in prompt view only
             </p>
-            <p>문서 설명보다 복붙 실행이 먼저 필요하면 Prompt Only부터 본다.</p>
+            <p>바로 실행할 때는 Prompt Only, 빠르게 훑을 때는 Compact를 먼저 봅니다.</p>
           </div>
         </section>
       ) : null}

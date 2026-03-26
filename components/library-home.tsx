@@ -52,26 +52,27 @@ function AxisNavigator({
 
   return (
     <section className="border-b border-line pb-8">
-      <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Four Ways In</p>
-          <h2 className="mt-2 font-display text-2xl tracking-[-0.03em] md:text-4xl">Start from the work you actually need.</h2>
+          <h2 className="mt-2 font-display text-3xl tracking-[-0.04em] md:text-5xl">지금 할 일 기준으로 바로 들어가기</h2>
         </div>
         <p className="max-w-[38ch] text-sm leading-7 text-smoke">
-          홈은 더 이상 인덱스가 아니라 진입 화면이다. 지금 하려는 일 기준으로 한 축만 골라 들어가면 된다.
+          수강생용 시작 화면입니다. 온보딩, 1시간 세션, UI, D3 중 하나만 골라 바로 시작하면 됩니다.
         </p>
       </div>
-      <div className="grid gap-2 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2">
         {items.map((item) => (
           <Link
             key={item.title}
             href={item.target!.route}
-            className="grid gap-3 border-b border-line py-4 transition hover:bg-white/40 md:grid-cols-[72px_minmax(0,1fr)]"
+            className="group grid min-h-[190px] gap-3 border border-line bg-white/40 px-4 py-5 transition hover:border-cobalt hover:bg-white md:grid-cols-[72px_minmax(0,1fr)] md:px-5"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cobalt">{item.eyebrow}</p>
             <div className="space-y-1">
-              <p className="font-display text-2xl tracking-[-0.03em]">{item.title}</p>
-              <p className="text-sm leading-7 text-smoke">{item.summary}</p>
+              <p className="font-display text-3xl tracking-[-0.04em] transition group-hover:translate-x-0.5">{item.title}</p>
+              <p className="max-w-[32ch] text-sm leading-7 text-smoke">{item.summary}</p>
+              <p className="pt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Open Track</p>
             </div>
           </Link>
         ))}
@@ -99,11 +100,10 @@ function WorkshopSpotlight({
         <div className="space-y-5">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-cobalt">One Hour Lab</p>
           <h2 className="max-w-[12ch] font-display text-4xl leading-none tracking-[-0.05em] md:text-6xl">
-            60-minute agent workshop, ready to run.
+            60분 안에 한 사이클 끝내기
           </h2>
           <p className="max-w-[44ch] text-sm leading-7 text-smoke md:text-base">
-            기존 UI 프로젝트를 대상으로 explorer, builder, reviewer, browser verifier, d3 tutor를 실제로 분리
-            호출하는 1시간 세션이다.
+            기존 UI 프로젝트를 기준으로 읽기, 범위 잠금, 작은 패치, 리뷰, 브라우저 검증, D3 미니 적용까지 한 번에 돌립니다.
           </p>
           <div className="grid gap-2 border-t border-line pt-4 md:grid-cols-3">
             {[
@@ -191,7 +191,7 @@ function FlowRunner({
               <p className="max-w-measure text-sm leading-7 text-smoke">{item.summary}</p>
             </div>
             <div className="self-start font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
-              {item.promptBlock ? "prompt only" : item.kind}
+              {item.promptBlock ? "copy-ready" : item.kind}
             </div>
           </Link>
         ))}
@@ -206,10 +206,10 @@ function QuickStartStrip({ items }: { items: ContentRecord[] }) {
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Quick Start</p>
-          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">자주 바로 여는 프롬프트</h2>
+          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">자주 바로 여는 문서</h2>
         </div>
         <p className="max-w-[36ch] text-sm leading-7 text-smoke">
-          흐름 초반에 가장 자주 여는 문서만 먼저 뽑았다. 복사는 상세 화면에서 한 번만 제공한다.
+          수업 중 가장 자주 여는 흐름만 먼저 뽑았습니다.
         </p>
       </div>
       <div className="grid gap-3">
@@ -286,10 +286,10 @@ function ReadingTracks({
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Reading Tracks</p>
-          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">Open one track and stay in sequence.</h2>
+          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">트랙 하나를 고르고 끝까지 따라가기</h2>
         </div>
         <p className="max-w-[40ch] text-sm leading-7 text-smoke">
-          UI와 D3는 문서를 섞어 읽기보다, 한 트랙을 끝까지 따라가는 쪽이 더 빠르다.
+          UI와 D3는 문서를 섞어 읽기보다, 한 트랙을 끝까지 따라가는 쪽이 더 빠릅니다.
         </p>
       </div>
       <div className="grid gap-8 md:grid-cols-2">
@@ -344,15 +344,14 @@ export function LibraryHome({ data }: { data: HomeData }) {
       <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-10 px-5 pb-16 pt-6 md:px-8 md:pb-24 md:pt-10">
         <header className="grid gap-8 border-b border-line pb-8 md:grid-cols-[1.25fr_0.75fr] md:items-end">
           <div className="space-y-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-smoke">Editorial Prompt Library / Existing Project First</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-smoke">UI Agent Prompt Library</p>
             <h1 className="max-w-[11ch] font-display text-5xl leading-none tracking-[-0.055em] md:text-[6.5rem]">
-              Step by step prompts for real UI work.
+              실무 UI 작업을 바로 따라가는 프롬프트 모음집
             </h1>
           </div>
           <div className="space-y-4 md:justify-self-end">
             <p className="max-w-measure text-sm leading-7 text-smoke md:text-base">
-              기존 UI 프로젝트에 Codex를 붙일 때 필요한 온보딩, Tailwind 정리, D3 구현, reviewer 흐름을
-              생각 없이 따라가게 정리한 프롬프트 라이브러리다.
+              기존 UI 프로젝트에 바로 붙이는 흐름만 모았습니다. 온보딩, Tailwind 정리, D3 구현, reviewer, 브라우저 검증 순서대로 따라가면 됩니다.
             </p>
             <div className="grid gap-2 border-t border-line pt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke md:grid-cols-3">
               <span>{promptCount} prompts</span>
