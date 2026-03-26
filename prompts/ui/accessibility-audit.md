@@ -2,7 +2,7 @@
 title: "Accessibility Audit"
 kind: "prompt"
 domain: "ui"
-summary: "기존 UI를 손대기 전에 접근성 리스크를 빠르게 찾고 싶다."
+summary: "레거시 UI를 손대기 전 semantic, focus, keyboard, contrast 리스크를 빠르게 드러내는 첫 점검 프롬프트."
 tags:
   - "ui"
   - "accessibility"

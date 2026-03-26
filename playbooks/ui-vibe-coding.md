@@ -2,7 +2,7 @@
 title: "UI Vibe Coding"
 kind: "playbook"
 domain: "ui"
-summary: "UI 작업에서 중요한 건 “예쁘게”가 아니라 “어떤 장면을 만들지”를 잠그는 것이다."
+summary: "에이전트가 양산형 UI로 흐르지 않게 장면, 톤, hierarchy를 먼저 잠그는 UI 디렉션 playbook."
 tags:
   - "ui"
   - "vibe"

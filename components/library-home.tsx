@@ -1,7 +1,8 @@
 "use client";
 
+import gsap from "gsap";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CopyPromptButton } from "@/components/copy-prompt-button";
 import { useReadingProgress } from "@/components/reading-progress";
 import { LanguageToggle, useSiteLanguage } from "@/components/site-language";
@@ -81,6 +82,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
   const { recentViewed } = useReadingProgress();
   const { markCopied } = useWorkbenchState();
   const [selectedScenario, setSelectedScenario] = useState<string>("scss-swamp");
+  const rootRef = useRef<HTMLElement | null>(null);
 
   const scenario = getScenarioDefinition(selectedScenario) ?? WAR_ROOM_SCENARIOS[0];
   const scenarioRecords = useMemo(() => getScenarioRecords(data.all, selectedScenario), [data.all, selectedScenario]);
@@ -113,28 +115,58 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
   const scenarioLibrary = scenarioRecords.filter((item) => item.isDossier).slice(0, 6);
 
+  useEffect(() => {
+    if (!rootRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        "[data-motion='hero']",
+        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.08 }
+      );
+
+      gsap.fromTo(
+        "[data-motion='flow']",
+        { autoAlpha: 0, y: 28 },
+        { autoAlpha: 1, y: 0, duration: 0.72, ease: "power2.out", stagger: 0.1, delay: 0.08 }
+      );
+
+      gsap.fromTo(
+        "[data-motion='library']",
+        { autoAlpha: 0, y: 22 },
+        { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.05, delay: 0.12 }
+      );
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, [language, selectedScenario]);
+
   return (
-    <main className="min-h-screen bg-terminal text-paper">
+    <main ref={rootRef} className="min-h-screen bg-terminal text-paper">
       <div className="mx-auto max-w-[1380px] px-4 pb-20 pt-5 md:px-8 md:pb-28 md:pt-10">
         <section className="paper-frame px-6 py-8 md:px-10 md:py-12">
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-[820px]">
-              <p className="eyebrow">{t("Prompt Collection", "프롬프트 컬렉션")}</p>
-              <h1 className="mt-4 max-w-[12ch] font-display text-5xl leading-[0.92] tracking-[-0.07em] text-paper md:text-8xl">
+              <p data-motion="hero" className="eyebrow">
+                {t("Prompt Collection", "프롬프트 컬렉션")}
+              </p>
+              <h1 data-motion="hero" className="mt-4 max-w-[12ch] font-display text-5xl leading-[0.92] tracking-[-0.07em] text-paper md:text-8xl">
                 {t("An archive for high-resolution prompting.", "고해상도 프롬프팅을 위한 아카이브.")}
               </h1>
-              <p className="mt-6 max-w-[58ch] text-lg leading-8 text-cloud">
+              <p data-motion="hero" className="mt-6 max-w-[58ch] text-lg leading-8 text-cloud">
                 {t(
                   "A curated collection of long-form prompt dossiers and short papers on how to direct agents with taste, evidence, and structural clarity.",
                   "긴 프롬프트 dossier와 바이브코딩 방법론을 묶은 큐레이션 아카이브. 코드 문법보다 장면, 근거, 구조 감각을 먼저 다룬다."
                 )}
               </p>
             </div>
-            <LanguageToggle />
+            <div data-motion="hero">
+              <LanguageToggle />
+            </div>
           </div>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_340px]">
-            <div className="essay-panel p-6 md:p-7">
+            <div data-motion="hero" className="essay-panel p-6 md:p-7">
               <p className="eyebrow">{t("Abstract", "초록")}</p>
               <p className="mt-4 max-w-[66ch] text-base leading-8 text-paper">
                 {t(
@@ -144,7 +176,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
               </p>
             </div>
 
-            <aside className="index-panel p-6">
+            <aside data-motion="hero" className="index-panel p-6">
               <p className="eyebrow">{t("Reading Index", "읽기 인덱스")}</p>
               <div className="mt-5 grid gap-2">
                 {WAR_ROOM_SCENARIOS.map((entry) => (
@@ -177,7 +209,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
               <div className="mt-8 grid gap-4 lg:grid-cols-3">
                 {flow.start ? (
-                  <article className="collection-card">
+                  <article data-motion="flow" className="collection-card">
                     <p className="eyebrow">{t("1. Start Here", "1. 먼저 이걸 쓴다")}</p>
                     <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
                       {stripOrdinalTitle(getLocalizedRecord(flow.start, language).title)}
@@ -198,7 +230,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
                   </article>
                 ) : null}
                 {flow.direct ? (
-                  <article className="collection-card">
+                  <article data-motion="flow" className="collection-card">
                     <p className="eyebrow">{t("2. Lock Direction", "2. 방향을 잠근다")}</p>
                     <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
                       {stripOrdinalTitle(getLocalizedRecord(flow.direct, language).title)}
@@ -219,7 +251,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
                   </article>
                 ) : null}
                 {flow.verify ? (
-                  <article className="collection-card">
+                  <article data-motion="flow" className="collection-card">
                     <p className="eyebrow">{t("3. Check In Browser", "3. 브라우저에서 확인")}</p>
                     <h3 className="mt-5 font-display text-3xl tracking-[-0.04em] text-paper">
                       {stripOrdinalTitle(getLocalizedRecord(flow.verify, language).title)}
@@ -257,7 +289,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">
                 {utilityNotes.map((item) => (
-                  <article key={item} className="thesis-card">
+                  <article key={item} data-motion="library" className="thesis-card">
                     <p className="eyebrow">{t("Reason", "이유")}</p>
                     <p className="mt-4 text-sm leading-8 text-paper">{item}</p>
                   </article>
@@ -283,13 +315,14 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
               <div className="mt-8 grid gap-4">
                 {scenarioLibrary.map((item) => (
-                  <CollectionCard
-                    key={item.route}
-                    item={item}
-                    language={language}
-                    onCopy={() => markCopied(item.route)}
-                  />
-                ))}
+                    <div key={item.route} data-motion="library">
+                      <CollectionCard
+                        item={item}
+                        language={language}
+                        onCopy={() => markCopied(item.route)}
+                      />
+                    </div>
+                  ))}
               </div>
             </section>
 
@@ -310,7 +343,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
                 {archiveRecords.map((item) => {
                   const localized = getLocalizedRecord(item, language);
                   return (
-                    <Link key={item.route} href={item.route} className="archive-entry">
+                    <Link key={item.route} href={item.route} className="archive-entry" data-motion="library">
                       <p className="eyebrow">{item.kind}</p>
                       <p className="mt-3 font-display text-2xl tracking-[-0.04em] text-paper">
                         {stripOrdinalTitle(localized.title)}
@@ -324,7 +357,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
           <aside className="space-y-6 xl:sticky xl:top-8 xl:self-start">
             {lead && leadLocalized ? (
-              <section className="index-panel p-6">
+              <section data-motion="hero" className="index-panel p-6">
                 <p className="eyebrow">{t("Lead Reading", "대표 읽기")}</p>
                 <h2 className="mt-4 font-display text-4xl tracking-[-0.05em] text-paper">
                   {stripOrdinalTitle(leadLocalized.title)}
@@ -349,7 +382,7 @@ export function LibraryHome({ data }: { data: HomeData }) {
               </section>
             ) : null}
 
-            <section className="index-panel p-6">
+            <section data-motion="hero" className="index-panel p-6">
               <p className="eyebrow">{t("Continue Reading", "이어서 읽기")}</p>
               <div className="mt-5 grid gap-2">
                 {(recentReads.length > 0 ? recentReads.slice(0, 5) : scenarioRecords.slice(0, 5)).map((item) => {

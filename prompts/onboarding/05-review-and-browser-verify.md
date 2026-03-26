@@ -2,7 +2,7 @@
 title: "05. Review And Browser Verify"
 kind: "prompt"
 domain: "onboarding"
-summary: "첫 패치가 끝났고, 회귀와 미감까지 빠르게 확인해야 한다."
+summary: "첫 패치 뒤 브라우저 인상, 레이아웃, interaction regression을 한 번에 확인하는 검증 프롬프트."
 tags:
   - "onboarding"
   - "review"

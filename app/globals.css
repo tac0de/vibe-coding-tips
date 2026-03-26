@@ -224,6 +224,19 @@ input:focus-visible {
     0 30px 70px rgba(2, 6, 23, 0.28);
 }
 
+.paper-frame,
+.essay-panel,
+.index-panel,
+.collection-card,
+.thesis-card,
+.archive-entry,
+.index-entry,
+.index-link,
+.quiet-link,
+.war-tab {
+  will-change: transform, opacity;
+}
+
 .paper-frame::before,
 .essay-panel::before,
 .index-panel::before,
@@ -332,6 +345,16 @@ input:focus-visible {
 .quiet-link:hover {
   border-color: rgba(56, 189, 248, 0.36);
   color: var(--text-0);
+}
+
+.collection-card::after,
+.paper-frame::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.16), transparent);
+  opacity: 0.7;
 }
 
 .war-frame,

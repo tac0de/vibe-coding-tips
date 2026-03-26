@@ -2,7 +2,7 @@
 title: "Create Design Brief"
 kind: "prompt"
 domain: "ui"
-summary: "에이전트가 자꾸 양산형 UI를 만든다."
+summary: "에이전트가 평균적인 화면으로 흐르지 않도록 목적, 장면, 미감 기준을 먼저 고정하는 브리프 프롬프트."
 tags:
   - "ui"
   - "create"

@@ -23,9 +23,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Legacy UI Migration War Room",
+  title: "Prompt Collection for UI Agent Work",
   description:
-    "Scenario-driven migration war room for legacy CSS/SCSS refactors, D3 retrofits, browser verification, review gates, and agent orchestration."
+    "A minimal prompt collection for UI developers directing agents across legacy CSS, D3, browser verification, and visual quality control."
 };
 
 export default function RootLayout({

@@ -2,7 +2,7 @@
 title: "Fix Responsive Breakage"
 kind: "prompt"
 domain: "ui"
-summary: "모바일이나 특정 breakpoint에서 레이아웃이 깨진다."
+summary: "모바일과 특정 breakpoint에서 무너지는 위계, spacing, overflow를 빠르게 정리하는 반응형 수정 프롬프트."
 tags:
   - "ui"
   - "fix"

@@ -1,7 +1,8 @@
 "use client";
 
+import gsap from "gsap";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CopyPromptButton } from "@/components/copy-prompt-button";
 import { useReadingProgress } from "@/components/reading-progress";
 import { LanguageToggle, useSiteLanguage } from "@/components/site-language";
@@ -48,6 +49,8 @@ export function DocumentLayout({
   const { markViewed } = useReadingProgress();
   const { markCopied } = useWorkbenchState();
   const [tab, setTab] = useState<"abstract" | "promptSet" | "variants" | "verification" | "notes">("abstract");
+  const rootRef = useRef<HTMLElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
   const localized = document ? getLocalizedRecord(document, language) : null;
   const chapters = useMemo(() => (document ? buildDossierChapters(document, catalog, language) : []), [catalog, document, language]);
 
@@ -55,6 +58,25 @@ export function DocumentLayout({
     if (!document) return;
     markViewed(document.route);
   }, [document, markViewed]);
+
+  useEffect(() => {
+    if (!document) return;
+    if (!rootRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        "[data-motion='detail-hero']",
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.68, ease: "power2.out", stagger: 0.07 }
+      );
+    }, rootRef);
+    return () => ctx.revert();
+  }, [document, language]);
+
+  useEffect(() => {
+    if (!document) return;
+    if (!panelRef.current) return;
+    gsap.fromTo(panelRef.current, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.38, ease: "power2.out" });
+  }, [document, tab]);
 
   if (!document || !localized) return null;
 
@@ -65,11 +87,11 @@ export function DocumentLayout({
     .slice(0, 3) as Array<{ id: string; title: string; doc: ContentRecord }>;
 
   return (
-    <main className="min-h-screen bg-terminal text-paper">
+    <main ref={rootRef} className="min-h-screen bg-terminal text-paper">
       <div className="mx-auto max-w-[1380px] px-4 pb-20 pt-5 md:px-8 md:pb-28 md:pt-10">
         <div className="grid gap-8 xl:grid-cols-[minmax(0,1.02fr)_340px]">
           <article className="space-y-8">
-            <nav className="paper-frame flex flex-wrap items-center gap-x-5 gap-y-3 px-6 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-fog md:px-8">
+            <nav data-motion="detail-hero" className="paper-frame flex flex-wrap items-center gap-x-5 gap-y-3 px-6 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-fog md:px-8">
               <Link href="/" className="transition hover:text-paper">
                 {t("Collection", "컬렉션")}
               </Link>
@@ -88,7 +110,7 @@ export function DocumentLayout({
               </span>
             </nav>
 
-            <section className="paper-frame px-6 py-8 md:px-10 md:py-10">
+            <section data-motion="detail-hero" className="paper-frame px-6 py-8 md:px-10 md:py-10">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
                 <div>
                   <div className="flex flex-wrap gap-2">
@@ -122,7 +144,7 @@ export function DocumentLayout({
                   </div>
                 </div>
 
-                <aside className="index-panel p-6">
+                <aside data-motion="detail-hero" className="index-panel p-6">
                   <p className="eyebrow">{t("Actions", "액션")}</p>
                   <div className="mt-5 grid gap-3">
                     <CopyPromptButton
@@ -173,6 +195,7 @@ export function DocumentLayout({
                 ))}
               </div>
 
+              <div ref={panelRef}>
               {tab === "abstract" ? (
                 <div className="grid gap-4 pt-8">
                   <div className="grid gap-4 md:grid-cols-2">
@@ -314,6 +337,7 @@ export function DocumentLayout({
                   <div className="prose-body max-w-none" dangerouslySetInnerHTML={{ __html: localized.html }} />
                 </div>
               ) : null}
+              </div>
             </section>
           </article>
 
