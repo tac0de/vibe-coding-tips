@@ -135,6 +135,14 @@ async function loadAllContentRaw() {
         .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
       const currentIndex = orderedPeers.findIndex((item) => item.route === record.route);
       const prevTarget = currentIndex > 0 ? orderedPeers[currentIndex - 1] : null;
+      const sequenceLinks: ContentLink[] = orderedPeers.map((item) => ({
+        title: item.title,
+        route: item.route,
+        summary: item.summary,
+        kind: item.kind,
+        domain: item.domain,
+        order: item.order
+      }));
 
       const relatedRoutes: ContentLink[] = (record.related ?? [])
         .map((entry) => resolveReference(entry))
@@ -146,7 +154,8 @@ async function loadAllContentRaw() {
             route: target.route,
             summary: target.summary,
             kind: target.kind,
-            domain: target.domain
+            domain: target.domain,
+            order: target.order
           };
         });
 
@@ -161,7 +170,8 @@ async function loadAllContentRaw() {
               route: item.route,
               summary: item.summary,
               kind: item.kind,
-              domain: item.domain
+              domain: item.domain,
+              order: item.order
             })
           );
       }
@@ -194,16 +204,21 @@ async function loadAllContentRaw() {
               route: prevTarget.route,
               summary: prevTarget.summary,
               kind: prevTarget.kind,
-              domain: prevTarget.domain
+              domain: prevTarget.domain,
+              order: prevTarget.order
             }
           : null,
+        sequenceIndex: currentIndex >= 0 ? currentIndex + 1 : null,
+        sequenceTotal: orderedPeers.length > 0 ? orderedPeers.length : null,
+        sequenceLinks,
         nextLink: nextTarget
           ? {
               title: nextTarget.title,
               route: nextTarget.route,
               summary: nextTarget.summary,
               kind: nextTarget.kind,
-              domain: nextTarget.domain
+              domain: nextTarget.domain,
+              order: nextTarget.order
             }
           : null,
         relatedRoutes

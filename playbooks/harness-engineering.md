@@ -29,6 +29,7 @@ UI/UX와 D3 작업은 특히 그렇다.
 - reviewer 분리
 - browser verifier
 - 검증 루프
+- 필요한 MCP만 좁게 호출
 - 실패 시 더 크게 말하지 않고 더 작게 자르기
 
 ## Tailwind / UI 작업 적용
@@ -64,8 +65,10 @@ UI/UX와 D3 작업은 특히 그렇다.
 
 - `prompts/onboarding/01-read-existing-repo.md`
 - `prompts/onboarding/09-subagent-orchestration.md`
+- `prompts/onboarding/11-tool-orchestration.md`
 - `prompts/ui/anti-dashboard-rules.md`
 - `prompts/d3/09-react-d3-boundary.md`
+- `playbooks/mcp-orchestration.md`
 - `templates/AGENTS.md`
 - `templates/task-brief.md`
 - `templates/verification-checklist.md`

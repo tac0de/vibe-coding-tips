@@ -12,42 +12,46 @@ type HomeData = {
   sources: ContentRecord[];
 };
 
-function SequenceRows({
+function FlowRunner({
   eyebrow,
   title,
-  items,
-  compact = false
+  summary,
+  items
 }: {
   eyebrow: string;
   title: string;
+  summary: string;
   items: ContentRecord[];
-  compact?: boolean;
 }) {
   return (
     <section className="border-t border-line pt-5">
-      <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">{eyebrow}</p>
-        <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">{title}</h2>
+      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-2">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">{eyebrow}</p>
+          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">{title}</h2>
+        </div>
+        <p className="max-w-[38ch] text-sm leading-7 text-smoke">{summary}</p>
       </div>
-      <div className="grid gap-0.5">
+      <div className="grid gap-2">
         {items.map((item, index) => (
           <Link
             key={item.route}
             href={item.route}
-            className="grid gap-2 border-b border-line py-3 transition hover:bg-white/40 md:grid-cols-[72px_minmax(0,1fr)_auto]"
+            className="grid gap-3 border-b border-line py-4 transition hover:bg-white/40 md:grid-cols-[86px_minmax(0,1fr)_auto]"
           >
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
-              {item.order ? String(item.order).padStart(2, "0") : String(index + 1).padStart(2, "0")}
-            </span>
             <div className="space-y-1">
-              <p className={compact ? "font-display text-xl tracking-[-0.025em]" : "font-display text-2xl tracking-[-0.03em]"}>
-                {item.title.replace(/^\d+\.\s*/, "")}
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-cobalt">
+                Step {String(item.order ?? index + 1).padStart(2, "0")}
               </p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">{item.domain}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="font-display text-2xl tracking-[-0.03em]">{item.title.replace(/^\d+\.\s*/, "")}</p>
               <p className="max-w-measure text-sm leading-7 text-smoke">{item.summary}</p>
             </div>
-            <span className="self-start font-mono text-[11px] uppercase tracking-[0.22em] text-cobalt">
-              {item.promptBlock ? "copy-ready" : item.kind}
-            </span>
+            <div className="self-start font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+              {item.promptBlock ? "prompt only" : item.kind}
+            </div>
           </Link>
         ))}
       </div>
@@ -168,7 +172,12 @@ export function LibraryHome({ data }: { data: HomeData }) {
 
         <section className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-start">
           <div className="space-y-8">
-            <SequenceRows eyebrow="Start Here" title="Existing Project Flow" items={data.onboarding} />
+            <FlowRunner
+              eyebrow="Start Here"
+              title="Existing Project Flow"
+              summary="기존 프로젝트에 Codex를 붙일 때는 탐색, 범위 잠금, 규칙 문서, 첫 작은 패치, reviewer, browser verify 순서로 가야 한다."
+              items={data.onboarding}
+            />
             <QuickStartStrip items={quickStart} />
           </div>
 
@@ -180,8 +189,18 @@ export function LibraryHome({ data }: { data: HomeData }) {
         </section>
 
         <section className="grid gap-10 border-t border-line pt-6 md:grid-cols-2">
-          <SequenceRows eyebrow="UI / Tailwind" title="Refine Layout, Tone, And Review" items={data.ui} compact />
-          <SequenceRows eyebrow="D3" title="Build Interaction In Order" items={data.d3} compact />
+          <FlowRunner
+            eyebrow="UI / Tailwind"
+            title="Refine Layout, Tone, And Review"
+            summary="브리프, 첫 화면, 반응형, 접근성, 톤 리뷰, Tailwind cleanup 순서로 좁혀 들어가면 양산형 UI를 피하기 쉽다."
+            items={data.ui}
+          />
+          <FlowRunner
+            eyebrow="D3"
+            title="Build Interaction In Order"
+            summary="choose, scales, axis, join, tooltip, interaction, cleanup 순서를 깨지 않는 것이 D3를 에이전트와 안정적으로 붙이는 핵심이다."
+            items={data.d3}
+          />
         </section>
       </div>
     </main>

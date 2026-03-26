@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CopyPromptButton } from "@/components/copy-prompt-button";
+import { DocumentReader } from "@/components/document-reader";
+import { SequenceStrip } from "@/components/sequence-strip";
 import type { ContentRecord } from "@/lib/content/types";
 
 export function DocumentLayout({ document }: { document: ContentRecord | null }) {
@@ -36,22 +37,11 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
             <p className="max-w-measure text-sm leading-7 text-smoke md:text-base">{document.summary}</p>
           </header>
 
-          {document.promptBlock ? (
-            <section className="border-y border-line py-5">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Prompt First</p>
-                  <h2 className="mt-2 font-display text-2xl tracking-[-0.03em] md:text-4xl">바로 복붙할 프롬프트</h2>
-                </div>
-                <CopyPromptButton value={document.promptBlock} />
-              </div>
-              <pre className="overflow-x-auto border border-ink/10 bg-ink px-4 py-4 text-[13px] leading-7 text-paper">
-                <code>{document.promptBlock}</code>
-              </pre>
-            </section>
+          {document.sequenceLinks.length > 1 ? (
+            <SequenceStrip title={`${document.domain} sequence`} items={document.sequenceLinks} activeRoute={document.route} />
           ) : null}
 
-          <div className="prose-body max-w-none" dangerouslySetInnerHTML={{ __html: document.html }} />
+          <DocumentReader html={document.html} promptBlock={document.promptBlock} />
         </article>
 
         <aside className="space-y-8 md:sticky md:top-6 md:self-start">

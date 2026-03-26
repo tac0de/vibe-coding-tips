@@ -23,6 +23,9 @@ export type ContentRecord = ContentMeta & {
   nextRoute?: string | null;
   nextLink?: ContentLink | null;
   prevLink?: ContentLink | null;
+  sequenceIndex?: number | null;
+  sequenceTotal?: number | null;
+  sequenceLinks: ContentLink[];
   relatedRoutes: ContentLink[];
   summaryPoints: string[];
   failurePoints: string[];
@@ -34,4 +37,5 @@ export type ContentLink = {
   summary: string;
   kind: ContentKind;
   domain: ContentDomain;
+  order?: number;
 };
