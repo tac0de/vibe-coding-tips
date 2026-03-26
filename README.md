@@ -30,6 +30,7 @@ related: []
 9. [prompts/onboarding/09-subagent-orchestration.md](prompts/onboarding/09-subagent-orchestration.md)
 10. [prompts/onboarding/10-regression-gate.md](prompts/onboarding/10-regression-gate.md)
 11. [prompts/onboarding/11-tool-orchestration.md](prompts/onboarding/11-tool-orchestration.md)
+12. [prompts/onboarding/12-run-one-hour-agent-lab.md](prompts/onboarding/12-run-one-hour-agent-lab.md)
 
 ## Prompt Viewer UI
 
@@ -107,6 +108,7 @@ GitHub Pages 배포:
 - [playbooks/d3-playbook.md](playbooks/d3-playbook.md)
 - [playbooks/harness-engineering.md](playbooks/harness-engineering.md)
 - [playbooks/mcp-orchestration.md](playbooks/mcp-orchestration.md)
+- [playbooks/one-hour-agent-lab.md](playbooks/one-hour-agent-lab.md)
 
 ## 출처
 
