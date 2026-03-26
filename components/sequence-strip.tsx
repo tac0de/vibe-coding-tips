@@ -16,8 +16,8 @@ export function SequenceStrip({ title, items, activeRoute }: Props) {
   return (
     <section className="space-y-3 border-y border-line py-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-smoke">{title}</p>
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">{items.length} steps</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-fog">{title}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-fog">{items.length} steps</p>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
         {items.map((item, index) => {
@@ -29,8 +29,8 @@ export function SequenceStrip({ title, items, activeRoute }: Props) {
               className={clsx(
                 "min-w-[220px] border-b px-0 py-3 transition",
                 isActive
-                  ? "border-cobalt text-ink"
-                  : "border-line text-smoke hover:border-ink hover:bg-white/30 hover:text-ink"
+                  ? "border-cobalt text-paper"
+                  : "border-line text-fog hover:border-cobalt hover:bg-white/[0.03] hover:text-paper"
               )}
             >
               <div className="space-y-1">

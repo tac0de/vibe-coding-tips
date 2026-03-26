@@ -3,31 +3,31 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html {
-  background: #f6f1e8;
+  background: #0b0f17;
 }
 
 body {
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.08) 48%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04)),
+    radial-gradient(circle at top left, rgba(79, 112, 191, 0.14), rgba(11, 15, 23, 0) 36%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0)),
     repeating-linear-gradient(
       to bottom,
       transparent,
-      transparent 32px,
-      rgba(18, 21, 28, 0.028) 32px,
-      rgba(18, 21, 28, 0.028) 33px
+      transparent 34px,
+      rgba(170, 183, 209, 0.03) 34px,
+      rgba(170, 183, 209, 0.03) 35px
     ),
-    #f6f1e8;
-  color: #12151c;
+    #0b0f17;
+  color: #eef2ff;
   min-height: 100vh;
 }
 
 * {
-  border-color: rgba(18, 21, 28, 0.14);
+  border-color: rgba(144, 162, 194, 0.18);
 }
 
 a {
@@ -38,12 +38,35 @@ a {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid rgba(29, 78, 216, 0.65);
+  outline: 2px solid rgba(93, 135, 255, 0.92);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(29, 78, 216, 0.18);
+  background: rgba(93, 135, 255, 0.28);
+}
+
+.bg-terminal {
+  background:
+    radial-gradient(circle at top left, rgba(79, 112, 191, 0.16), rgba(11, 15, 23, 0) 34%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    #0b0f17;
+}
+
+.text-paper {
+  color: #eef2ff;
+}
+
+.text-cloud {
+  color: #cfd6ea;
+}
+
+.text-fog {
+  color: #91a0c4;
+}
+
+.border-line {
+  border-color: rgba(144, 162, 194, 0.18);
 }
 
 .prose-body h2,
@@ -57,18 +80,20 @@ input:focus-visible {
   margin-top: 2.75rem;
   margin-bottom: 1rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(18, 21, 28, 0.12);
+  border-top: 1px solid rgba(144, 162, 194, 0.18);
+  color: #eef2ff;
 }
 
 .prose-body h3 {
   font-size: 1.15rem;
   margin-top: 1.8rem;
   margin-bottom: 0.7rem;
+  color: #eef2ff;
 }
 
 .prose-body p,
 .prose-body li {
-  color: #262e3d;
+  color: #cfd6ea;
   line-height: 1.9;
   max-width: 72ch;
 }
@@ -83,17 +108,17 @@ input:focus-visible {
 .prose-body code {
   font-family: var(--font-mono);
   font-size: 0.92em;
-  background: rgba(18, 21, 28, 0.06);
+  background: rgba(144, 162, 194, 0.1);
   padding: 0.1rem 0.35rem;
 }
 
 .prose-body pre {
   overflow-x: auto;
-  background: #10141d;
-  color: #f3efe6;
+  background: #080b12;
+  color: #f6f7fb;
   padding: 1rem 1.1rem;
   line-height: 1.65;
-  border: 1px solid rgba(18, 21, 28, 0.18);
+  border: 1px solid rgba(144, 162, 194, 0.18);
 }
 
 .prose-body pre code {
@@ -104,12 +129,12 @@ input:focus-visible {
 .prose-body blockquote {
   margin: 1.25rem 0;
   padding-left: 1rem;
-  border-left: 2px solid rgba(29, 78, 216, 0.35);
-  color: #4b5563;
+  border-left: 2px solid rgba(93, 135, 255, 0.45);
+  color: #aeb9d3;
 }
 
 .prose-body a {
   text-decoration: underline;
-  text-decoration-color: rgba(29, 78, 216, 0.35);
+  text-decoration-color: rgba(93, 135, 255, 0.4);
   text-underline-offset: 3px;
 }
