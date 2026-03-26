@@ -15,18 +15,20 @@ type HomeData = {
 function WorkshopSpotlight({
   lab,
   script,
-  handout
+  handout,
+  runPrompt
 }: {
   lab: ContentRecord | undefined;
   script: ContentRecord | undefined;
   handout: ContentRecord | undefined;
+  runPrompt: ContentRecord | undefined;
 }) {
   if (!lab) return null;
 
   return (
-    <section className="border-b border-line pb-8">
-      <div className="grid gap-6 md:grid-cols-[1.15fr_0.85fr] md:items-end">
-        <div className="space-y-4">
+    <section className="border-y border-line py-8">
+      <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-start">
+        <div className="space-y-5">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-cobalt">One Hour Lab</p>
           <h2 className="max-w-[12ch] font-display text-4xl leading-none tracking-[-0.05em] md:text-6xl">
             60-minute agent workshop, ready to run.
@@ -35,6 +37,20 @@ function WorkshopSpotlight({
             기존 UI 프로젝트를 대상으로 explorer, builder, reviewer, browser verifier, d3 tutor를 실제로 분리
             호출하는 1시간 세션이다.
           </p>
+          <div className="grid gap-2 border-t border-line pt-4 md:grid-cols-3">
+            {[
+              "Read -> Lock -> Small Patch",
+              "Reviewer -> Browser Verify",
+              "D3 mini view -> Wrap-up"
+            ].map((item, index) => (
+              <div key={item} className="border-b border-line pb-3">
+                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+                  Block {String(index + 1).padStart(2, "0")}
+                </p>
+                <p className="mt-2 text-sm leading-7 text-ink">{item}</p>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="grid gap-2 border-t border-line pt-4">
           <Link href={lab.route} className="border-b border-line py-3 transition hover:bg-white/40">
@@ -54,6 +70,13 @@ function WorkshopSpotlight({
               <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Attendee</p>
               <p className="mt-1 font-display text-xl tracking-[-0.025em]">{handout.title}</p>
               <p className="text-sm text-smoke">{handout.summary}</p>
+            </Link>
+          ) : null}
+          {runPrompt ? (
+            <Link href={runPrompt.route} className="border-b border-line py-3 transition hover:bg-white/40">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Copy-ready prompt</p>
+              <p className="mt-1 font-display text-xl tracking-[-0.025em]">{runPrompt.title}</p>
+              <p className="text-sm text-smoke">{runPrompt.summary}</p>
             </Link>
           ) : null}
         </div>
@@ -183,6 +206,50 @@ function DenseShelf({
   );
 }
 
+function ReadingTracks({
+  ui,
+  d3
+}: {
+  ui: ContentRecord[];
+  d3: ContentRecord[];
+}) {
+  return (
+    <section className="border-t border-line pt-6">
+      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-2">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Reading Tracks</p>
+          <h2 className="font-display text-2xl tracking-[-0.03em] md:text-4xl">Open one track and stay in sequence.</h2>
+        </div>
+        <p className="max-w-[40ch] text-sm leading-7 text-smoke">
+          UI와 D3는 문서를 섞어 읽기보다, 한 트랙을 끝까지 따라가는 쪽이 더 빠르다.
+        </p>
+      </div>
+      <div className="grid gap-8 md:grid-cols-2">
+        {[{ title: "UI / Tailwind Track", items: ui }, { title: "D3 Track", items: d3 }].map((group) => (
+          <div key={group.title} className="space-y-3">
+            <p className="font-display text-xl tracking-[-0.025em]">{group.title}</p>
+            <div className="grid gap-2">
+              {group.items.slice(0, 5).map((item, index) => (
+                <Link key={item.route} href={item.route} className="border-b border-line py-3 transition hover:bg-white/40">
+                  <div className="flex items-start gap-4">
+                    <p className="min-w-10 font-mono text-[11px] uppercase tracking-[0.22em] text-cobalt">
+                      {String(item.order ?? index + 1).padStart(2, "0")}
+                    </p>
+                    <div>
+                      <p className="font-display text-lg tracking-[-0.02em]">{item.title.replace(/^\d+\.\s*/, "")}</p>
+                      <p className="text-sm text-smoke">{item.summary}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function LibraryHome({ data }: { data: HomeData }) {
   const quickStartRoutes = new Set([
     "/prompts/onboarding/02-lock-scope",
@@ -197,6 +264,8 @@ export function LibraryHome({ data }: { data: HomeData }) {
   const workshopLab = data.playbooks.find((item) => item.route === "/playbooks/one-hour-agent-lab");
   const workshopScript = data.playbooks.find((item) => item.route === "/playbooks/one-hour-instructor-script");
   const workshopHandout = data.playbooks.find((item) => item.route === "/playbooks/one-hour-attendee-handout");
+  const workshopPrompt = data.onboarding.find((item) => item.route === "/prompts/onboarding/12-run-one-hour-agent-lab");
+  const promptCount = data.all.filter((item) => item.kind === "prompt").length;
 
   return (
     <main className="min-h-screen bg-paper text-ink">
@@ -214,14 +283,19 @@ export function LibraryHome({ data }: { data: HomeData }) {
               생각 없이 따라가게 정리한 프롬프트 라이브러리다.
             </p>
             <div className="grid gap-2 border-t border-line pt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke md:grid-cols-3">
-              <span>39 prompts</span>
+              <span>{promptCount} prompts</span>
               <span>step flow</span>
               <span>copy ready</span>
             </div>
           </div>
         </header>
 
-        <WorkshopSpotlight lab={workshopLab} script={workshopScript} handout={workshopHandout} />
+        <WorkshopSpotlight
+          lab={workshopLab}
+          script={workshopScript}
+          handout={workshopHandout}
+          runPrompt={workshopPrompt}
+        />
 
         <SearchExplorer items={data.all} />
 
@@ -257,6 +331,8 @@ export function LibraryHome({ data }: { data: HomeData }) {
             items={data.d3}
           />
         </section>
+
+        <ReadingTracks ui={data.ui} d3={data.d3} />
       </div>
     </main>
   );

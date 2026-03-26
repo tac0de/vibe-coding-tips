@@ -35,6 +35,11 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
               {document.title}
             </h1>
             <p className="max-w-measure text-sm leading-7 text-smoke md:text-base">{document.summary}</p>
+            <div className="grid gap-2 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke md:grid-cols-3">
+              <span>{document.kind}</span>
+              <span>{document.domain}</span>
+              <span>{document.promptBlock ? "copy-first" : "read-first"}</span>
+            </div>
           </header>
 
           {document.sequenceLinks.length > 1 ? (

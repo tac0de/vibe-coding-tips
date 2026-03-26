@@ -17,7 +17,7 @@ export function DocumentReader({ html, promptBlock }: Props) {
   return (
     <div className="space-y-6">
       {hasPrompt ? (
-        <section className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+        <section className="flex flex-col gap-3 border-b border-line pb-4 md:flex-row md:items-center md:justify-between">
           <div className="flex gap-2">
             <button
               type="button"
@@ -38,9 +38,12 @@ export function DocumentReader({ html, promptBlock }: Props) {
               {notesLabel}
             </button>
           </div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
-            Copy button lives in prompt view only
-          </p>
+          <div className="grid gap-1 text-sm text-smoke md:text-right">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+              Copy button lives in prompt view only
+            </p>
+            <p>문서 설명보다 복붙 실행이 먼저 필요하면 Prompt Only부터 본다.</p>
+          </div>
         </section>
       ) : null}
 
