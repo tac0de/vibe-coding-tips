@@ -12,6 +12,56 @@ type HomeData = {
   sources: ContentRecord[];
 };
 
+function WorkshopSpotlight({
+  lab,
+  script,
+  handout
+}: {
+  lab: ContentRecord | undefined;
+  script: ContentRecord | undefined;
+  handout: ContentRecord | undefined;
+}) {
+  if (!lab) return null;
+
+  return (
+    <section className="border-b border-line pb-8">
+      <div className="grid gap-6 md:grid-cols-[1.15fr_0.85fr] md:items-end">
+        <div className="space-y-4">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-cobalt">One Hour Lab</p>
+          <h2 className="max-w-[12ch] font-display text-4xl leading-none tracking-[-0.05em] md:text-6xl">
+            60-minute agent workshop, ready to run.
+          </h2>
+          <p className="max-w-[44ch] text-sm leading-7 text-smoke md:text-base">
+            기존 UI 프로젝트를 대상으로 explorer, builder, reviewer, browser verifier, d3 tutor를 실제로 분리
+            호출하는 1시간 세션이다.
+          </p>
+        </div>
+        <div className="grid gap-2 border-t border-line pt-4">
+          <Link href={lab.route} className="border-b border-line py-3 transition hover:bg-white/40">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Main flow</p>
+            <p className="mt-1 font-display text-2xl tracking-[-0.03em]">{lab.title}</p>
+            <p className="text-sm text-smoke">{lab.summary}</p>
+          </Link>
+          {script ? (
+            <Link href={script.route} className="border-b border-line py-3 transition hover:bg-white/40">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Instructor</p>
+              <p className="mt-1 font-display text-xl tracking-[-0.025em]">{script.title}</p>
+              <p className="text-sm text-smoke">{script.summary}</p>
+            </Link>
+          ) : null}
+          {handout ? (
+            <Link href={handout.route} className="border-b border-line py-3 transition hover:bg-white/40">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Attendee</p>
+              <p className="mt-1 font-display text-xl tracking-[-0.025em]">{handout.title}</p>
+              <p className="text-sm text-smoke">{handout.summary}</p>
+            </Link>
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FlowRunner({
   eyebrow,
   title,
@@ -144,6 +194,9 @@ export function LibraryHome({ data }: { data: HomeData }) {
   ]);
 
   const quickStart = data.all.filter((item) => quickStartRoutes.has(item.route));
+  const workshopLab = data.playbooks.find((item) => item.route === "/playbooks/one-hour-agent-lab");
+  const workshopScript = data.playbooks.find((item) => item.route === "/playbooks/one-hour-instructor-script");
+  const workshopHandout = data.playbooks.find((item) => item.route === "/playbooks/one-hour-attendee-handout");
 
   return (
     <main className="min-h-screen bg-paper text-ink">
@@ -167,6 +220,8 @@ export function LibraryHome({ data }: { data: HomeData }) {
             </div>
           </div>
         </header>
+
+        <WorkshopSpotlight lab={workshopLab} script={workshopScript} handout={workshopHandout} />
 
         <SearchExplorer items={data.all} />
 

@@ -60,6 +60,13 @@ GitHub Pages 배포:
 - [AGENTS.md](AGENTS.md)
 - [PROMPT_SPEC.md](PROMPT_SPEC.md)
 
+## 1시간 세션 바로 열기
+
+- [playbooks/one-hour-agent-lab.md](playbooks/one-hour-agent-lab.md)
+- [playbooks/one-hour-instructor-script.md](playbooks/one-hour-instructor-script.md)
+- [playbooks/one-hour-attendee-handout.md](playbooks/one-hour-attendee-handout.md)
+- [prompts/onboarding/12-run-one-hour-agent-lab.md](prompts/onboarding/12-run-one-hour-agent-lab.md)
+
 ## 역할 프롬프트
 
 - [prompts/roles/builder.md](prompts/roles/builder.md)
@@ -109,6 +116,8 @@ GitHub Pages 배포:
 - [playbooks/harness-engineering.md](playbooks/harness-engineering.md)
 - [playbooks/mcp-orchestration.md](playbooks/mcp-orchestration.md)
 - [playbooks/one-hour-agent-lab.md](playbooks/one-hour-agent-lab.md)
+- [playbooks/one-hour-instructor-script.md](playbooks/one-hour-instructor-script.md)
+- [playbooks/one-hour-attendee-handout.md](playbooks/one-hour-attendee-handout.md)
 
 ## 출처
 
