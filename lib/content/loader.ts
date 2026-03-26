@@ -98,6 +98,7 @@ async function loadAllContentRaw() {
           toc: extractToc(displayBody),
           promptBlock: meta.kind === "prompt" ? extractPromptBlock(rewrittenBody) : null,
           nextReference: meta.next ?? extractNextFromBody(rewrittenBody),
+          situationLead: extractLeadLineFromSection(rewrittenBody, "상황"),
           summaryPoints: extractBulletSummary(rewrittenBody, "좋은 출력의 기준"),
           failurePoints: extractBulletSummary(rewrittenBody, "실패 패턴")
         };

@@ -27,6 +27,7 @@ export type ContentRecord = ContentMeta & {
   sequenceTotal?: number | null;
   sequenceLinks: ContentLink[];
   relatedRoutes: ContentLink[];
+  situationLead?: string | null;
   summaryPoints: string[];
   failurePoints: string[];
 };

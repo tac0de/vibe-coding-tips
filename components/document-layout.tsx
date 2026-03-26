@@ -46,6 +46,31 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
             <SequenceStrip title={`${document.domain} sequence`} items={document.sequenceLinks} activeRoute={document.route} />
           ) : null}
 
+          <section className="grid gap-4 border-y border-line py-5 md:grid-cols-3">
+            <div className="space-y-2">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-smoke">Use This When</p>
+              <p className="text-sm leading-7 text-ink">{document.situationLead ?? document.summary}</p>
+            </div>
+            <div className="space-y-2">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-smoke">Aim For</p>
+              <p className="text-sm leading-7 text-ink">
+                {document.summaryPoints[0] ?? "좋은 출력 기준을 먼저 읽고 프롬프트를 붙인다."}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-smoke">Then Do</p>
+              <p className="text-sm leading-7 text-ink">
+                {document.nextLink ? (
+                  <Link href={document.nextLink.route} className="border-b border-cobalt/40 text-cobalt">
+                    {document.nextLink.title.replace(/^\d+\.\s*/, "")}
+                  </Link>
+                ) : (
+                  "관련 문서 또는 summary rail을 이어서 본다."
+                )}
+              </p>
+            </div>
+          </section>
+
           <DocumentReader html={document.html} promptBlock={document.promptBlock} />
         </article>
 
