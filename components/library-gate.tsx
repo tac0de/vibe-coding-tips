@@ -3,10 +3,22 @@
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "vibe-coding-tips:gate-open";
+const PASSWORD_HASH = process.env.NEXT_PUBLIC_LIBRARY_PASSWORD_SHA256 ?? "";
+
+async function sha256(value: string) {
+  const encoded = new TextEncoder().encode(value);
+  const digest = await window.crypto.subtle.digest("SHA-256", encoded);
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 export function LibraryGate({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [remember, setRemember] = useState(true);
 
   useEffect(() => {
     const stored = window.sessionStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(STORAGE_KEY);
@@ -16,8 +28,24 @@ export function LibraryGate({ children }: { children: React.ReactNode }) {
 
   const handleOpen = () => {
     window.sessionStorage.setItem(STORAGE_KEY, "open");
-    window.localStorage.setItem(STORAGE_KEY, "open");
+    if (remember) window.localStorage.setItem(STORAGE_KEY, "open");
     setIsOpen(true);
+  };
+
+  const handleUnlock = async () => {
+    if (!PASSWORD_HASH) {
+      handleOpen();
+      return;
+    }
+
+    const hashed = await sha256(password.trim());
+    if (hashed === PASSWORD_HASH) {
+      setError("");
+      handleOpen();
+      return;
+    }
+
+    setError("비밀번호가 맞지 않습니다.");
   };
 
   return (
@@ -33,23 +61,64 @@ export function LibraryGate({ children }: { children: React.ReactNode }) {
               <div className="space-y-5">
                 <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Initial Gate</p>
                 <h1 className="max-w-[10ch] font-display text-5xl leading-none tracking-[-0.055em] md:text-[6.6rem]">
-                  Open the prompt library.
+                  Unlock the prompt library.
                 </h1>
                 <p className="max-w-measure text-sm leading-7 text-smoke md:text-base">
-                  첫 진입에서는 라이브러리를 바로 노출하지 않고, 의도적으로 한 번 열고 들어오게 한다. 패스워드
-                  기반 보안이 아니라 읽기 게이트다.
+                  열람을 바로 열어두지 않고, 비밀번호를 통과한 뒤에만 라이브러리에 들어가게 한다. 다만 정적 GitHub
+                  Pages 기반이라 완전한 보안 장치는 아니다.
                 </p>
               </div>
               <div className="space-y-5 md:justify-self-end">
-                <button
-                  type="button"
-                  onClick={handleOpen}
-                  className="border-b border-ink pb-1 font-mono text-sm uppercase tracking-[0.24em] text-cobalt transition hover:text-ink"
-                >
-                  Enter Library
-                </button>
+                {PASSWORD_HASH ? (
+                  <div className="space-y-4">
+                    <label className="block space-y-2">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-smoke">Password</span>
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(event) => {
+                          setPassword(event.target.value);
+                          setError("");
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") void handleUnlock();
+                        }}
+                        className="w-full border-b border-ink bg-transparent px-0 py-3 font-display text-2xl tracking-[-0.03em] text-ink outline-none"
+                      />
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-smoke">
+                      <input
+                        type="checkbox"
+                        checked={remember}
+                        onChange={(event) => setRemember(event.target.checked)}
+                      />
+                      Remember in this browser
+                    </label>
+                    {error ? <p className="text-sm text-[#9f2f28]">{error}</p> : null}
+                    <button
+                      type="button"
+                      onClick={() => void handleUnlock()}
+                      className="border-b border-ink pb-1 font-mono text-sm uppercase tracking-[0.24em] text-cobalt transition hover:text-ink"
+                    >
+                      Enter Library
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <button
+                      type="button"
+                      onClick={handleOpen}
+                      className="border-b border-ink pb-1 font-mono text-sm uppercase tracking-[0.24em] text-cobalt transition hover:text-ink"
+                    >
+                      Enter Library
+                    </button>
+                    <p className="max-w-[32ch] text-sm leading-7 text-smoke">
+                      아직 비밀번호 해시가 설정되지 않아 기본 게이트 모드로 동작한다.
+                    </p>
+                  </div>
+                )}
                 <p className="max-w-[32ch] text-sm leading-7 text-smoke">
-                  이후에는 이 브라우저에서 다시 묻지 않는다. 공개 사이트이므로 완전한 접근 제어는 아니다.
+                  공개 사이트이므로 완전한 접근 제어는 아니다. 정적 사이트에서의 읽기 제한용 소프트 게이트다.
                 </p>
               </div>
             </div>

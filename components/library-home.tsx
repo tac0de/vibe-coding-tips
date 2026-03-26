@@ -12,6 +12,74 @@ type HomeData = {
   sources: ContentRecord[];
 };
 
+function AxisNavigator({
+  onboarding,
+  workshop,
+  ui,
+  d3
+}: {
+  onboarding: ContentRecord | undefined;
+  workshop: ContentRecord | undefined;
+  ui: ContentRecord | undefined;
+  d3: ContentRecord | undefined;
+}) {
+  const items = [
+    {
+      eyebrow: "01",
+      title: "Onboarding",
+      summary: "기존 프로젝트 읽기, 범위 잠금, AGENTS.md, 첫 작은 패치부터 시작한다.",
+      target: onboarding
+    },
+    {
+      eyebrow: "02",
+      title: "One Hour Lab",
+      summary: "1시간 내외 실습 세션을 그대로 진행하는 메인 흐름이다.",
+      target: workshop
+    },
+    {
+      eyebrow: "03",
+      title: "UI / Tailwind",
+      summary: "first screen, hierarchy, anti-dashboard, responsive, tone review 순서로 간다.",
+      target: ui
+    },
+    {
+      eyebrow: "04",
+      title: "D3",
+      summary: "choose, scales, axis, join, tooltip, interaction 순서로 붙인다.",
+      target: d3
+    }
+  ].filter((item) => item.target);
+
+  return (
+    <section className="border-b border-line pb-8">
+      <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-smoke">Four Ways In</p>
+          <h2 className="mt-2 font-display text-2xl tracking-[-0.03em] md:text-4xl">Start from the work you actually need.</h2>
+        </div>
+        <p className="max-w-[38ch] text-sm leading-7 text-smoke">
+          홈은 더 이상 인덱스가 아니라 진입 화면이다. 지금 하려는 일 기준으로 한 축만 골라 들어가면 된다.
+        </p>
+      </div>
+      <div className="grid gap-2 md:grid-cols-2">
+        {items.map((item) => (
+          <Link
+            key={item.title}
+            href={item.target!.route}
+            className="grid gap-3 border-b border-line py-4 transition hover:bg-white/40 md:grid-cols-[72px_minmax(0,1fr)]"
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cobalt">{item.eyebrow}</p>
+            <div className="space-y-1">
+              <p className="font-display text-2xl tracking-[-0.03em]">{item.title}</p>
+              <p className="text-sm leading-7 text-smoke">{item.summary}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function WorkshopSpotlight({
   lab,
   script,
@@ -266,6 +334,10 @@ export function LibraryHome({ data }: { data: HomeData }) {
   const workshopHandout = data.playbooks.find((item) => item.route === "/playbooks/one-hour-attendee-handout");
   const workshopPrompt = data.onboarding.find((item) => item.route === "/prompts/onboarding/12-run-one-hour-agent-lab");
   const promptCount = data.all.filter((item) => item.kind === "prompt").length;
+  const onboardingEntry = data.onboarding[0];
+  const workshopEntry = workshopLab;
+  const uiEntry = data.ui[0];
+  const d3Entry = data.d3[0];
 
   return (
     <main className="min-h-screen bg-paper text-ink">
@@ -296,6 +368,8 @@ export function LibraryHome({ data }: { data: HomeData }) {
           handout={workshopHandout}
           runPrompt={workshopPrompt}
         />
+
+        <AxisNavigator onboarding={onboardingEntry} workshop={workshopEntry} ui={uiEntry} d3={d3Entry} />
 
         <SearchExplorer items={data.all} />
 

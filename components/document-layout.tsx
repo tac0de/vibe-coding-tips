@@ -71,7 +71,14 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
             </div>
           </section>
 
-          <DocumentReader html={document.html} promptBlock={document.promptBlock} />
+          <DocumentReader
+            html={document.html}
+            promptBlock={document.promptBlock}
+            situationLead={document.situationLead}
+            summaryPoints={document.summaryPoints}
+            failurePoints={document.failurePoints}
+            nextLink={document.nextLink}
+          />
         </article>
 
         <aside className="space-y-8 md:sticky md:top-6 md:self-start">
