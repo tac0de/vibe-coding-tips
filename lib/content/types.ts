@@ -3,6 +3,8 @@ export type ContentDomain = "onboarding" | "roles" | "ui" | "d3" | "ops" | "temp
 export type SiteLanguage = "en" | "ko";
 export type ContentDifficulty = "starter" | "intermediate" | "advanced";
 export type ContentCopyReadiness = "ready" | "guided" | "reference";
+export type ContentArtifactType = "dossier" | "prompt" | "playbook" | "reference";
+export type ContentRiskLevel = "low" | "medium" | "high" | "critical";
 
 export type LocalizedContentData = {
   title: string;
@@ -24,6 +26,14 @@ export type ContentMeta = {
   tags: string[];
   useCase: string;
   role: string;
+  scenario: string;
+  legacySurface: string;
+  targetArchitecture: string;
+  artifactType: ContentArtifactType;
+  riskLevel: ContentRiskLevel;
+  variantGroup: string;
+  isDossier: boolean;
+  archive: boolean;
   difficulty: ContentDifficulty;
   timeToUse: number;
   copyReadiness: ContentCopyReadiness;
@@ -49,6 +59,9 @@ export type ContentRecord = ContentMeta & {
   sequenceTotal?: number | null;
   sequenceLinks: ContentLink[];
   relatedRoutes: ContentLink[];
+  dossierLinks: ContentLink[];
+  variantLinks: ContentLink[];
+  verificationLinks: ContentLink[];
   situationLead?: string | null;
   summaryPoints: string[];
   failurePoints: string[];
@@ -63,6 +76,14 @@ export type ContentLink = {
   domain: ContentDomain;
   useCase: string;
   role: string;
+  scenario: string;
+  legacySurface: string;
+  targetArchitecture: string;
+  artifactType: ContentArtifactType;
+  riskLevel: ContentRiskLevel;
+  variantGroup: string;
+  isDossier: boolean;
+  archive: boolean;
   difficulty: ContentDifficulty;
   timeToUse: number;
   copyReadiness: ContentCopyReadiness;

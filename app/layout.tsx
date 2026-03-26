@@ -23,8 +23,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prompt Workbench",
-  description: "Interaction-max prompt workbench for agent coding, rapid execution flows, browser verification, UI passes, D3 work, and orchestration."
+  title: "Legacy UI Migration War Room",
+  description:
+    "Scenario-driven migration war room for legacy CSS/SCSS refactors, D3 retrofits, browser verification, review gates, and agent orchestration."
 };
 
 export default function RootLayout({

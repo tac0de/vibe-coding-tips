@@ -1,114 +1,79 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CopyPromptButton } from "@/components/copy-prompt-button";
 import { useReadingProgress } from "@/components/reading-progress";
-import { SequenceStrip } from "@/components/sequence-strip";
 import { LanguageToggle, useSiteLanguage } from "@/components/site-language";
 import { useWorkbenchState } from "@/components/workbench-state";
-import { getLocalizedLink, getLocalizedRecord } from "@/lib/content/localize";
+import { getLocalizedRecord } from "@/lib/content/localize";
 import {
   buildCopyPayload,
+  buildDossierBundlePayload,
+  buildDossierChapters,
+  getArtifactTypeLabel,
   getDifficultyLabel,
-  getReadinessLabel,
-  getRoleLabel,
-  getUseCaseLabel,
-  getWorkflowLabel,
+  getLegacySurfaceLabel,
+  getLinkText,
+  getRiskLabel,
+  getScenarioDefinition,
+  getTargetArchitectureLabel,
   stripOrdinalTitle
 } from "@/lib/content/workbench";
 import type { ContentLink, ContentRecord } from "@/lib/content/types";
 
 function MetaPill({ label }: { label: string }) {
   return (
-    <span className="rounded-full border border-line bg-white/65 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
+    <span className="war-pill rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em]">
       {label}
     </span>
   );
 }
 
-function LinkCard({
-  title,
-  description,
-  href
-}: {
-  title: string;
-  description: string;
-  href: string;
-}) {
+function LinkCard({ item, language }: { item: ContentLink; language: "en" | "ko" }) {
+  const localized = getLinkText(item, language);
+
   return (
-    <Link href={href} className="lab-list-item block">
-      <p className="font-display text-xl tracking-[-0.03em] text-paper">{title}</p>
-      <p className="mt-1 text-sm leading-6 text-cloud">{description}</p>
+    <Link href={item.route} className="lab-list-item block">
+      <p className="font-display text-xl tracking-[-0.03em] text-paper">{localized.title}</p>
+      <p className="mt-1 text-sm leading-6 text-cloud">{localized.summary}</p>
     </Link>
   );
 }
 
-function RelatedCards({
-  items,
-  language,
-  fallback
+export function DocumentLayout({
+  document,
+  catalog
 }: {
-  items: ContentLink[];
-  language: "en" | "ko";
-  fallback: string;
+  document: ContentRecord | null;
+  catalog: ContentRecord[];
 }) {
-  if (items.length === 0) {
-    return <p className="text-sm leading-7 text-cloud">{fallback}</p>;
-  }
-
-  return (
-    <div className="grid gap-3">
-      {items.map((item) => {
-        const localized = getLocalizedLink(item, language);
-        return (
-          <LinkCard
-            key={item.route}
-            href={item.route}
-            title={stripOrdinalTitle(localized.title)}
-            description={localized.summary}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
-export function DocumentLayout({ document }: { document: ContentRecord | null }) {
   const { language, t } = useSiteLanguage();
   const { completed, markViewed, toggleCompleted, isCompleted } = useReadingProgress();
   const { toggleFavorite, toggleQueue, markCopied, isFavorite, isQueued, queue } = useWorkbenchState();
-  const [tab, setTab] = useState<"overview" | "prompt" | "workflow" | "notes">("overview");
+  const [tab, setTab] = useState<"overview" | "promptSet" | "variants" | "verification" | "notes">("overview");
+  const localized = document ? getLocalizedRecord(document, language) : null;
+  const scenario = document ? getScenarioDefinition(document.scenario) : null;
+  const chapters = useMemo(() => (document ? buildDossierChapters(document, catalog, language) : []), [catalog, document, language]);
 
   useEffect(() => {
     if (!document) return;
     markViewed(document.route);
   }, [document, markViewed]);
 
-  useEffect(() => {
-    if (!document?.promptBlock && tab === "prompt") {
-      setTab("overview");
-    }
-  }, [document?.promptBlock, tab]);
+  if (!document || !localized) return null;
 
-  if (!document) return null;
-
-  const localized = getLocalizedRecord(document, language);
   const completedState = isCompleted(document.route);
-  const explicit = document.relatedRoutes.filter((item) => item.route !== document.nextLink?.route);
-  const togetherLinks =
-    explicit.length > 0 ? explicit.slice(0, 4) : document.sequenceLinks.filter((item) => item.route !== document.route).slice(0, 4);
-
-  const queueBadge = queue.length;
+  const dossierTitle = scenario?.dossierTitle[language] ?? stripOrdinalTitle(localized.title);
 
   return (
     <main className="min-h-screen bg-terminal text-paper">
-      <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-4 md:px-8 md:pb-24 md:pt-8">
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_400px]">
+      <div className="mx-auto max-w-[1500px] px-4 pb-16 pt-4 md:px-8 md:pb-24 md:pt-8">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_420px]">
           <article className="space-y-6">
-            <nav className="editorial-frame flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-fog md:px-7">
+            <nav className="war-frame flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-fog md:px-7">
               <Link href="/" className="transition hover:text-paper">
-                {t("Workbench", "워크벤치")}
+                {t("War room", "war room")}
               </Link>
               {document.prevLink ? (
                 <Link href={document.prevLink.route} className="transition hover:text-paper">
@@ -125,95 +90,100 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
               </span>
             </nav>
 
-            <section className="editorial-frame overflow-hidden px-5 py-6 md:px-8 md:py-8">
-              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <section className="war-frame overflow-hidden px-5 py-6 md:px-8 md:py-8">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
                 <div className="space-y-5">
                   <div className="flex flex-wrap gap-2">
-                    <MetaPill label={getUseCaseLabel(document.useCase, language)} />
-                    <MetaPill label={getRoleLabel(document.role, language)} />
+                    <MetaPill label={getArtifactTypeLabel(document.artifactType, language)} />
+                    <MetaPill label={getRiskLabel(document.riskLevel, language)} />
+                    <MetaPill label={getLegacySurfaceLabel(document.legacySurface, language)} />
+                    <MetaPill label={getTargetArchitectureLabel(document.targetArchitecture, language)} />
                     <MetaPill label={getDifficultyLabel(document.difficulty, language)} />
-                    <MetaPill label={getReadinessLabel(document.copyReadiness, language)} />
-                    <MetaPill label={`${document.timeToUse}m`} />
                   </div>
 
                   <div className="space-y-4">
-                    <p className="eyebrow">{getWorkflowLabel(document.workflowGroup, language)}</p>
-                    <h1 className="max-w-[12ch] font-display text-5xl leading-[0.9] tracking-[-0.06em] text-paper md:text-8xl">
+                    <p className="eyebrow">{scenario?.labels[language] ?? document.scenario}</p>
+                    <h1 className="max-w-[13ch] font-display text-5xl leading-[0.88] tracking-[-0.06em] text-paper md:text-8xl">
                       {stripOrdinalTitle(localized.title)}
                     </h1>
-                    <p className="max-w-[64ch] text-base leading-8 text-cloud md:text-lg">{localized.summary}</p>
+                    <p className="max-w-[68ch] text-base leading-8 text-cloud md:text-lg">{localized.summary}</p>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="lab-panel p-4">
-                      <p className="eyebrow text-fog">{t("Use this when", "이럴 때 바로 쓴다")}</p>
-                      <p className="mt-3 text-sm leading-7 text-paper">
-                        {localized.situationLead ?? localized.summary}
-                      </p>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="threat-card p-4">
+                      <p className="eyebrow text-fog">{t("When to use", "When to use")}</p>
+                      <p className="mt-3 text-sm leading-7 text-paper">{localized.situationLead ?? localized.summary}</p>
                     </div>
-                    <div className="lab-panel p-4">
-                      <p className="eyebrow text-fog">{t("Workflow jump", "다음 연결 지점")}</p>
-                      <p className="mt-3 text-sm leading-7 text-paper">
-                        {document.nextLink
-                          ? stripOrdinalTitle(getLocalizedLink(document.nextLink, language).title)
-                          : t("Use the related prompts in Workflow tab.", "Workflow 탭의 연결 문서를 이어서 사용한다.")}
-                      </p>
+                    <div className="threat-card p-4">
+                      <p className="eyebrow text-fog">{t("Primary risk", "Primary risk")}</p>
+                      <p className="mt-3 text-sm leading-7 text-paper">{scenario?.risks[language] ?? getRiskLabel(document.riskLevel, language)}</p>
+                    </div>
+                    <div className="threat-card p-4">
+                      <p className="eyebrow text-fog">{t("Target architecture", "Target architecture")}</p>
+                      <p className="mt-3 text-sm leading-7 text-paper">{getTargetArchitectureLabel(document.targetArchitecture, language)}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="lab-panel flex flex-col gap-4 p-5">
+                <div className="war-side-panel p-5">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="eyebrow">{t("Immediate Actions", "즉시 액션")}</p>
+                    <p className="eyebrow">{t("Migration console", "Migration console")}</p>
                     <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
-                      {document.kind}
+                      {document.timeToUse}m
                     </span>
                   </div>
 
-                  <div className="grid gap-3">
+                  <div className="mt-4 grid gap-3">
                     <CopyPromptButton
                       value={buildCopyPayload(document, language, false)}
                       onCopy={() => markCopied(document.route)}
                       className="action-button w-full justify-center"
-                      defaultLabel={document.promptBlock ? t("Copy Prompt", "프롬프트 복사") : t("Copy Notes", "노트 복사")}
+                      defaultLabel={document.promptBlock ? t("Copy current prompt", "현재 프롬프트 복사") : t("Copy notes", "노트 복사")}
+                      copiedLabel={t("Copied", "복사됨")}
+                    />
+                    <CopyPromptButton
+                      value={buildDossierBundlePayload(dossierTitle, chapters, language)}
+                      onCopy={() => markCopied(document.route)}
+                      className="ghost-button w-full justify-center"
+                      defaultLabel={t("Copy full dossier set", "전체 dossier 세트 복사")}
                       copiedLabel={t("Copied", "복사됨")}
                     />
                     <CopyPromptButton
                       value={buildCopyPayload(document, language, true)}
                       onCopy={() => markCopied(document.route)}
                       className="ghost-button w-full justify-center"
-                      defaultLabel={t("Copy With Context", "컨텍스트 포함 복사")}
+                      defaultLabel={t("Copy with migration context", "마이그레이션 컨텍스트 복사")}
                       copiedLabel={t("Copied", "복사됨")}
                     />
                     <button type="button" onClick={() => toggleQueue(document.route)} className="ghost-button w-full justify-center">
-                      {isQueued(document.route) ? t("Queued For Session", "세션 큐에 담김") : t("Add To Session Queue", "세션 큐 담기")}
+                      {isQueued(document.route) ? t("In battle stack", "battle stack 적재됨") : t("Add battle stack", "battle stack 적재")}
                     </button>
                     <button type="button" onClick={() => toggleFavorite(document.route)} className="ghost-button w-full justify-center">
-                      {isFavorite(document.route) ? t("Saved In Favorites", "즐겨찾기에 저장됨") : t("Save Favorite", "즐겨찾기 저장")}
+                      {isFavorite(document.route) ? t("Pinned ops tray", "ops tray 고정됨") : t("Pin ops tray", "ops tray 고정")}
                     </button>
                     <button
                       type="button"
                       onClick={() => toggleCompleted(document.route)}
                       className={`ghost-button w-full justify-center ${completedState ? "border-cobalt text-paper" : ""}`}
                     >
-                      {completedState ? t("Marked Complete", "완료 체크됨") : t("Mark Complete", "완료 체크")}
+                      {completedState ? t("Gate closed", "게이트 종료") : t("Mark gate", "게이트 체크")}
                     </button>
                   </div>
 
-                  <div className="border-t border-line pt-4">
-                    <p className="eyebrow text-fog">{t("Session state", "세션 상태")}</p>
+                  <div className="mt-5 border-t border-line pt-4">
+                    <p className="eyebrow text-fog">{t("Current run", "Current run")}</p>
                     <div className="mt-3 grid grid-cols-3 gap-3">
                       <div>
-                        <p className="font-display text-3xl text-paper">{queueBadge}</p>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{t("queue", "큐")}</p>
+                        <p className="font-display text-3xl text-paper">{queue.length}</p>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{t("stack", "stack")}</p>
                       </div>
                       <div>
                         <p className="font-display text-3xl text-paper">{completed.length}</p>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{t("complete", "완료")}</p>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{t("gates", "gates")}</p>
                       </div>
                       <div>
-                        <p className="font-display text-3xl text-paper">{document.sequenceTotal ?? togetherLinks.length}</p>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{t("flow size", "플로우 수")}</p>
+                        <p className="font-display text-3xl text-paper">{chapters.length}</p>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-fog">{t("chapters", "chapters")}</p>
                       </div>
                     </div>
                   </div>
@@ -221,55 +191,42 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
               </div>
             </section>
 
-            {document.sequenceLinks.length > 1 ? (
-              <section className="editorial-frame px-5 py-4 md:px-7">
-                <SequenceStrip
-                  title={t("workflow lane", "워크플로 라인")}
-                  items={document.sequenceLinks}
-                  activeRoute={document.route}
-                />
-              </section>
-            ) : null}
-
-            <section className="editorial-frame px-5 py-5 md:px-7">
+            <section className="war-frame px-5 py-5 md:px-7">
               <div className="flex flex-wrap items-center gap-2 border-b border-line pb-4">
                 {([
                   ["overview", t("Overview", "Overview")],
-                  ["prompt", t("Prompt", "Prompt")],
-                  ["workflow", t("Workflow", "Workflow")],
+                  ["promptSet", t("Prompt Set", "Prompt Set")],
+                  ["variants", t("Variants", "Variants")],
+                  ["verification", t("Verification", "Verification")],
                   ["notes", t("Notes", "Notes")]
-                ] as const)
-                  .filter(([value]) => value !== "prompt" || document.promptBlock)
-                  .map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setTab(value)}
-                      className={`rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] transition ${
-                        tab === value
-                          ? "border-cobalt bg-cobalt text-white"
-                          : "border-line bg-white/55 text-fog hover:border-cobalt/40 hover:text-paper"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
+                ] as const).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setTab(value)}
+                    className={`war-tab rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] transition ${
+                      tab === value
+                        ? "war-tab-active"
+                        : ""
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
 
               {tab === "overview" ? (
                 <div className="grid gap-4 pt-6 lg:grid-cols-3">
                   <div className="lab-panel p-4">
-                    <p className="eyebrow text-fog">{t("Use this when", "언제 쓰는지")}</p>
+                    <p className="eyebrow text-fog">{t("Dossier summary", "Dossier summary")}</p>
                     <p className="mt-3 text-sm leading-7 text-paper">
-                      {localized.situationLead ?? localized.summary}
+                      {scenario?.dossierSummary[language] ?? localized.summary}
                     </p>
                   </div>
                   <div className="lab-panel p-4">
-                    <p className="eyebrow text-fog">{t("Expected output", "기대 출력")}</p>
+                    <p className="eyebrow text-fog">{t("Expected output", "Expected output")}</p>
                     <ul className="mt-3 space-y-2 text-sm leading-7 text-paper">
-                      {(localized.summaryPoints.length > 0
-                        ? localized.summaryPoints
-                        : [t("Read once, then execute in a small explicit move.", "한 번 읽고 작은 단위로 명시적으로 실행한다.")])
+                      {(localized.summaryPoints.length > 0 ? localized.summaryPoints : [t("Map the surface before changing the surface.", "표면을 바꾸기 전에 구조를 먼저 매핑한다.")])
                         .slice(0, 4)
                         .map((point) => (
                           <li key={point}>{point}</li>
@@ -277,11 +234,9 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
                     </ul>
                   </div>
                   <div className="lab-panel p-4">
-                    <p className="eyebrow text-fog">{t("Watch for", "주의 포인트")}</p>
+                    <p className="eyebrow text-fog">{t("Failure patterns", "Failure patterns")}</p>
                     <ul className="mt-3 space-y-2 text-sm leading-7 text-paper">
-                      {(localized.failurePoints.length > 0
-                        ? localized.failurePoints
-                        : [t("Do not widen scope while running this flow.", "이 흐름 실행 중 범위를 넓히지 않는다.")])
+                      {(localized.failurePoints.length > 0 ? localized.failurePoints : [t("Do not replace styles before isolating ownership boundaries.", "소유 경계를 분리하기 전에 스타일 치환부터 하지 않는다.")])
                         .slice(0, 4)
                         .map((point) => (
                           <li key={point}>{point}</li>
@@ -291,78 +246,94 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
                 </div>
               ) : null}
 
-              {tab === "prompt" && document.promptBlock ? (
-                <div className="pt-6">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="eyebrow">{t("Copy-ready prompt", "바로 복붙할 프롬프트")}</p>
-                      <p className="mt-2 text-sm leading-7 text-cloud">
-                        {t(
-                          "Use the raw prompt for fast execution, or copy with context from the action panel.",
-                          "빠른 실행은 원본 프롬프트를, 배경까지 넘길 때는 액션 패널의 컨텍스트 포함 복사를 사용한다."
-                        )}
-                      </p>
-                    </div>
-                    <CopyPromptButton
-                      value={document.promptBlock}
-                      onCopy={() => markCopied(document.route)}
-                      className="action-button"
-                      defaultLabel={t("Copy Prompt", "프롬프트 복사")}
-                      copiedLabel={t("Copied", "복사됨")}
-                    />
-                  </div>
-                  <pre className="overflow-x-auto rounded-[28px] border border-line bg-[#08111f] px-5 py-5 text-[13px] leading-7 text-[#f3efe6]">
-                    <code>{document.promptBlock}</code>
-                  </pre>
-                </div>
-              ) : null}
-
-              {tab === "workflow" ? (
-                <div className="grid gap-4 pt-6 lg:grid-cols-2">
-                  <div className="lab-panel p-4">
-                    <p className="eyebrow text-fog">{t("Next best doc", "다음 추천 문서")}</p>
-                    <div className="mt-4">
-                      {document.nextLink ? (
-                        <LinkCard
-                          href={document.nextLink.route}
-                          title={stripOrdinalTitle(getLocalizedLink(document.nextLink, language).title)}
-                          description={getLocalizedLink(document.nextLink, language).summary}
+              {tab === "promptSet" ? (
+                <div className="grid gap-5 pt-6">
+                  {chapters.map((chapter) => (
+                    <section key={chapter.id} className="dossier-card">
+                      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="eyebrow">{chapter.title}</p>
+                          <p className="mt-2 text-sm leading-7 text-cloud">
+                            {t("Copy chapter-level prompts or open each source dossier.", "챕터 단위 프롬프트를 복사하거나 각 원본 dossier를 연다.")}
+                          </p>
+                        </div>
+                        <CopyPromptButton
+                          value={buildDossierBundlePayload(chapter.title, [chapter], language)}
+                          onCopy={() => markCopied(document.route)}
+                          className="ghost-button"
+                          defaultLabel={t("Copy chapter", "챕터 복사")}
+                          copiedLabel={t("Copied", "복사됨")}
                         />
-                      ) : (
-                        <p className="text-sm leading-7 text-cloud">
-                          {t("There is no single next doc. Use the related set below.", "고정된 다음 문서가 없으니 아래 연결 세트를 사용한다.")}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                      </div>
+                      <div className="grid gap-3 lg:grid-cols-2">
+                        {chapter.docs.map((item) => {
+                          const itemLocalized = getLocalizedRecord(item, language);
+                          return (
+                            <div key={item.route} className="lab-panel p-4">
+                              <div className="flex flex-wrap gap-2">
+                                <MetaPill label={getArtifactTypeLabel(item.artifactType, language)} />
+                                <MetaPill label={getRiskLabel(item.riskLevel, language)} />
+                              </div>
+                              <p className="mt-4 font-display text-2xl text-paper">{stripOrdinalTitle(itemLocalized.title)}</p>
+                              <p className="mt-2 text-sm leading-7 text-cloud">{itemLocalized.summary}</p>
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                <CopyPromptButton
+                                  value={buildCopyPayload(item, language, false)}
+                                  onCopy={() => markCopied(item.route)}
+                                  className="ghost-button"
+                                  defaultLabel={t("Copy prompt", "프롬프트 복사")}
+                                  copiedLabel={t("Copied", "복사됨")}
+                                />
+                                <Link href={item.route} className="ghost-button">
+                                  {t("Open source", "원본 열기")}
+                                </Link>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              ) : null}
 
-                  <div className="lab-panel p-4">
-                    <p className="eyebrow text-fog">{t("Use together", "같이 쓰는 문서")}</p>
-                    <div className="mt-4">
-                      <RelatedCards
-                        items={togetherLinks}
-                        language={language}
-                        fallback={t("No related docs are linked yet.", "아직 연결된 문서가 없다.")}
-                      />
-                    </div>
-                  </div>
+              {tab === "variants" ? (
+                <div className="grid gap-4 pt-6 lg:grid-cols-2">
+                  {(document.variantLinks.length > 0 ? document.variantLinks : document.dossierLinks).map((item) => (
+                    <LinkCard key={item.route} item={item} language={language} />
+                  ))}
+                  {document.variantLinks.length === 0 && document.dossierLinks.length === 0 ? (
+                    <p className="text-sm leading-7 text-cloud">
+                      {t("No variants are mapped yet for this dossier.", "이 dossier에 아직 매핑된 변형 세트가 없다.")}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {tab === "verification" ? (
+                <div className="grid gap-4 pt-6 lg:grid-cols-2">
+                  {document.verificationLinks.map((item) => (
+                    <LinkCard key={item.route} item={item} language={language} />
+                  ))}
+                  {document.verificationLinks.length === 0 ? (
+                    <p className="text-sm leading-7 text-cloud">
+                      {t("Verification set is not linked yet.", "검증 세트가 아직 연결되지 않았다.")}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
 
               {tab === "notes" ? (
                 <div className="pt-6">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
-                      <p className="eyebrow">{t("Reference Notes", "참고 노트")}</p>
+                      <p className="eyebrow">{t("Field notes", "Field notes")}</p>
                       <p className="mt-2 text-sm leading-7 text-cloud">
-                        {t(
-                          "Keep this for full background, rationale, and section-level details.",
-                          "전체 배경, 근거, 섹션 단위 디테일은 이 노트 뷰에서 본다."
-                        )}
+                        {t("Original notes stay here as full context and fallback evidence.", "원본 노트는 전체 맥락과 백업 근거로 여기 유지한다.")}
                       </p>
                     </div>
                     <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-fog">
-                      {localized.toc.length} {t("sections", "섹션")}
+                      {localized.toc.length} {t("sections", "sections")}
                     </span>
                   </div>
                   <div className="prose-body max-w-none" dangerouslySetInnerHTML={{ __html: localized.html }} />
@@ -372,66 +343,30 @@ export function DocumentLayout({ document }: { document: ContentRecord | null })
           </article>
 
           <aside className="space-y-6 xl:sticky xl:top-6 xl:self-start">
-            <section className="editorial-frame px-5 py-5 md:px-6">
-              <p className="eyebrow">{t("Execution Checks", "실행 체크")}</p>
+            <section className="war-frame px-5 py-5 md:px-6">
+              <p className="eyebrow">{t("Related dossiers", "Related dossiers")}</p>
               <div className="mt-4 grid gap-3">
-                <div className="lab-panel p-4">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
-                    {completedState ? t("completed", "완료됨") : t("in progress", "진행 중")}
-                  </p>
-                  <p className="mt-2 text-sm leading-7 text-cloud">
-                    {t(
-                      "Use complete as a workflow marker, not a gamified badge.",
-                      "게이미피케이션이 아니라 워크플로 마커로 완료 체크를 사용한다."
-                    )}
-                  </p>
-                </div>
-
-                <div className="lab-panel p-4">
-                  <p className="eyebrow text-fog">{t("Prompt status", "프롬프트 상태")}</p>
-                  <p className="mt-3 text-sm leading-7 text-paper">
-                    {document.promptBlock
-                      ? t("Copy-ready prompt is available.", "즉시 복붙 가능한 프롬프트가 있다.")
-                      : t("Use notes or context copy instead of raw prompt.", "원본 프롬프트 대신 노트/컨텍스트 복사를 사용한다.")}
-                  </p>
-                </div>
-
-                <div className="lab-panel p-4">
-                  <p className="eyebrow text-fog">{t("Session queue", "세션 큐")}</p>
-                  <p className="mt-3 text-sm leading-7 text-paper">
-                    {isQueued(document.route)
-                      ? t("This doc is already in your active session queue.", "이 문서는 현재 세션 큐에 이미 담겨 있다.")
-                      : t("Add it when this document belongs to a live demo flow.", "실시간 데모 플로우에 포함될 때 큐에 담는다.")}
-                  </p>
-                </div>
+                {document.dossierLinks.slice(0, 4).map((item) => (
+                  <LinkCard key={item.route} item={item} language={language} />
+                ))}
+                {document.dossierLinks.length === 0 ? (
+                  <p className="text-sm leading-7 text-cloud">{t("No related dossier mapped.", "연결된 dossier가 없다.")}</p>
+                ) : null}
               </div>
             </section>
 
-            <section className="editorial-frame px-5 py-5 md:px-6">
-              <p className="eyebrow">{t("Similar Docs", "유사 문서")}</p>
-              <div className="mt-4">
-                <RelatedCards
-                  items={document.relatedRoutes.slice(0, 4)}
-                  language={language}
-                  fallback={t("No related documents are linked yet.", "아직 연결된 유사 문서가 없다.")}
-                />
-              </div>
-            </section>
-
-            <section className="editorial-frame px-5 py-5 md:px-6">
-              <p className="eyebrow">{t("Use Together", "같이 쓰는 프롬프트")}</p>
-              <div className="mt-4">
-                <RelatedCards
-                  items={togetherLinks}
-                  language={language}
-                  fallback={t("No adjacent workflow items are available.", "인접 워크플로 문서가 없다.")}
-                />
+            <section className="war-frame px-5 py-5 md:px-6">
+              <p className="eyebrow">{t("Verification rails", "Verification rails")}</p>
+              <div className="mt-4 grid gap-3">
+                {document.verificationLinks.slice(0, 4).map((item) => (
+                  <LinkCard key={item.route} item={item} language={language} />
+                ))}
               </div>
             </section>
 
             {localized.toc.length > 0 ? (
-              <section className="editorial-frame px-5 py-5 md:px-6">
-                <p className="eyebrow">{t("Sections", "섹션")}</p>
+              <section className="war-frame px-5 py-5 md:px-6">
+                <p className="eyebrow">{t("Sections", "Sections")}</p>
                 <div className="mt-4 grid gap-2">
                   {localized.toc.map((item) => (
                     <a key={item.id} href={`#${item.id}`} className="lab-list-item block">

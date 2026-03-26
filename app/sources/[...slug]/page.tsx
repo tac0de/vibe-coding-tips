@@ -9,7 +9,8 @@ export async function generateStaticParams() {
 
 export default async function SourceDetailPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
+  const all = await getAllContent();
   const document = await getContentByKindAndSlug("sources", slug);
   if (!document) notFound();
-  return <DocumentLayout document={document} />;
+  return <DocumentLayout document={document} catalog={all} />;
 }

@@ -13,18 +13,29 @@ import {
   stripLeadingTitle
 } from "@/lib/content/markdown";
 import type {
+  ContentArtifactType,
   ContentCopyReadiness,
   ContentDifficulty,
   ContentKind,
   ContentLink,
   ContentMeta,
   ContentRecord,
+  ContentRiskLevel,
   LocalizedContentData
 } from "@/lib/content/types";
 
 type RawContentRecord = Omit<
   ContentRecord,
-  "nextRoute" | "nextLink" | "prevLink" | "sequenceIndex" | "sequenceTotal" | "sequenceLinks" | "relatedRoutes"
+  | "nextRoute"
+  | "nextLink"
+  | "prevLink"
+  | "sequenceIndex"
+  | "sequenceTotal"
+  | "sequenceLinks"
+  | "relatedRoutes"
+  | "dossierLinks"
+  | "variantLinks"
+  | "verificationLinks"
 > & {
   nextReference: string | null;
 };
@@ -68,6 +79,102 @@ function inferUseCase(dir: string, relativePath: string, kind: ContentKind, doma
   if (domain === "onboarding") return "repo-onboarding";
   if (domain === "roles") return "role-templates";
   return dir === "playbooks" ? "workflow-playbook" : "reference";
+}
+
+function inferScenario(relativePath: string, kind: ContentKind, useCase: string, domain: string) {
+  const file = relativePath.toLowerCase();
+
+  if (domain === "d3" || file.includes("d3")) {
+    if (file.includes("boundary") || file.includes("where-d3-fits") || file.includes("interaction-qa")) {
+      return "d3-extraction";
+    }
+    return "d3-retrofit";
+  }
+
+  if (domain === "ui" || file.includes("tailwind") || file.includes("scss") || file.includes("accessibility")) {
+    if (file.includes("component") || file.includes("design-system") || file.includes("information-hierarchy")) {
+      return "legacy-component-split";
+    }
+    return "scss-swamp";
+  }
+
+  if (useCase === "repo-onboarding") return "css-module-migration";
+  if (useCase === "browser-verification" || useCase === "review-qa") return "verification-gate";
+  if (useCase === "agent-orchestration") return "orchestration-war-room";
+  if (kind === "source") return "archive-general";
+  return "archive-general";
+}
+
+function inferLegacySurface(relativePath: string, scenario: string, kind: ContentKind) {
+  const file = relativePath.toLowerCase();
+  if (kind === "source") return "mixed-references";
+  if (file.includes("scss")) return "scss";
+  if (file.includes("tailwind")) return "global-css";
+  if (scenario === "scss-swamp") return "global-css";
+  if (scenario === "legacy-component-split" || scenario === "css-module-migration") return "mixed-react-dom";
+  if (scenario === "d3-retrofit" || scenario === "d3-extraction") return "jquery-dom";
+  return "mixed-react-dom";
+}
+
+function inferTargetArchitecture(relativePath: string, scenario: string) {
+  const file = relativePath.toLowerCase();
+  if (file.includes("tailwind")) return "tokenized-system";
+  if (scenario === "scss-swamp") return "componentized-react";
+  if (scenario === "css-module-migration") return "css-modules";
+  if (scenario === "legacy-component-split") return "componentized-react";
+  if (scenario === "d3-retrofit") return "isolated-d3";
+  if (scenario === "d3-extraction") return "isolated-d3";
+  return "componentized-react";
+}
+
+function inferArtifactType(kind: ContentKind, useCase: string, scenario: string, filePath: string): ContentArtifactType {
+  const file = filePath.toLowerCase();
+  if (kind === "source") return "reference";
+  if (kind === "playbook") return useCase === "workflow-playbook" || file.includes("one-hour") ? "playbook" : "dossier";
+  if (
+    scenario === "scss-swamp" ||
+    scenario === "css-module-migration" ||
+    scenario === "legacy-component-split" ||
+    scenario === "d3-retrofit" ||
+    scenario === "d3-extraction"
+  ) {
+    return "dossier";
+  }
+  return "prompt";
+}
+
+function inferRiskLevel(relativePath: string, scenario: string, useCase: string): ContentRiskLevel {
+  const file = relativePath.toLowerCase();
+  if (file.includes("regression") || file.includes("orchestration") || file.includes("failure")) return "critical";
+  if (scenario === "d3-retrofit" || scenario === "d3-extraction" || useCase === "browser-verification") return "high";
+  if (scenario === "scss-swamp" || scenario === "legacy-component-split") return "medium";
+  return "low";
+}
+
+function inferVariantGroup(relativePath: string, scenario: string) {
+  const file = relativePath.toLowerCase();
+  if (scenario === "scss-swamp") {
+    if (file.includes("tailwind")) return "utility-migration";
+    if (file.includes("design-system") || file.includes("component")) return "component-extraction";
+    return "scss-nesting-hell";
+  }
+  if (scenario === "css-module-migration") return "pure-css-to-modules";
+  if (scenario === "legacy-component-split") return "component-decomposition";
+  if (scenario === "d3-retrofit") return file.includes("boundary") ? "d3-isolate" : "d3-embed";
+  if (scenario === "d3-extraction") return "d3-isolate";
+  if (scenario === "verification-gate") return "verification-set";
+  return "general";
+}
+
+function inferIsDossier(kind: ContentKind, artifactType: ContentArtifactType, scenario: string, featured: boolean) {
+  if (kind === "source") return false;
+  if (featured) return true;
+  return artifactType === "dossier" && scenario !== "archive-general";
+}
+
+function inferArchive(kind: ContentKind, scenario: string, useCase: string) {
+  if (kind === "source") return true;
+  return scenario === "archive-general" || useCase === "teaching-kit" || useCase === "role-templates";
 }
 
 function inferRole(relativePath: string, kind: ContentKind, domain: string) {
@@ -139,6 +246,14 @@ function sanitizeMeta(raw: Record<string, unknown>): ContentMeta {
     tags: Array.isArray(raw.tags) ? raw.tags.map(String) : [],
     useCase: String(raw.useCase ?? ""),
     role: String(raw.role ?? ""),
+    scenario: String(raw.scenario ?? ""),
+    legacySurface: String(raw.legacySurface ?? ""),
+    targetArchitecture: String(raw.targetArchitecture ?? ""),
+    artifactType: (raw.artifactType as ContentArtifactType) ?? "prompt",
+    riskLevel: (raw.riskLevel as ContentRiskLevel) ?? "medium",
+    variantGroup: String(raw.variantGroup ?? ""),
+    isDossier: typeof raw.isDossier === "boolean" ? raw.isDossier : false,
+    archive: typeof raw.archive === "boolean" ? raw.archive : false,
     difficulty: (raw.difficulty as ContentDifficulty) ?? "starter",
     timeToUse: typeof raw.timeToUse === "number" ? raw.timeToUse : 0,
     copyReadiness: (raw.copyReadiness as ContentCopyReadiness) ?? "reference",
@@ -220,6 +335,9 @@ async function loadAllContentRaw() {
         const localizedEn = await buildLocalizedData(sourceEn);
         const useCase = baseMeta.useCase || inferUseCase(dir, relativePath, baseMeta.kind, baseMeta.domain);
         const role = baseMeta.role || inferRole(relativePath, baseMeta.kind, baseMeta.domain);
+        const scenario = baseMeta.scenario || inferScenario(relativePath, baseMeta.kind, useCase, baseMeta.domain);
+        const legacySurface = baseMeta.legacySurface || inferLegacySurface(relativePath, scenario, baseMeta.kind);
+        const targetArchitecture = baseMeta.targetArchitecture || inferTargetArchitecture(relativePath, scenario);
         const difficulty =
           typeof parsed.data.difficulty === "string"
             ? baseMeta.difficulty
@@ -231,12 +349,32 @@ async function loadAllContentRaw() {
             : inferCopyReadiness(baseMeta.kind, localizedKo.promptBlock);
         const workflowGroup = baseMeta.workflowGroup || inferWorkflowGroup(dir, relativePath, baseMeta.domain);
         const featured = typeof parsed.data.featured === "boolean" ? Boolean(parsed.data.featured) : inferFeatured(relativePath, baseMeta.kind, workflowGroup);
+        const artifactType =
+          typeof parsed.data.artifactType === "string"
+            ? baseMeta.artifactType
+            : inferArtifactType(baseMeta.kind, useCase, scenario, relativePath);
+        const riskLevel =
+          typeof parsed.data.riskLevel === "string"
+            ? baseMeta.riskLevel
+            : inferRiskLevel(relativePath, scenario, useCase);
+        const variantGroup = baseMeta.variantGroup || inferVariantGroup(relativePath, scenario);
+        const isDossier =
+          typeof parsed.data.isDossier === "boolean" ? baseMeta.isDossier : inferIsDossier(baseMeta.kind, artifactType, scenario, featured);
+        const archive = typeof parsed.data.archive === "boolean" ? baseMeta.archive : inferArchive(baseMeta.kind, scenario, useCase);
 
         const meta = {
           ...baseMeta,
           summary: localizedKo.summary,
           useCase,
           role,
+          scenario,
+          legacySurface,
+          targetArchitecture,
+          artifactType,
+          riskLevel,
+          variantGroup,
+          isDossier,
+          archive,
           difficulty,
           timeToUse,
           copyReadiness,
@@ -309,6 +447,14 @@ async function loadAllContentRaw() {
         domain: item.domain,
         useCase: item.useCase,
         role: item.role,
+        scenario: item.scenario,
+        legacySurface: item.legacySurface,
+        targetArchitecture: item.targetArchitecture,
+        artifactType: item.artifactType,
+        riskLevel: item.riskLevel,
+        variantGroup: item.variantGroup,
+        isDossier: item.isDossier,
+        archive: item.archive,
         difficulty: item.difficulty,
         timeToUse: item.timeToUse,
         copyReadiness: item.copyReadiness,
@@ -361,6 +507,39 @@ async function loadAllContentRaw() {
 
       const nextRoute = explicitNextRoute ?? sequentialNextRoute;
       const nextTarget = nextRoute ? records.find((item) => item.route === nextRoute) ?? null : null;
+      const dossierLinks = records
+        .filter(
+          (item) =>
+            item.route !== record.route &&
+            item.isDossier &&
+            item.scenario === record.scenario &&
+            item.archive === false
+        )
+        .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+        .slice(0, 5)
+        .map(toLink);
+      const variantLinks = records
+        .filter(
+          (item) =>
+            item.route !== record.route &&
+            item.scenario === record.scenario &&
+            item.variantGroup === record.variantGroup
+        )
+        .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+        .slice(0, 5)
+        .map(toLink);
+      const verificationLinks = records
+        .filter(
+          (item) =>
+            item.route !== record.route &&
+            (item.scenario === "verification-gate" ||
+              item.useCase === "browser-verification" ||
+              item.useCase === "review-qa" ||
+              item.path.endsWith("10-regression-gate.md"))
+        )
+        .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+        .slice(0, 5)
+        .map(toLink);
 
       return {
         ...record,
@@ -370,7 +549,10 @@ async function loadAllContentRaw() {
         sequenceTotal: orderedPeers.length > 0 ? orderedPeers.length : null,
         sequenceLinks,
         nextLink: nextTarget ? toLink(nextTarget) : null,
-        relatedRoutes
+        relatedRoutes,
+        dossierLinks,
+        variantLinks,
+        verificationLinks
       } satisfies ContentRecord;
     })
     .sort((a, b) => {
